@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useMedicalProfileStore } from '@/stores/medicalProfileStore'
 import { useTreatmentStore } from '@/stores/treatmentStore'
@@ -34,13 +34,20 @@ export function MedicalProfileFullPage() {
   const [customAllergie, setCustomAllergie] = useState('')
   const [customContreIndication, setCustomContreIndication] = useState('')
 
+  const initialSyncDone = useRef(false)
+
   useEffect(() => {
-    loadProfile()
+    loadProfile().then(() => {
+      initialSyncDone.current = true
+    })
     if (treatments.length === 0) loadTreatments()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Sync form when profile loads from vault
+  // Sync form only on initial vault load — never overwrite user edits
   useEffect(() => {
+    if (!initialSyncDone.current) return
+    // Only sync once after vault load
+    initialSyncDone.current = false
     setMigraineType(profile.migraineType)
     setMigraineTypeAutre(profile.migraineTypeAutre ?? '')
     setTraitementsCrise(profile.traitementsCrise)
