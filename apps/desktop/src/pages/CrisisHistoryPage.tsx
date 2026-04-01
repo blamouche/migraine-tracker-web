@@ -20,8 +20,10 @@ export function CrisisHistoryPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
 
   useEffect(() => {
-    loadCrises()
-  }, [loadCrises])
+    if (crises.length === 0) {
+      loadCrises()
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtered = useMemo(() => {
     const result = crises.filter((c) => {

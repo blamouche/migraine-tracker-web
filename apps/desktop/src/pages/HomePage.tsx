@@ -10,9 +10,11 @@ export function HomePage() {
   const { crises, loadCrises, purgeOldTrash } = useCrisisStore()
 
   useEffect(() => {
-    loadCrises()
+    if (crises.length === 0) {
+      loadCrises()
+    }
     purgeOldTrash()
-  }, [loadCrises, purgeOldTrash])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const recentCrises = crises.slice(0, 5)
   const hasCrises = crises.length > 0

@@ -56,9 +56,12 @@ export function CrisisFormPage() {
   }, [crises.length, loadCrises])
 
   useEffect(() => {
-    const found = crises.find((c) => c.id === crisisId)
-    if (found) setCrisis({ ...found })
-  }, [crises, crisisId])
+    // Only init local state once — don't overwrite user edits
+    if (!crisis) {
+      const found = crises.find((c) => c.id === crisisId)
+      if (found) setCrisis({ ...found })
+    }
+  }, [crises, crisisId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-save every 30 seconds
   const doAutoSave = useCallback(async () => {
