@@ -46,6 +46,13 @@ export function CrisisFormPage() {
   const [crisis, setCrisis] = useState<CrisisEntry | null>(null)
   const [showHit6, setShowHit6] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [customTreatments, setCustomTreatments] = useState<string[]>([])
+  const [customSymptoms, setCustomSymptoms] = useState<string[]>([])
+  const [customTriggers, setCustomTriggers] = useState<string[]>([])
+
+  const treatmentOptions = [...DEFAULT_TREATMENTS, ...customTreatments]
+  const symptomOptions = [...DEFAULT_SYMPTOMS, ...customSymptoms]
+  const triggerOptions = [...DEFAULT_TRIGGERS, ...customTriggers]
   const autoSaveTimer = useRef<ReturnType<typeof setInterval> | null>(null)
 
   // Load crisis data
@@ -170,10 +177,10 @@ export function CrisisFormPage() {
           <div className={fieldWrapperClass(missingFields.includes('Traitements'))}>
             <ChipSelector
               label="Traitements"
-              options={DEFAULT_TREATMENTS}
+              options={treatmentOptions}
               selected={crisis.treatments}
               onChange={(v) => update({ treatments: v })}
-              onAddCustom={() => {}}
+              onAddCustom={(v) => setCustomTreatments((prev) => [...prev, v])}
               helpText="Les médicaments ou remèdes utilisés pendant la crise."
             />
           </div>
@@ -182,10 +189,10 @@ export function CrisisFormPage() {
           <div className={fieldWrapperClass(missingFields.includes('Symptômes'))}>
             <ChipSelector
               label="Symptômes"
-              options={DEFAULT_SYMPTOMS}
+              options={symptomOptions}
               selected={crisis.symptoms}
               onChange={(v) => update({ symptoms: v })}
-              onAddCustom={() => {}}
+              onAddCustom={(v) => setCustomSymptoms((prev) => [...prev, v])}
               helpText="Les symptômes ressentis pendant la crise."
             />
           </div>
@@ -193,10 +200,10 @@ export function CrisisFormPage() {
           {/* Triggers */}
           <ChipSelector
             label="Déclencheurs probables"
-            options={DEFAULT_TRIGGERS}
+            options={triggerOptions}
             selected={crisis.triggers}
             onChange={(v) => update({ triggers: v })}
-            onAddCustom={() => {}}
+            onAddCustom={(v) => setCustomTriggers((prev) => [...prev, v])}
             helpText="Les facteurs qui ont pu déclencher cette crise."
           />
 
