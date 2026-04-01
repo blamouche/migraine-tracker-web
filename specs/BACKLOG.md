@@ -572,9 +572,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Saisie horodatée par repas
-- [ ] Base d'aliments préconfigurée avec étiquettes de risque (tyramine, histamine, caféine)
-- [ ] Autocomplétion depuis l'historique personnel
+- [x] Saisie horodatée par repas
+- [x] Base d'aliments préconfigurée avec étiquettes de risque (tyramine, histamine, caféine)
+- [x] Autocomplétion depuis l'historique personnel
 - [ ] Possibilité de sauvegarder un repas complet comme modèle réutilisable
 
 ---
@@ -587,10 +587,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Stress : échelle 1-5 avec référentiel fonctionnel affiché au survol
-- [ ] Sommeil : échelle 1-5 avec référentiel fonctionnel
-- [ ] Hydratation : Bonne / Insuffisante
-- [ ] Champs accessibles depuis le journal alimentaire du jour
+- [x] Stress : échelle 1-5 avec référentiel fonctionnel affiché au survol
+- [x] Sommeil : échelle 1-5 avec référentiel fonctionnel
+- [x] Hydratation : Bonne / Insuffisante
+- [x] Champs accessibles depuis le journal alimentaire du jour
 
 ---
 
@@ -646,9 +646,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Liste des journaux par date avec résumé des repas
-- [ ] Accès au détail complet d'un jour
-- [ ] Modification et suppression possibles (même mécanisme que les crises)
+- [x] Liste des journaux par date avec résumé des repas
+- [x] Accès au détail complet d'un jour
+- [x] Modification et suppression possibles (même mécanisme que les crises)
 
 ---
 
@@ -664,11 +664,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Chaque jour coloré selon le niveau de douleur déclaré (0-10)
-- [ ] Jours de crise distingués par un contour indigo superposé
-- [ ] Jours sans saisie en gris neutre
-- [ ] Tooltip au survol : niveau de douleur + intensité crise + traitement pris
-- [ ] Légende double : gradient douleur + marqueur crise
+- [x] Chaque jour coloré selon le niveau de douleur déclaré (0-10)
+- [x] Jours de crise distingués par un contour indigo superposé
+- [x] Jours sans saisie en gris neutre
+- [x] Tooltip au survol : niveau de douleur + intensité crise + traitement pris
+- [x] Légende double : gradient douleur + marqueur crise
 
 ---
 
@@ -680,10 +680,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Fréquence mensuelle, intensité moyenne, durée moyenne, efficacité des traitements
-- [ ] Top déclencheurs, score HIT-6 mensuel, pression atmosphérique
-- [ ] Indicateur de fréquence élevée si ≥ seuil configuré (défaut : 4 jours/mois)
-- [ ] Formulation factuelle sans recommandation thérapeutique
+- [x] Fréquence mensuelle, intensité moyenne, durée moyenne, efficacité des traitements
+- [x] Top déclencheurs, score HIT-6 mensuel, pression atmosphérique
+- [x] Indicateur de fréquence élevée si ≥ seuil configuré (défaut : 4 jours/mois)
+- [x] Formulation factuelle sans recommandation thérapeutique
 
 ---
 
@@ -695,9 +695,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Raccourcis : 7j / 1 mois / 3 mois / 6 mois / 1 an / depuis le début
-- [ ] Plage personnalisée via calendrier
-- [ ] Chaque graphique a son propre sélecteur indépendant
+- [x] Raccourcis : 7j / 1 mois / 3 mois / 6 mois / 1 an / depuis le début
+- [x] Plage personnalisée via calendrier
+- [x] Chaque graphique a son propre sélecteur indépendant
 - [ ] La plage sélectionnée est mémorisée entre les sessions
 - [ ] En plan FREE : données limitées à 3 mois (configurable par l'admin) avec message d'upgrade
 
@@ -711,10 +711,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Barres mensuelles pour la fréquence des crises
-- [ ] Courbe temporelle pour l'évolution de l'intensité
-- [ ] Barres empilées pour la durée des crises (min/moy/max)
-- [ ] Courbe avec seuils pour l'évolution du score HIT-6
+- [x] Barres mensuelles pour la fréquence des crises
+- [x] Courbe temporelle pour l'évolution de l'intensité
+- [x] Barres empilées pour la durée des crises (min/moy/max)
+- [x] Courbe avec seuils pour l'évolution du score HIT-6
 
 ---
 
@@ -783,10 +783,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Trois niveaux : Faible (vert) / Modéré (orange) / Élevé (rouge)
-- [ ] Détail au survol / au clic : liste des facteurs actifs
-- [ ] Calculé localement, sans appel réseau (niveau 1 — voir E19 pour le niveau IA)
-- [ ] Visible sur l'écran d'accueil
+- [x] Trois niveaux : Faible (vert) / Modéré (orange) / Élevé (rouge)
+- [x] Détail au survol / au clic : liste des facteurs actifs
+- [x] Calculé localement, sans appel réseau (niveau 1 — voir E19 pour le niveau IA)
+- [x] Visible sur l'écran d'accueil
 
 ---
 
@@ -798,9 +798,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Recalcul des indicateurs après ajout, modification ou suppression d'une entrée
+- [x] Recalcul des indicateurs après ajout, modification ou suppression d'une entrée
 - [ ] Skeleton screens pendant le rechargement des graphiques
-- [ ] Optimistic UI : la mise à jour est immédiate côté interface
+- [x] Optimistic UI : la mise à jour est immédiate côté interface
 
 ---
 
@@ -816,11 +816,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Période sélectionnable : 1 mois / 3 mois / 6 mois / personnalisé
-- [ ] Contenu : résumé de période, fréquence, intensité, durée, traitements, déclencheurs, HIT-6, consultations
-- [ ] Mention factuelle de la fréquence par rapport au seuil configuré (sans recommandation thérapeutique)
-- [ ] Génération entièrement côté client (jsPDF + html2canvas)
-- [ ] Téléchargement direct depuis le navigateur
+- [x] Période sélectionnable : 1 mois / 3 mois / 6 mois / personnalisé
+- [x] Contenu : résumé de période, fréquence, intensité, durée, traitements, déclencheurs, HIT-6, consultations
+- [x] Mention factuelle de la fréquence par rapport au seuil configuré (sans recommandation thérapeutique)
+- [x] Génération entièrement côté client (jsPDF + html2canvas)
+- [x] Téléchargement direct depuis le navigateur
 
 ---
 
@@ -832,10 +832,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Une ligne par crise, tous les champs du frontmatter en colonnes
-- [ ] Encodage UTF-8 avec BOM (compatibilité Excel)
-- [ ] Bouton « Exporter en CSV » accessible depuis le module Crises et depuis le dashboard
-- [ ] Génération entièrement côté client — aucune donnée transmise à un serveur
+- [x] Une ligne par crise, tous les champs du frontmatter en colonnes
+- [x] Encodage UTF-8 avec BOM (compatibilité Excel)
+- [x] Bouton « Exporter en CSV » accessible depuis le module Crises et depuis le dashboard
+- [x] Génération entièrement côté client — aucune donnée transmise à un serveur
 
 ---
 
@@ -847,10 +847,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] CSV journal alimentaire : une ligne par jour, colonnes par repas et facteurs
-- [ ] CSV traitements : un traitement par ligne, dates, efficacité
+- [x] CSV journal alimentaire : une ligne par jour, colonnes par repas et facteurs
+- [x] CSV traitements : un traitement par ligne, dates, efficacité
 - [ ] CSV douleur quotidienne : une ligne par jour, niveau de douleur et impact
-- [ ] Même standard d'encodage que US-05-02
+- [x] Même standard d'encodage que US-05-02
 
 ---
 
@@ -862,9 +862,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Accessible depuis Préférences → « Exporter mon vault »
-- [ ] ZIP contient tous les fichiers Markdown avec la structure de dossiers préservée
-- [ ] Génération côté client — aucune donnée transmise à un serveur
+- [x] Accessible depuis Préférences → « Exporter mon vault »
+- [x] ZIP contient tous les fichiers Markdown avec la structure de dossiers préservée
+- [x] Génération côté client — aucune donnée transmise à un serveur
 
 ---
 
@@ -923,10 +923,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Alerte déclenchée quand le seuil configuré est atteint (défaut : 4 jours/mois)
-- [ ] Formulation factuelle et non-alarmiste, sans mention de traitement spécifique
-- [ ] Seuil configurable par l'utilisateur depuis les préférences
-- [ ] L'alerte s'affiche une seule fois par période mensuelle
+- [x] Alerte déclenchée quand le seuil configuré est atteint (défaut : 4 jours/mois)
+- [x] Formulation factuelle et non-alarmiste, sans mention de traitement spécifique
+- [x] Seuil configurable par l'utilisateur depuis les préférences
+- [x] L'alerte s'affiche une seule fois par période mensuelle
 
 ---
 
@@ -938,9 +938,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Comptage automatique depuis les fichiers crises du mois en cours
-- [ ] Alerte factuelle : « Vous avez pris X triptans ce mois-ci. Un usage fréquent peut entraîner des céphalées de rebond — à évoquer avec votre médecin. »
-- [ ] Ne se déclenche qu'une fois par palier de 10
+- [x] Comptage automatique depuis les fichiers crises du mois en cours
+- [x] Alerte factuelle : « Vous avez pris X triptans ce mois-ci. Un usage fréquent peut entraîner des céphalées de rebond — à évoquer avec votre médecin. »
+- [x] Ne se déclenche qu'une fois par palier de 10
 
 ---
 
@@ -1027,10 +1027,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Champs : nom, molécule, classe, type, posologie, voie, dates, prescripteur, notes
-- [ ] Classe thérapeutique : Triptan / Anti-CGRP / Gépant / Bêtabloquant / Antiépileptique / AINS / Autre
-- [ ] Date de fin vide si traitement en cours
-- [ ] Fichier Markdown créé dans `traitements/`
+- [x] Champs : nom, molécule, classe, type, posologie, voie, dates, prescripteur, notes
+- [x] Classe thérapeutique : Triptan / Anti-CGRP / Gépant / Bêtabloquant / Antiépileptique / AINS / Autre
+- [x] Date de fin vide si traitement en cours
+- [x] Fichier Markdown créé dans `traitements/`
 
 ---
 
@@ -1042,11 +1042,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Verdict : Efficace / Partiellement efficace / Inefficace / Non évalué
-- [ ] Réduction de fréquence : Aucune / Légère / Modérée / Importante
-- [ ] Tolérance : Bonne / Acceptable / Mauvaise
-- [ ] Commentaire libre
-- [ ] Badge coloré (vert/orange/rouge/gris) dans la vue liste
+- [x] Verdict : Efficace / Partiellement efficace / Inefficace / Non évalué
+- [x] Réduction de fréquence : Aucune / Légère / Modérée / Importante
+- [x] Tolérance : Bonne / Acceptable / Mauvaise
+- [x] Commentaire libre
+- [x] Badge coloré (vert/orange/rouge/gris) dans la vue liste
 
 ---
 
@@ -1058,9 +1058,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Timeline Gantt des périodes de chaque traitement
-- [ ] Fréquence mensuelle des crises superposée sur le même axe temporel
-- [ ] Accessible depuis le dashboard (onglet Traitements)
+- [x] Timeline Gantt des périodes de chaque traitement
+- [x] Fréquence mensuelle des crises superposée sur le même axe temporel
+- [x] Accessible depuis le dashboard (onglet Traitements)
 
 ---
 
@@ -1072,7 +1072,7 @@
 
 **Critères d'acceptation :**
 
-- [ ] Les traitements de crise actifs (date_fin vide + type = crise) s'affichent en chips dans le formulaire
+- [x] Les traitements de crise actifs (date_fin vide + type = crise) s'affichent en chips dans le formulaire
 - [ ] Au survol d'un traitement : posologie enregistrée affichée
 - [ ] Dernier traitement pris pré-sélectionné par défaut
 
@@ -1086,9 +1086,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vue liste avec badge d'efficacité, dates de début/fin, classe
-- [ ] Modification possible de tous les champs
-- [ ] Suppression avec confirmation (même mécanisme corbeille que les crises)
+- [x] Vue liste avec badge d'efficacité, dates de début/fin, classe
+- [x] Modification possible de tous les champs
+- [x] Suppression avec confirmation (même mécanisme corbeille que les crises)
 
 ---
 
@@ -1104,10 +1104,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Analyse déclenchée à chaque ouverture et après chaque nouvelle entrée
-- [ ] Minimum 10 crises requis pour des résultats fiables
-- [ ] Seuil de confiance ≥ 60% et ≥ 5 occurrences avant affichage
-- [ ] Sources analysées : alimentation, stress, sommeil, météo, cycle, transport, sport, charge mentale
+- [x] Analyse déclenchée à chaque ouverture et après chaque nouvelle entrée
+- [x] Minimum 10 crises requis pour des résultats fiables
+- [x] Seuil de confiance ≥ 60% et ≥ 5 occurrences avant affichage
+- [x] Sources analysées : alimentation, stress, sommeil, météo, cycle, transport, sport, charge mentale
 
 ---
 
@@ -1119,10 +1119,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Chaque pattern affiché avec boutons Valider / Rejeter
-- [ ] Statut stocké dans `config/patterns-valides.md`
-- [ ] Seuls les patterns validés alimentent l'indicateur de risque
-- [ ] Les patterns rejetés ne réapparaissent pas sauf si la confiance augmente significativement
+- [x] Chaque pattern affiché avec boutons Valider / Rejeter
+- [x] Statut stocké dans `config/patterns-valides.md`
+- [x] Seuls les patterns validés alimentent l'indicateur de risque
+- [x] Les patterns rejetés ne réapparaissent pas sauf si la confiance augmente significativement
 
 ---
 
@@ -1134,10 +1134,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Trois niveaux : Faible / Modéré / Élevé avec code couleur
-- [ ] Détail au clic : liste des facteurs actifs avec explication
-- [ ] Calculé entièrement en local — aucun appel réseau
-- [ ] Visible en premier sur l'écran d'accueil
+- [x] Trois niveaux : Faible / Modéré / Élevé avec code couleur
+- [x] Détail au clic : liste des facteurs actifs avec explication
+- [x] Calculé entièrement en local — aucun appel réseau
+- [x] Visible en premier sur l'écran d'accueil
 
 ---
 
@@ -1149,9 +1149,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Pattern détecté : charge ≥ 7 pendant ≥ 3 jours, puis chute ≤ 4
-- [ ] Formulation : « 75% de vos crises surviennent dans les 24h suivant une chute de charge > 4 points »
-- [ ] Intégré à l'indicateur de risque du jour
+- [x] Pattern détecté : charge ≥ 7 pendant ≥ 3 jours, puis chute ≤ 4
+- [x] Formulation : « 75% de vos crises surviennent dans les 24h suivant une chute de charge > 4 points »
+- [x] Intégré à l'indicateur de risque du jour
 
 ---
 
@@ -1163,9 +1163,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Combinaisons multi-facteurs analysées (ex : stress élevé + sommeil court)
-- [ ] Formulation : « Stress élevé + moins de 6h de sommeil → crise dans les 48h dans 82% des cas »
-- [ ] Minimum 5 occurrences requis pour chaque combinaison
+- [x] Combinaisons multi-facteurs analysées (ex : stress élevé + sommeil court)
+- [x] Formulation : « Stress élevé + moins de 6h de sommeil → crise dans les 48h dans 82% des cas »
+- [x] Minimum 5 occurrences requis pour chaque combinaison
 
 ---
 
@@ -1177,9 +1177,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Calcul de l'intervalle moyen entre les crises
-- [ ] Affiché dans les patterns : « Une crise survient en moyenne tous les X jours »
-- [ ] Intervalle de confiance affiché (min / moy / max)
+- [x] Calcul de l'intervalle moyen entre les crises
+- [x] Affiché dans les patterns : « Une crise survient en moyenne tous les X jours »
+- [x] Intervalle de confiance affiché (min / moy / max)
 
 ---
 
@@ -1195,12 +1195,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Type de migraine (épisodique, chronique, avec aura, hémiplégique…)
-- [ ] Traitements de fond et de crise en cours (références vers `traitements/`)
-- [ ] Antécédents cardiovasculaires, allergies, contre-indications
-- [ ] Médecin traitant et neurologue (nom, coordonnées)
-- [ ] Contraception en cours
-- [ ] Stocké dans `profil-medical.md`
+- [x] Type de migraine (épisodique, chronique, avec aura, hémiplégique…)
+- [x] Traitements de fond et de crise en cours (références vers `traitements/`)
+- [x] Antécédents cardiovasculaires, allergies, contre-indications
+- [x] Médecin traitant et neurologue (nom, coordonnées)
+- [x] Contraception en cours
+- [x] Stocké dans `profil-medical.md`
 
 ---
 
@@ -1212,9 +1212,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Accès depuis Préférences → Profil médical
-- [ ] Tous les champs éditables
-- [ ] Modification propagée automatiquement aux formulaires de crise (traitements pré-listés)
+- [x] Accès depuis Préférences → Profil médical
+- [x] Tous les champs éditables
+- [x] Modification propagée automatiquement aux formulaires de crise (traitements pré-listés)
 
 ---
 
@@ -1226,9 +1226,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Section « Profil patient » en première page du rapport
-- [ ] Inclut : type de migraine, traitements en cours, antécédents pertinents
-- [ ] Médecin traitant et neurologue mentionnés si renseignés
+- [x] Section « Profil patient » en première page du rapport
+- [x] Inclut : type de migraine, traitements en cours, antécédents pertinents
+- [x] Médecin traitant et neurologue mentionnés si renseignés
 
 ---
 
