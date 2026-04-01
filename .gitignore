@@ -26,3 +26,4 @@ playwright-report/
 
 # PWA dev artifacts
 dev-dist/
+.vite/

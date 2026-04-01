@@ -21,16 +21,16 @@ pnpm dev
 
 ## Scripts
 
-| Commande | Description |
-|---|---|
-| `pnpm dev` | Lance toutes les apps en développement |
-| `pnpm build` | Build de production (toutes les apps) |
-| `pnpm test` | Tests unitaires (Vitest) |
-| `pnpm test:coverage` | Tests avec rapport de couverture |
-| `pnpm test:e2e` | Tests E2E (Playwright + axe-core) |
-| `pnpm lint` | Lint (ESLint) |
-| `pnpm typecheck` | Vérification des types TypeScript |
-| `pnpm format` | Formatage (Prettier) |
+| Commande             | Description                            |
+| -------------------- | -------------------------------------- |
+| `pnpm dev`           | Lance toutes les apps en développement |
+| `pnpm build`         | Build de production (toutes les apps)  |
+| `pnpm test`          | Tests unitaires (Vitest)               |
+| `pnpm test:coverage` | Tests avec rapport de couverture       |
+| `pnpm test:e2e`      | Tests E2E (Playwright + axe-core)      |
+| `pnpm lint`          | Lint (ESLint)                          |
+| `pnpm typecheck`     | Vérification des types TypeScript      |
+| `pnpm format`        | Formatage (Prettier)                   |
 
 ## Structure
 

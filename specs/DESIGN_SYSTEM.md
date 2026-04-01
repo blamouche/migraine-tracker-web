@@ -31,14 +31,14 @@
 
 > **Principe cardinal :** L'utilisateur ne doit jamais avoir à chercher ce qu'il faut faire. Chaque écran a une action principale évidente. La complexité est cachée derrière des valeurs par défaut intelligentes.
 
-| Principe | Application concrète |
-|---|---|
-| **Utilisable en crise** | Mode Crise accessible en moins de 2 taps depuis n'importe quel écran. Fond sombre automatique. Zones tactiles ≥ 64×64px. Aucun scroll. |
-| **Progressive disclosure** | Champs essentiels d'abord, options avancées accessibles via « + Ajouter des détails ». Jamais plus d'un écran de profondeur depuis l'action principale. |
-| **Optimistic UI** | L'interface se met à jour immédiatement, sans attendre la confirmation de l'écriture disque. |
-| **Valeurs par défaut intelligentes** | Heure = maintenant, lieu = dernier lieu utilisé, traitement = dernier pris. Le formulaire est toujours pré-rempli. |
-| **Pas de culpabilisation** | Les messages d'erreur et de rappel ne jugent pas l'utilisateur. Ton neutre, bienveillant, actionnable. |
-| **Clarté > densité** | Un seul objectif par écran. Pas de sidebar encombrée, pas de tableau de bord surchargé. |
+| Principe                             | Application concrète                                                                                                                                    |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Utilisable en crise**              | Mode Crise accessible en moins de 2 taps depuis n'importe quel écran. Fond sombre automatique. Zones tactiles ≥ 64×64px. Aucun scroll.                  |
+| **Progressive disclosure**           | Champs essentiels d'abord, options avancées accessibles via « + Ajouter des détails ». Jamais plus d'un écran de profondeur depuis l'action principale. |
+| **Optimistic UI**                    | L'interface se met à jour immédiatement, sans attendre la confirmation de l'écriture disque.                                                            |
+| **Valeurs par défaut intelligentes** | Heure = maintenant, lieu = dernier lieu utilisé, traitement = dernier pris. Le formulaire est toujours pré-rempli.                                      |
+| **Pas de culpabilisation**           | Les messages d'erreur et de rappel ne jugent pas l'utilisateur. Ton neutre, bienveillant, actionnable.                                                  |
+| **Clarté > densité**                 | Un seul objectif par écran. Pas de sidebar encombrée, pas de tableau de bord surchargé.                                                                 |
 
 ---
 
@@ -46,12 +46,12 @@
 
 L'application supporte trois thèmes. Le choix se fait dans Préférences → Apparence.
 
-| Thème | Déclenchement | Usage principal |
-|---|---|---|
-| **Clair** | Manuel | Consultation de l'historique et des graphiques en journée |
-| **Sombre** | Manuel ou `prefers-color-scheme: dark` (OS) | Usage général en soirée ou environnement peu éclairé |
-| **Automatique** | Suit le réglage de l'OS | Valeur par défaut recommandée |
-| **Mode Crise** | Automatique à l'ouverture du mode Crise | Toujours sombre — surcharge temporaire du thème actif |
+| Thème           | Déclenchement                               | Usage principal                                           |
+| --------------- | ------------------------------------------- | --------------------------------------------------------- |
+| **Clair**       | Manuel                                      | Consultation de l'historique et des graphiques en journée |
+| **Sombre**      | Manuel ou `prefers-color-scheme: dark` (OS) | Usage général en soirée ou environnement peu éclairé      |
+| **Automatique** | Suit le réglage de l'OS                     | Valeur par défaut recommandée                             |
+| **Mode Crise**  | Automatique à l'ouverture du mode Crise     | Toujours sombre — surcharge temporaire du thème actif     |
 
 Le thème est géré via des variables CSS custom (`--color-*`) et une classe sur `<html>` (`data-theme="light"` / `"dark"` / `"crisis"`). Nivo lit ces variables via le `nivoTheme` global (section 9).
 
@@ -63,126 +63,126 @@ Le thème est géré via des variables CSS custom (`--color-*`) et une classe su
 
 ```css
 /* Primitives — ne pas utiliser directement dans les composants */
---primitive-indigo-50:  #EEF2FF;
---primitive-indigo-100: #E0E7FF;
---primitive-indigo-400: #818CF8;
---primitive-indigo-500: #6366F1;
---primitive-indigo-600: #4F46E5;
---primitive-indigo-700: #4338CA;
+--primitive-indigo-50: #eef2ff;
+--primitive-indigo-100: #e0e7ff;
+--primitive-indigo-400: #818cf8;
+--primitive-indigo-500: #6366f1;
+--primitive-indigo-600: #4f46e5;
+--primitive-indigo-700: #4338ca;
 
---primitive-pink-400:   #F472B6;
---primitive-pink-500:   #EC4899;
+--primitive-pink-400: #f472b6;
+--primitive-pink-500: #ec4899;
 
---primitive-slate-50:   #F8FAFC;
---primitive-slate-100:  #F1F5F9;
---primitive-slate-200:  #E2E8F0;
---primitive-slate-400:  #94A3B8;
---primitive-slate-500:  #64748B;
---primitive-slate-600:  #475569;
---primitive-slate-700:  #334155;
---primitive-slate-800:  #1E293B;
---primitive-slate-900:  #0F172A;
---primitive-slate-950:  #020617;
+--primitive-slate-50: #f8fafc;
+--primitive-slate-100: #f1f5f9;
+--primitive-slate-200: #e2e8f0;
+--primitive-slate-400: #94a3b8;
+--primitive-slate-500: #64748b;
+--primitive-slate-600: #475569;
+--primitive-slate-700: #334155;
+--primitive-slate-800: #1e293b;
+--primitive-slate-900: #0f172a;
+--primitive-slate-950: #020617;
 ```
 
 ### 3.2 Tokens sémantiques — Thème clair
 
 ```css
-[data-theme="light"] {
+[data-theme='light'] {
   /* Surfaces */
-  --color-bg-base:         #F8FAFC;   /* fond principal */
-  --color-bg-elevated:     #FFFFFF;   /* cartes, modales */
-  --color-bg-subtle:       #F1F5F9;   /* zones de contenu secondaire */
-  --color-bg-interactive:  #E0E7FF;   /* hover sur éléments interactifs */
+  --color-bg-base: #f8fafc; /* fond principal */
+  --color-bg-elevated: #ffffff; /* cartes, modales */
+  --color-bg-subtle: #f1f5f9; /* zones de contenu secondaire */
+  --color-bg-interactive: #e0e7ff; /* hover sur éléments interactifs */
 
   /* Bordures */
-  --color-border:          #E2E8F0;
-  --color-border-strong:   #94A3B8;
+  --color-border: #e2e8f0;
+  --color-border-strong: #94a3b8;
 
   /* Texte */
-  --color-text-primary:    #0F172A;
-  --color-text-secondary:  #475569;
-  --color-text-muted:      #94A3B8;
-  --color-text-inverse:    #FFFFFF;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #ffffff;
 
   /* Brand */
-  --color-brand:           #6366F1;
-  --color-brand-hover:     #4F46E5;
-  --color-brand-light:     #E0E7FF;
+  --color-brand: #6366f1;
+  --color-brand-hover: #4f46e5;
+  --color-brand-light: #e0e7ff;
 
   /* Statuts */
-  --color-success:         #10B981;
-  --color-success-light:   #D1FAE5;
-  --color-warning:         #F59E0B;
-  --color-warning-light:   #FEF3C7;
-  --color-danger:          #EF4444;
-  --color-danger-light:    #FEE2E2;
+  --color-success: #10b981;
+  --color-success-light: #d1fae5;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fef3c7;
+  --color-danger: #ef4444;
+  --color-danger-light: #fee2e2;
 
   /* Intensité douleur — heatmap */
-  --color-pain-0:          #F1F5F9;   /* aucune */
-  --color-pain-1:          #DBEAFE;
-  --color-pain-3:          #93C5FD;
-  --color-pain-5:          #FBBF24;
-  --color-pain-7:          #F97316;
-  --color-pain-9:          #EF4444;
-  --color-pain-10:         #7F1D1D;
+  --color-pain-0: #f1f5f9; /* aucune */
+  --color-pain-1: #dbeafe;
+  --color-pain-3: #93c5fd;
+  --color-pain-5: #fbbf24;
+  --color-pain-7: #f97316;
+  --color-pain-9: #ef4444;
+  --color-pain-10: #7f1d1d;
 
   /* Crise marqueur sur heatmap */
-  --color-crisis-marker:   #6366F1;
+  --color-crisis-marker: #6366f1;
 }
 ```
 
 ### 3.3 Tokens sémantiques — Thème sombre
 
 ```css
-[data-theme="dark"] {
-  --color-bg-base:         #0F172A;
-  --color-bg-elevated:     #1E293B;
-  --color-bg-subtle:       #334155;
-  --color-bg-interactive:  #4338CA;
+[data-theme='dark'] {
+  --color-bg-base: #0f172a;
+  --color-bg-elevated: #1e293b;
+  --color-bg-subtle: #334155;
+  --color-bg-interactive: #4338ca;
 
-  --color-border:          #334155;
-  --color-border-strong:   #475569;
+  --color-border: #334155;
+  --color-border-strong: #475569;
 
-  --color-text-primary:    #F1F5F9;
-  --color-text-secondary:  #94A3B8;
-  --color-text-muted:      #475569;
-  --color-text-inverse:    #0F172A;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #475569;
+  --color-text-inverse: #0f172a;
 
-  --color-brand:           #818CF8;
-  --color-brand-hover:     #6366F1;
-  --color-brand-light:     #1E1B4B;
+  --color-brand: #818cf8;
+  --color-brand-hover: #6366f1;
+  --color-brand-light: #1e1b4b;
 
-  --color-success:         #34D399;
-  --color-success-light:   #064E3B;
-  --color-warning:         #FBBF24;
-  --color-warning-light:   #451A03;
-  --color-danger:          #F87171;
-  --color-danger-light:    #450A0A;
+  --color-success: #34d399;
+  --color-success-light: #064e3b;
+  --color-warning: #fbbf24;
+  --color-warning-light: #451a03;
+  --color-danger: #f87171;
+  --color-danger-light: #450a0a;
 
-  --color-pain-0:          #1E293B;
-  --color-pain-1:          #1E3A5F;
-  --color-pain-3:          #1D4ED8;
-  --color-pain-5:          #92400E;
-  --color-pain-7:          #9A3412;
-  --color-pain-9:          #7F1D1D;
-  --color-pain-10:         #450A0A;
+  --color-pain-0: #1e293b;
+  --color-pain-1: #1e3a5f;
+  --color-pain-3: #1d4ed8;
+  --color-pain-5: #92400e;
+  --color-pain-7: #9a3412;
+  --color-pain-9: #7f1d1d;
+  --color-pain-10: #450a0a;
 
-  --color-crisis-marker:   #A5B4FC;
+  --color-crisis-marker: #a5b4fc;
 }
 ```
 
 ### 3.4 Mode Crise — surcharge
 
 ```css
-[data-theme="crisis"] {
-  --color-bg-base:         #0F172A;   /* slate-900 — fond maximal */
-  --color-bg-elevated:     #1E293B;
-  --color-text-primary:    #FFFFFF;
-  --color-text-secondary:  #CBD5E1;
-  --color-brand:           #818CF8;
+[data-theme='crisis'] {
+  --color-bg-base: #0f172a; /* slate-900 — fond maximal */
+  --color-bg-elevated: #1e293b;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #cbd5e1;
+  --color-brand: #818cf8;
   /* Toutes les animations désactivées */
-  --transition-speed:      0ms;
+  --transition-speed: 0ms;
 }
 ```
 
@@ -216,17 +216,17 @@ Les profils multi-utilisateurs disposent d'une palette de 8 couleurs d'identific
 
 ### 4.2 Échelle typographique
 
-| Token | Taille | Line-height | Poids | Usage |
-|---|---|---|---|---|
-| `--text-xs` | 12px | 16px | 400 | Labels, badges, metadata |
-| `--text-sm` | 14px | 20px | 400 | Corps secondaire, descriptions |
-| `--text-base` | 16px | 24px | 400 | Corps principal |
-| `--text-lg` | 18px | 28px | 500 | Sous-titres de sections |
-| `--text-xl` | 20px | 28px | 600 | Titres de cartes |
-| `--text-2xl` | 24px | 32px | 600 | Titres de pages |
-| `--text-3xl` | 30px | 36px | 700 | Indicateurs clés du dashboard |
-| `--text-crisis` | 28px | 36px | 700 | Mode Crise — labels principaux |
-| `--text-crisis-value` | 48px | 56px | 800 | Mode Crise — valeur de l'intensité |
+| Token                 | Taille | Line-height | Poids | Usage                              |
+| --------------------- | ------ | ----------- | ----- | ---------------------------------- |
+| `--text-xs`           | 12px   | 16px        | 400   | Labels, badges, metadata           |
+| `--text-sm`           | 14px   | 20px        | 400   | Corps secondaire, descriptions     |
+| `--text-base`         | 16px   | 24px        | 400   | Corps principal                    |
+| `--text-lg`           | 18px   | 28px        | 500   | Sous-titres de sections            |
+| `--text-xl`           | 20px   | 28px        | 600   | Titres de cartes                   |
+| `--text-2xl`          | 24px   | 32px        | 600   | Titres de pages                    |
+| `--text-3xl`          | 30px   | 36px        | 700   | Indicateurs clés du dashboard      |
+| `--text-crisis`       | 28px   | 36px        | 700   | Mode Crise — labels principaux     |
+| `--text-crisis-value` | 48px   | 56px        | 800   | Mode Crise — valeur de l'intensité |
 
 ### 4.3 Mode Crise — taille augmentée
 
@@ -286,16 +286,17 @@ Utilisé pour : intensité douleur (1-10), stress (1-5), sommeil (1-5), charge m
 
 **Spécifications :**
 
-| Propriété | Valeur normale | Valeur Mode Crise |
-|---|---|---|
-| Hauteur de la piste | 8px | 12px |
-| Diamètre du thumb | 28px | 44px |
-| Largeur totale | 100% du conteneur | 100% de l'écran |
-| Zone tactile min | 44×44px | 64×64px |
-| Couleur piste vide | `--color-border` | `--color-border` |
-| Couleur piste remplie | Gradient douleur (vert → orange → rouge) | Idem |
+| Propriété             | Valeur normale                           | Valeur Mode Crise |
+| --------------------- | ---------------------------------------- | ----------------- |
+| Hauteur de la piste   | 8px                                      | 12px              |
+| Diamètre du thumb     | 28px                                     | 44px              |
+| Largeur totale        | 100% du conteneur                        | 100% de l'écran   |
+| Zone tactile min      | 44×44px                                  | 64×64px           |
+| Couleur piste vide    | `--color-border`                         | `--color-border`  |
+| Couleur piste remplie | Gradient douleur (vert → orange → rouge) | Idem              |
 
 **Comportement :**
+
 - Les pastilles numérotées s'affichent sous la piste à intervalle régulier (toutes les valeurs entières)
 - Le tooltip de définition fonctionnelle (ex : « 7 — Sévère ») apparaît au-dessus du thumb en temps réel
 - L'ancre personnelle de l'utilisateur (ex : « Pour vous, 7 = ne peut pas travailler ») s'affiche en sous-texte sous la piste dès qu'une valeur est sélectionnée
@@ -319,13 +320,13 @@ Zone tactile  : ≥ 44px (padding vertical auto-agrandi)
 
 **États :**
 
-| État | Background | Border | Texte |
-|---|---|---|---|
-| Default | `--color-bg-elevated` | `--color-border` | `--color-text-primary` |
-| Hover | `--color-bg-interactive` | `--color-brand` | `--color-brand` |
-| Selected | `--color-brand` | `--color-brand` | `--color-text-inverse` |
-| Custom (✏️) | `--color-bg-subtle` | `--color-border-strong` | `--color-text-secondary` |
-| Disabled | `--color-bg-subtle` | `--color-border` | `--color-text-muted` |
+| État        | Background               | Border                  | Texte                    |
+| ----------- | ------------------------ | ----------------------- | ------------------------ |
+| Default     | `--color-bg-elevated`    | `--color-border`        | `--color-text-primary`   |
+| Hover       | `--color-bg-interactive` | `--color-brand`         | `--color-brand`          |
+| Selected    | `--color-brand`          | `--color-brand`         | `--color-text-inverse`   |
+| Custom (✏️) | `--color-bg-subtle`      | `--color-border-strong` | `--color-text-secondary` |
+| Disabled    | `--color-bg-subtle`      | `--color-border`        | `--color-text-muted`     |
 
 **Mode Crise :** chips en `--radius-xl`, hauteur min 56px, font-size `--text-lg`.
 
@@ -356,30 +357,30 @@ Font-size     : --text-base
 
 **États :**
 
-| État | Border |
-|---|---|
-| Default | `--color-border` |
-| Focus | `--color-brand` (2px) |
-| Error | `--color-danger` (2px) |
+| État     | Border                         |
+| -------- | ------------------------------ |
+| Default  | `--color-border`               |
+| Focus    | `--color-brand` (2px)          |
+| Error    | `--color-danger` (2px)         |
 | Disabled | `--color-border` (opacité 50%) |
 
 ### 6.5 Boutons d'action
 
-| Variante | Usage | Background | Texte |
-|---|---|---|---|
-| Primary | Action principale de la page | `--color-brand` | `--color-text-inverse` |
-| Secondary | Action secondaire | `--color-bg-subtle` | `--color-text-primary` |
-| Danger | Suppression, actions irréversibles | `--color-danger` | `--color-text-inverse` |
-| Ghost | Actions de navigation tertiaires | transparent | `--color-brand` |
+| Variante  | Usage                              | Background          | Texte                  |
+| --------- | ---------------------------------- | ------------------- | ---------------------- |
+| Primary   | Action principale de la page       | `--color-brand`     | `--color-text-inverse` |
+| Secondary | Action secondaire                  | `--color-bg-subtle` | `--color-text-primary` |
+| Danger    | Suppression, actions irréversibles | `--color-danger`    | `--color-text-inverse` |
+| Ghost     | Actions de navigation tertiaires   | transparent         | `--color-brand`        |
 
 **Tailles :**
 
-| Taille | Hauteur | Padding H | Font |
-|---|---|---|---|
-| sm | 32px | 12px | `--text-sm` |
-| md (défaut) | 40px | 16px | `--text-base` |
-| lg | 48px | 24px | `--text-lg` |
-| crisis | 64px | 32px | `--text-crisis` |
+| Taille      | Hauteur | Padding H | Font            |
+| ----------- | ------- | --------- | --------------- |
+| sm          | 32px    | 12px      | `--text-sm`     |
+| md (défaut) | 40px    | 16px      | `--text-base`   |
+| lg          | 48px    | 24px      | `--text-lg`     |
+| crisis      | 64px    | 32px      | `--text-crisis` |
 
 **Bouton « Enregistrer » — Mode Crise :** variante `crisis`, pleine largeur, position fixe en bas de l'écran avec `padding-bottom: env(safe-area-inset-bottom)` pour iPhone.
 
@@ -393,6 +394,7 @@ Font-size     : --text-base
 ### 6.7 Champ « + Ajouter… » (valeur personnalisée)
 
 Dernier élément dans toute liste extensible. À l'activation :
+
 - Un champ texte inline s'ouvre sous la liste (pas de modale)
 - Bouton « Ajouter » et bouton « ✕ » à droite
 - La valeur est sauvegardée dans la saisie ET dans `config/listes-personnalisees.md`
@@ -440,11 +442,11 @@ Chaque entrée affiche : type d'entrée, date, résumé minimal, et les actions 
 
 Widget sur l'écran d'accueil. Trois niveaux visuels :
 
-| Niveau | Couleur | Icône | Libellé |
-|---|---|---|---|
-| Faible | `--color-success` | ✓ | « Conditions favorables » |
-| Modéré | `--color-warning` | ⚠ | « Conditions à surveiller » |
-| Élevé | `--color-danger` | ⚡ | « Risque de crise élevé » |
+| Niveau | Couleur           | Icône | Libellé                     |
+| ------ | ----------------- | ----- | --------------------------- |
+| Faible | `--color-success` | ✓     | « Conditions favorables »   |
+| Modéré | `--color-warning` | ⚠     | « Conditions à surveiller » |
+| Élevé  | `--color-danger`  | ⚡    | « Risque de crise élevé »   |
 
 Détail accessible au clic — liste des facteurs actifs. Pour les utilisateurs Pro avec analyse IA : bouton « Affiner avec l'IA » en dessous.
 
@@ -478,6 +480,7 @@ Accessible via `Cmd/Ctrl + P` ou l'avatar en haut à droite. Affiche tous les pr
 - **Taille navigation :** 24×24px
 
 **Illustrations :**
+
 - Schéma de tête (localisation douleur) : SVG inline simple, stylisé avec les couleurs du design system
 - Types d'aura visuels : illustrations SVG minimalistes (4 types)
 - Écrans vides (empty states) : illustrations légères mono-couleur brand, accompagnées d'un CTA
@@ -491,14 +494,16 @@ Tous les graphiques utilisent un thème global unique qui lit les variables CSS 
 ```javascript
 // nivoTheme.ts — importé dans chaque composant Nivo
 export const nivoTheme = {
-  background:  'transparent',
-  textColor:   'var(--color-text-secondary)',
-  fontSize:    12,
-  fontFamily:  'Inter, system-ui, sans-serif',
+  background: 'transparent',
+  textColor: 'var(--color-text-secondary)',
+  fontSize: 12,
+  fontFamily: 'Inter, system-ui, sans-serif',
   axis: {
     domain: { line: { stroke: 'var(--color-border)', strokeWidth: 1 } },
-    ticks:  { line: { stroke: 'var(--color-border)', strokeWidth: 1 },
-               text: { fill: 'var(--color-text-muted)', fontSize: 11 } },
+    ticks: {
+      line: { stroke: 'var(--color-border)', strokeWidth: 1 },
+      text: { fill: 'var(--color-text-muted)', fontSize: 11 },
+    },
     legend: { text: { fill: 'var(--color-text-secondary)', fontSize: 12 } },
   },
   grid: {
@@ -506,12 +511,12 @@ export const nivoTheme = {
   },
   tooltip: {
     container: {
-      background:   'var(--color-bg-elevated)',
-      border:       '1px solid var(--color-border)',
+      background: 'var(--color-bg-elevated)',
+      border: '1px solid var(--color-border)',
       borderRadius: 8,
-      color:        'var(--color-text-primary)',
-      fontSize:     13,
-      boxShadow:    '0 4px 12px rgba(0,0,0,0.15)',
+      color: 'var(--color-text-primary)',
+      fontSize: 13,
+      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
     },
   },
   legends: {
@@ -525,6 +530,7 @@ export const nivoTheme = {
 Ce graphique combine deux sources de données : le suivi quotidien de la douleur (3.15) et les crises (3.1).
 
 **Rendu par cellule (jour) :**
+
 - **Couleur de fond** : gradient selon `niveau_douleur` (0-10) — tokens `--color-pain-*`
 - **Marqueur de crise** : contour/bordure de 2px `--color-crisis-marker` (indigo) superposé si une crise existe ce jour. En mode hover, tooltip détaille : niveau de douleur + intensité de crise + traitement pris
 - **Jour sans saisie** : `--color-pain-0` (gris neutre)
@@ -533,10 +539,10 @@ Ce graphique combine deux sources de données : le suivi quotidien de la douleur
 ```typescript
 // Exemple de structure de données pour le composant
 type CalendarDay = {
-  day:          string    // 'YYYY-MM-DD'
-  value:        number    // niveau_douleur 0-10 (source: daily-pain ou crise si absent)
-  hasCrisis:    boolean   // true si fichier crises/ existe ce jour
-  crisisIntensity?: number  // intensité de la crise si hasCrisis
+  day: string // 'YYYY-MM-DD'
+  value: number // niveau_douleur 0-10 (source: daily-pain ou crise si absent)
+  hasCrisis: boolean // true si fichier crises/ existe ce jour
+  crisisIntensity?: number // intensité de la crise si hasCrisis
 }
 ```
 
@@ -585,13 +591,13 @@ Le mode Crise est l'écran le plus critique de l'application. Il est conçu pour
 
 ### 10.3 Accessibilité spécifique
 
-| Critère | Valeur |
-|---|---|
-| Zones tactiles minimales | 64×64px (vs 44px standard WCAG) |
-| Contraste texte / fond | ≥ 7:1 (AAA) |
-| Police | 120% de la taille standard (`--text-crisis`) |
-| Animations | 0ms — aucune |
-| Focus visible | Outline 3px `--color-brand`, offset 2px |
+| Critère                  | Valeur                                       |
+| ------------------------ | -------------------------------------------- |
+| Zones tactiles minimales | 64×64px (vs 44px standard WCAG)              |
+| Contraste texte / fond   | ≥ 7:1 (AAA)                                  |
+| Police                   | 120% de la taille standard (`--text-crisis`) |
+| Animations               | 0ms — aucune                                 |
+| Focus visible            | Outline 3px `--color-brand`, offset 2px      |
 
 ---
 
@@ -612,11 +618,11 @@ Taille minimum : 48×48px (standard mobile WCAG) — augmentée à 56px pour les
 
 ### 11.3 Écrans disponibles
 
-| Écran | Champs | Temps cible |
-|---|---|---|
-| Crise rapide | Heure, intensité (curseur), traitement (chips) | < 15 secondes |
-| Douleur quotidienne | Niveau de douleur (curseur) | < 5 secondes |
-| Charge mentale | Niveau (curseur) | < 5 secondes |
+| Écran               | Champs                                         | Temps cible   |
+| ------------------- | ---------------------------------------------- | ------------- |
+| Crise rapide        | Heure, intensité (curseur), traitement (chips) | < 15 secondes |
+| Douleur quotidienne | Niveau de douleur (curseur)                    | < 5 secondes  |
+| Charge mentale      | Niveau (curseur)                               | < 5 secondes  |
 
 Chaque écran est une page unique sans navigation — bouton « Enregistrer » pleine largeur, fixe en bas.
 
@@ -626,18 +632,18 @@ Chaque écran est une page unique sans navigation — bouton « Enregistrer » p
 
 Conformité cible : **WCAG 2.1 niveau AA** sur tous les écrans, vérifiée via axe-core en CI.
 
-| Critère | Implémentation |
-|---|---|
-| Contraste texte/fond | ≥ 4.5:1 (AA) en thème clair et sombre — ≥ 7:1 en mode Crise |
-| Taille zones tactiles | ≥ 44×44px (64×64px en mode Crise) |
-| Focus visible | Outline 2px brand, jamais supprimé sans alternative |
-| Landmarks ARIA | `<main>`, `<nav>`, `<aside>` — pas de `div` soup |
-| Labels formulaires | Tous les inputs ont un `<label>` associé explicitement |
-| Icônes sans texte | `aria-label` obligatoire |
-| Animations | Respecte `prefers-reduced-motion` — toutes les transitions désactivées si actif |
-| Langage | `lang="fr"` sur `<html>` |
-| Erreurs | Messages d'erreur associés aux champs via `aria-describedby` |
-| Tooltips | Accessibles au clavier (focus) et au survol |
+| Critère               | Implémentation                                                                  |
+| --------------------- | ------------------------------------------------------------------------------- |
+| Contraste texte/fond  | ≥ 4.5:1 (AA) en thème clair et sombre — ≥ 7:1 en mode Crise                     |
+| Taille zones tactiles | ≥ 44×44px (64×64px en mode Crise)                                               |
+| Focus visible         | Outline 2px brand, jamais supprimé sans alternative                             |
+| Landmarks ARIA        | `<main>`, `<nav>`, `<aside>` — pas de `div` soup                                |
+| Labels formulaires    | Tous les inputs ont un `<label>` associé explicitement                          |
+| Icônes sans texte     | `aria-label` obligatoire                                                        |
+| Animations            | Respecte `prefers-reduced-motion` — toutes les transitions désactivées si actif |
+| Langage               | `lang="fr"` sur `<html>`                                                        |
+| Erreurs               | Messages d'erreur associés aux champs via `aria-describedby`                    |
+| Tooltips              | Accessibles au clavier (focus) et au survol                                     |
 
 ---
 
@@ -653,18 +659,18 @@ Conformité cible : **WCAG 2.1 niveau AA** sur tous les écrans, vérifiée via 
 
 ### 13.2 Formulations types
 
-| Contexte | Formulation |
-|---|---|
-| Toast post-crise | *« Crise enregistrée — complétez les détails plus tard »* |
-| Rappel post-crise | *« Votre crise de ce matin est enregistrée. Prenez 2 minutes pour compléter les détails ? »* |
-| Alerte fréquence | *« Vous avez atteint 4 jours de migraine ce mois-ci. Cette information peut être utile lors de votre prochaine consultation. »* |
-| Saisie mobile confirmée | *« Crise enregistrée. Elle sera intégrée à votre vault à la prochaine ouverture sur votre ordinateur. »* |
-| Accès hors connexion | *« Vous pouvez utiliser Migraine AI maintenant. Votre compte sera créé à la prochaine connexion internet. »* |
-| Module Pro désactivé | *« Disponible avec le plan Pro »* |
-| Entrée incomplète | *« Cette saisie est incomplète — complétez-la quand vous êtes prêt »* |
-| Confirmation suppression | *« Ce fichier sera déplacé dans la corbeille et supprimé définitivement dans 30 jours »* |
-| Erreur générique auth | *« Email ou mot de passe incorrect »* |
-| Magic link expiré | *« Ce lien de connexion a expiré. Demandez-en un nouveau. »* |
+| Contexte                 | Formulation                                                                                                                     |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Toast post-crise         | _« Crise enregistrée — complétez les détails plus tard »_                                                                       |
+| Rappel post-crise        | _« Votre crise de ce matin est enregistrée. Prenez 2 minutes pour compléter les détails ? »_                                    |
+| Alerte fréquence         | _« Vous avez atteint 4 jours de migraine ce mois-ci. Cette information peut être utile lors de votre prochaine consultation. »_ |
+| Saisie mobile confirmée  | _« Crise enregistrée. Elle sera intégrée à votre vault à la prochaine ouverture sur votre ordinateur. »_                        |
+| Accès hors connexion     | _« Vous pouvez utiliser Migraine AI maintenant. Votre compte sera créé à la prochaine connexion internet. »_                    |
+| Module Pro désactivé     | _« Disponible avec le plan Pro »_                                                                                               |
+| Entrée incomplète        | _« Cette saisie est incomplète — complétez-la quand vous êtes prêt »_                                                           |
+| Confirmation suppression | _« Ce fichier sera déplacé dans la corbeille et supprimé définitivement dans 30 jours »_                                        |
+| Erreur générique auth    | _« Email ou mot de passe incorrect »_                                                                                           |
+| Magic link expiré        | _« Ce lien de connexion a expiré. Demandez-en un nouveau. »_                                                                    |
 
 ### 13.3 Aides contextuelles (tooltips ⓘ)
 

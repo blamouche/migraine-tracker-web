@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -36,6 +37,7 @@ export function LoginPage() {
     error,
     clearError,
   } = useAuthStore()
+  const navigate = useNavigate()
   const setStep = useOnboardingStore((s) => s.setStep)
 
   const magicLinkForm = useForm<EmailForm>({
@@ -84,8 +86,9 @@ export function LoginPage() {
     }
   }
 
-  const handleSkip = async () => {
-    setStep('vault-selection')
+  const handleSkip = () => {
+    setStep('consent')
+    navigate('/onboarding/consent')
   }
 
   return (

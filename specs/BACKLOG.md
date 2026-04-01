@@ -354,12 +354,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Accès au mode Crise en ≤ 2 taps depuis n'importe quel écran
-- [ ] Seuls 3 champs : heure de début (pré-remplie), intensité (curseur), traitement (chips)
-- [ ] Fond sombre automatique à l'ouverture
-- [ ] Aucun scroll nécessaire — tout sur un seul écran
-- [ ] Validation = écriture immédiate dans `crises/YYYY-MM-DD_crise.md` avec `statut: incomplet`
-- [ ] Toast de confirmation 2 secondes puis retour à l'accueil
+- [x] Accès au mode Crise en ≤ 2 taps depuis n'importe quel écran
+- [x] Seuls 3 champs : heure de début (pré-remplie), intensité (curseur), traitement (chips)
+- [x] Fond sombre automatique à l'ouverture
+- [x] Aucun scroll nécessaire — tout sur un seul écran
+- [x] Validation = écriture immédiate dans `crises/YYYY-MM-DD_crise.md` avec `statut: incomplet`
+- [x] Toast de confirmation 2 secondes puis retour à l'accueil
 
 ---
 
@@ -371,11 +371,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Accès depuis la zone d'attention du dashboard, l'historique, ou la notification de rappel
-- [ ] Formulaire pré-rempli avec les données du mode Crise
-- [ ] Champs manquants mis en évidence (bordure + label « À compléter »)
-- [ ] Sauvegarde automatique toutes les 30 secondes
-- [ ] `statut: incomplet` retiré dès que les champs essentiels sont renseignés
+- [x] Accès depuis la zone d'attention du dashboard, l'historique, ou la notification de rappel
+- [x] Formulaire pré-rempli avec les données du mode Crise
+- [x] Champs manquants mis en évidence (bordure + label « À compléter »)
+- [x] Sauvegarde automatique toutes les 30 secondes
+- [x] `statut: incomplet` retiré dès que les champs essentiels sont renseignés
 
 ---
 
@@ -387,9 +387,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Référentiel de définitions fonctionnelles affiché à côté du curseur (1=Imperceptible → 10=Insupportable)
+- [x] Référentiel de définitions fonctionnelles affiché à côté du curseur (1=Imperceptible → 10=Insupportable)
 - [ ] Après 5 crises, l'app propose de définir des ancres personnelles pour 3 paliers clés
-- [ ] L'ancre personnelle est rappelée en sous-texte du curseur à chaque saisie
+- [x] L'ancre personnelle est rappelée en sous-texte du curseur à chaque saisie
 - [ ] Les ancres sont stockées dans `config/preferences.md`
 
 ---
@@ -402,10 +402,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] La durée estimée s'affiche immédiatement sous le curseur d'intensité
-- [ ] Les valeurs de référence par défaut sont utilisées sans historique
-- [ ] Avec historique : estimation personnalisée depuis les crises précédentes
-- [ ] L'utilisateur peut confirmer l'estimation ou saisir l'heure de fin réelle
+- [x] La durée estimée s'affiche immédiatement sous le curseur d'intensité
+- [x] Les valeurs de référence par défaut sont utilisées sans historique
+- [x] Avec historique : estimation personnalisée depuis les crises précédentes
+- [x] L'utilisateur peut confirmer l'estimation ou saisir l'heure de fin réelle
 
 ---
 
@@ -417,10 +417,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Chaque champ de sélection a un élément « + Ajouter… » en bas de liste
-- [ ] Le champ texte s'ouvre inline, sans modale ni navigation
+- [x] Chaque champ de sélection a un élément « + Ajouter… » en bas de liste
+- [x] Le champ texte s'ouvre inline, sans modale ni navigation
 - [ ] La valeur est sauvegardée dans la saisie ET dans `config/listes-personnalisees.md`
-- [ ] La valeur personnalisée est distinguée par un badge ✏️
+- [x] La valeur personnalisée est distinguée par un badge ✏️
 - [ ] Les valeurs sont triées par fréquence d'utilisation
 
 ---
@@ -433,10 +433,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Icône ⓘ à côté de chaque label de champ
-- [ ] Tooltip au clic (mobile) ou au survol (desktop)
-- [ ] Contenu : définition courte du champ + exemple ou conseil
-- [ ] Ne bloque pas le formulaire — dismissable immédiatement
+- [x] Icône ⓘ à côté de chaque label de champ
+- [x] Tooltip au clic (mobile) ou au survol (desktop)
+- [x] Contenu : définition courte du champ + exemple ou conseil
+- [x] Ne bloque pas le formulaire — dismissable immédiatement
 
 ---
 
@@ -448,10 +448,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] 6 questions standardisées affichées une par une
-- [ ] Options : Jamais / Rarement / Parfois / Très souvent / Toujours
-- [ ] Score calculé (36-78) affiché avec son interprétation immédiatement
-- [ ] Champ optionnel — skip possible
+- [x] 6 questions standardisées affichées une par une
+- [x] Options : Jamais / Rarement / Parfois / Très souvent / Toujours
+- [x] Score calculé (36-78) affiché avec son interprétation immédiatement
+- [x] Champ optionnel — skip possible
 
 ---
 
@@ -478,10 +478,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Liste des crises avec date, intensité, durée, statut (complet/incomplet)
-- [ ] Tri par date décroissante par défaut
-- [ ] Filtres : période, intensité, statut
-- [ ] Accès au détail complet d'une crise en lecture
+- [x] Liste des crises avec date, intensité, durée, statut (complet/incomplet)
+- [x] Tri par date décroissante par défaut
+- [x] Filtres : période, intensité, statut
+- [x] Accès au détail complet d'une crise en lecture
 
 ---
 
@@ -493,10 +493,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Formulaire pré-rempli avec les données existantes
-- [ ] Tous les champs sont éditables
-- [ ] La modification recalcule immédiatement les indicateurs du dashboard
-- [ ] Pas de versionnage — la modification écrase le fichier Markdown
+- [x] Formulaire pré-rempli avec les données existantes
+- [x] Tous les champs sont éditables
+- [x] La modification recalcule immédiatement les indicateurs du dashboard
+- [x] Pas de versionnage — la modification écrase le fichier Markdown
 
 ---
 
@@ -508,10 +508,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Confirmation obligatoire avant suppression
-- [ ] Le fichier est déplacé dans `corbeille/` avec `supprime_le` horodaté
-- [ ] La crise disparaît de l'historique et des analytics immédiatement
-- [ ] Message : « Ce fichier sera supprimé définitivement dans 30 jours »
+- [x] Confirmation obligatoire avant suppression
+- [x] Le fichier est déplacé dans `corbeille/` avec `supprime_le` horodaté
+- [x] La crise disparaît de l'historique et des analytics immédiatement
+- [x] Message : « Ce fichier sera supprimé définitivement dans 30 jours »
 
 ---
 
@@ -523,10 +523,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] La purge s'exécute à chaque démarrage de l'application
-- [ ] Seuls les fichiers dont `supprime_le` dépasse 30 jours sont supprimés
-- [ ] Aucune notification pour la purge routine
-- [ ] Si l'app n'est pas ouverte depuis > 30 jours, la purge s'exécute au prochain lancement
+- [x] La purge s'exécute à chaque démarrage de l'application
+- [x] Seuls les fichiers dont `supprime_le` dépasse 30 jours sont supprimés
+- [x] Aucune notification pour la purge routine
+- [x] Si l'app n'est pas ouverte depuis > 30 jours, la purge s'exécute au prochain lancement
 
 ---
 
@@ -538,10 +538,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Section visible uniquement quand il y a des entrées incomplètes
-- [ ] Actions disponibles : Compléter / Ignorer (jusqu'à la prochaine session) / Forcer
-- [ ] Badge numérique sur l'icône de navigation du dashboard
-- [ ] Les entrées avec `completion_forcee: true` sont exclues des analytics sensibles
+- [x] Section visible uniquement quand il y a des entrées incomplètes
+- [x] Actions disponibles : Compléter / Ignorer (jusqu'à la prochaine session) / Forcer
+- [x] Badge numérique sur l'icône de navigation du dashboard
+- [x] Les entrées avec `completion_forcee: true` sont exclues des analytics sensibles
 
 ---
 

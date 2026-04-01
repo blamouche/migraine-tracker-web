@@ -14,12 +14,12 @@ for (const varName of REQUIRED_VARS) {
 }
 
 if (missing.length > 0) {
-  console.error('\n❌ Variables d\'environnement manquantes :\n')
+  console.error("\n❌ Variables d'environnement manquantes :\n")
   for (const varName of missing) {
     console.error(`   - ${varName}`)
   }
   console.error('\n📄 Voir .env.example pour la liste complète.\n')
   process.exit(1)
 } else {
-  console.log('✅ Toutes les variables d\'environnement sont définies.\n')
+  console.log("✅ Toutes les variables d'environnement sont définies.\n")
 }
