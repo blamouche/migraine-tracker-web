@@ -11,6 +11,7 @@ import { CrisisFormPage } from '@/pages/CrisisFormPage'
 import { CrisisHistoryPage } from '@/pages/CrisisHistoryPage'
 import { FoodFormPage } from '@/pages/FoodFormPage'
 import { FoodHistoryPage } from '@/pages/FoodHistoryPage'
+import { DashboardPage } from '@/pages/DashboardPage'
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
       {
         path: '/alimentaire/historique',
         element: <FoodHistoryPage />,
+      },
+      {
+        path: '/dashboard',
+        element: <DashboardPage />,
       },
     ],
   },

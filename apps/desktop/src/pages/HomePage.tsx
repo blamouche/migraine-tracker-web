@@ -29,6 +29,15 @@ export function HomePage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Migraine AI</h1>
           <div className="flex items-center gap-4">
+            {hasCrises && (
+              <button
+                type="button"
+                onClick={() => navigate('/dashboard')}
+                className="text-sm text-(--color-brand) font-medium hover:underline"
+              >
+                Tableau de bord
+              </button>
+            )}
             {hasFood && (
               <button
                 type="button"
