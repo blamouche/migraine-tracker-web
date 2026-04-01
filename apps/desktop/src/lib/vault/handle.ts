@@ -31,7 +31,7 @@ export async function pickVaultFolder(): Promise<FileSystemDirectoryHandle> {
 }
 
 const VAULT_ROOT = 'Migraine AI'
-const VAULT_DIRS = ['crises', 'daily-pain', 'charge-mentale', 'config', 'corbeille']
+const VAULT_DIRS = ['crises', 'daily-pain', 'charge-mentale', 'journal-alimentaire', 'config', 'corbeille']
 
 export async function ensureVaultStructure(
   handle: FileSystemDirectoryHandle,
