@@ -1,16 +1,19 @@
-import { ThemeProvider } from './components/layout/ThemeProvider'
+import { useEffect } from 'react'
+import { RouterProvider } from 'react-router'
+import { ThemeProvider } from '@/components/layout/ThemeProvider'
+import { useAuthStore } from '@/stores/authStore'
+import { router } from '@/router'
 
 export function App() {
+  const initialize = useAuthStore((s) => s.initialize)
+
+  useEffect(() => {
+    initialize()
+  }, [initialize])
+
   return (
     <ThemeProvider>
-      <main className="min-h-screen bg-(--color-bg-base) text-(--color-text-primary)">
-        <div className="mx-auto max-w-[1200px] px-8 py-8">
-          <h1 className="text-2xl font-semibold">Migraine AI</h1>
-          <p className="mt-2 text-(--color-text-secondary)">
-            Bienvenue sur Migraine AI. L&apos;application est en cours de développement.
-          </p>
-        </div>
-      </main>
+      <RouterProvider router={router} />
     </ThemeProvider>
   )
 }
