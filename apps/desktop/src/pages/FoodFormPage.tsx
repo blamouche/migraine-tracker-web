@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { ChipSelector, initDefaultSet } from '@/components/crisis/ChipSelector'
-import { FieldTooltip } from '@/components/crisis/FieldTooltip'
 import { DailyFactorsForm } from '@/components/alimentaire/DailyFactorsForm'
 import {
   DEFAULT_FOODS,

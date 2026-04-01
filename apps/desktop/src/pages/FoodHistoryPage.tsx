@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useFoodStore } from '@/stores/foodStore'
 import { MEAL_TYPE_LABELS, STRESS_LABELS, SLEEP_LABELS } from '@/types/alimentaire'
-import type { FoodEntry, DailyFactors } from '@/types/alimentaire'
+import type { FoodEntry } from '@/types/alimentaire'
 
 type SortOrder = 'date-desc' | 'date-asc'
 type StatusFilter = 'all' | 'complet' | 'incomplet'
