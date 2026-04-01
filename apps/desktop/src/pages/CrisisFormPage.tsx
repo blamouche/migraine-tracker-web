@@ -12,6 +12,7 @@ import {
 } from '@/types/crisis'
 import type { CrisisEntry } from '@/types/crisis'
 import { useCrisisStore } from '@/stores/crisisStore'
+import { useTreatmentStore } from '@/stores/treatmentStore'
 
 initDefaultSet([...DEFAULT_TREATMENTS, ...DEFAULT_SYMPTOMS, ...DEFAULT_TRIGGERS])
 
@@ -42,6 +43,12 @@ export function CrisisFormPage() {
   const navigate = useNavigate()
   const { crisisId } = useParams<{ crisisId: string }>()
   const { crises, updateCrisis, loadCrises } = useCrisisStore()
+  const { treatments: allTreatments, loadTreatments } = useTreatmentStore()
+
+  // Active crisis treatments from E07 (date_fin null + type crise)
+  const activeCrisisTreatments = allTreatments
+    .filter((t) => t.type === 'crise' && !t.dateFin)
+    .map((t) => t.nom)
 
   const [crisis, setCrisis] = useState<CrisisEntry | null>(null)
   const [showHit6, setShowHit6] = useState(false)
@@ -50,17 +57,28 @@ export function CrisisFormPage() {
   const [customSymptoms, setCustomSymptoms] = useState<string[]>([])
   const [customTriggers, setCustomTriggers] = useState<string[]>([])
 
-  const treatmentOptions = [...DEFAULT_TREATMENTS, ...customTreatments]
+  // Merge active crisis treatments with defaults, avoiding duplicates
+  const activeTreatmentNames = new Set(activeCrisisTreatments)
+  const treatmentOptions = [
+    ...activeCrisisTreatments,
+    ...DEFAULT_TREATMENTS.filter((t) => !activeTreatmentNames.has(t)),
+    ...customTreatments,
+  ]
+
+  // Posology tooltips for active treatments (shown on hover)
+  const treatmentTooltips: Record<string, string> = {}
+  for (const t of allTreatments.filter((t) => t.type === 'crise' && !t.dateFin)) {
+    treatmentTooltips[t.nom] = `${t.posologie || t.molecule || t.nom} — ${t.voie}`
+  }
   const symptomOptions = [...DEFAULT_SYMPTOMS, ...customSymptoms]
   const triggerOptions = [...DEFAULT_TRIGGERS, ...customTriggers]
   const autoSaveTimer = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // Load crisis data
+  // Load crisis data and treatments
   useEffect(() => {
-    if (crises.length === 0) {
-      loadCrises()
-    }
-  }, [crises.length, loadCrises])
+    if (crises.length === 0) loadCrises()
+    if (allTreatments.length === 0) loadTreatments()
+  }, [crises.length, loadCrises, allTreatments.length, loadTreatments])
 
   useEffect(() => {
     // Only init local state once — don't overwrite user edits
@@ -182,6 +200,7 @@ export function CrisisFormPage() {
               onChange={(v) => update({ treatments: v })}
               onAddCustom={(v) => setCustomTreatments((prev) => [...prev, v])}
               helpText="Les médicaments ou remèdes utilisés pendant la crise."
+              tooltips={treatmentTooltips}
             />
           </div>
 

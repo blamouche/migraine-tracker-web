@@ -7,6 +7,7 @@ interface ChipSelectorProps {
   onChange: (selected: string[]) => void
   onAddCustom?: (value: string) => void
   helpText?: string
+  tooltips?: Record<string, string>
 }
 
 export function ChipSelector({
@@ -16,6 +17,7 @@ export function ChipSelector({
   onChange,
   onAddCustom,
   helpText,
+  tooltips,
 }: ChipSelectorProps) {
   const [isAdding, setIsAdding] = useState(false)
   const [customValue, setCustomValue] = useState('')
@@ -58,6 +60,7 @@ export function ChipSelector({
               role="checkbox"
               aria-checked={isSelected}
               onClick={() => toggle(option)}
+              title={tooltips?.[option]}
               className={`rounded-(--radius-full) border px-3 py-1.5 text-sm transition-colors ${
                 isSelected
                   ? 'border-(--color-brand) bg-(--color-brand) text-(--color-text-inverse)'

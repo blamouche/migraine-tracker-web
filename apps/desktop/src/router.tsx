@@ -15,6 +15,8 @@ import { DashboardPage } from '@/pages/DashboardPage'
 import { ReportPage } from '@/pages/ReportPage'
 import { ExportPage } from '@/pages/ExportPage'
 import { AlertPreferencesPage } from '@/pages/AlertPreferencesPage'
+import { TreatmentFormPage } from '@/pages/TreatmentFormPage'
+import { TreatmentHistoryPage } from '@/pages/TreatmentHistoryPage'
 
 export const router = createBrowserRouter([
   {
@@ -83,6 +85,18 @@ export const router = createBrowserRouter([
       {
         path: '/alertes',
         element: <AlertPreferencesPage />,
+      },
+      {
+        path: '/traitements/nouveau',
+        element: <TreatmentFormPage />,
+      },
+      {
+        path: '/traitements/:treatmentId/edit',
+        element: <TreatmentFormPage />,
+      },
+      {
+        path: '/traitements/historique',
+        element: <TreatmentHistoryPage />,
       },
     ],
   },
