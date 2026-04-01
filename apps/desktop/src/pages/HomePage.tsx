@@ -6,6 +6,7 @@ import { useFoodStore } from '@/stores/foodStore'
 import { useTreatmentStore } from '@/stores/treatmentStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
 import { AlertBanner } from '@/components/alerts/AlertBanner'
+import { RiskIndicator } from '@/components/patterns/RiskIndicator'
 import { MEAL_TYPE_LABELS } from '@/types/alimentaire'
 
 export function HomePage() {
@@ -74,6 +75,15 @@ export function HomePage() {
             >
               Traitements
             </button>
+            {hasCrises && (
+              <button
+                type="button"
+                onClick={() => navigate('/patterns')}
+                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+              >
+                Patterns
+              </button>
+            )}
             {hasFood && (
               <button
                 type="button"
@@ -111,6 +121,9 @@ export function HomePage() {
               préférences et accéder aux fonctionnalités Pro.
             </div>
           )}
+
+          {/* Risk indicator (E08) — visible en premier */}
+          <RiskIndicator />
 
           {/* Alerts (E06) */}
           <AlertBanner />

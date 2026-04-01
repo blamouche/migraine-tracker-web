@@ -17,6 +17,7 @@ import { ExportPage } from '@/pages/ExportPage'
 import { AlertPreferencesPage } from '@/pages/AlertPreferencesPage'
 import { TreatmentFormPage } from '@/pages/TreatmentFormPage'
 import { TreatmentHistoryPage } from '@/pages/TreatmentHistoryPage'
+import { PatternsPage } from '@/pages/PatternsPage'
 
 export const router = createBrowserRouter([
   {
@@ -97,6 +98,10 @@ export const router = createBrowserRouter([
       {
         path: '/traitements/historique',
         element: <TreatmentHistoryPage />,
+      },
+      {
+        path: '/patterns',
+        element: <PatternsPage />,
       },
     ],
   },
