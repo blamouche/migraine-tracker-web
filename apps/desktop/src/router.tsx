@@ -18,6 +18,7 @@ import { AlertPreferencesPage } from '@/pages/AlertPreferencesPage'
 import { TreatmentFormPage } from '@/pages/TreatmentFormPage'
 import { TreatmentHistoryPage } from '@/pages/TreatmentHistoryPage'
 import { PatternsPage } from '@/pages/PatternsPage'
+import { MedicalProfileFullPage } from '@/pages/MedicalProfileFullPage'
 
 export const router = createBrowserRouter([
   {
@@ -102,6 +103,10 @@ export const router = createBrowserRouter([
       {
         path: '/patterns',
         element: <PatternsPage />,
+      },
+      {
+        path: '/profil-medical',
+        element: <MedicalProfileFullPage />,
       },
     ],
   },

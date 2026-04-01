@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { useOnboardingStore } from '@/stores/onboardingStore'
+import { useMedicalProfileStore } from '@/stores/medicalProfileStore'
+import type { MigraineType } from '@/types/medicalProfile'
 
 interface MedicalProfileForm {
   migraineType: string
@@ -17,9 +19,19 @@ const MIGRAINE_TYPES = [
   'Autre',
 ]
 
+const TYPE_MAP: Record<string, MigraineType> = {
+  'Migraine sans aura': 'sans-aura',
+  'Migraine avec aura': 'avec-aura',
+  'Migraine chronique': 'chronique',
+  'Migraine menstruelle': 'menstruelle',
+  'Migraine vestibulaire': 'vestibulaire',
+  'Autre': 'autre',
+}
+
 export function MedicalProfilePage() {
   const navigate = useNavigate()
   const { markMedicalProfileDone, completeOnboarding } = useOnboardingStore()
+  const { profile, saveProfile } = useMedicalProfileStore()
 
   const { register, handleSubmit } = useForm<MedicalProfileForm>({
     defaultValues: {
@@ -29,8 +41,21 @@ export function MedicalProfilePage() {
     },
   })
 
-  const onSubmit = () => {
-    // TODO: write to vault config/preferences.md when vault writer is implemented
+  const onSubmit = (data: MedicalProfileForm) => {
+    // Save to medical profile store & vault
+    const traitementsCrise = data.crisisTreatment
+      ? data.crisisTreatment.split(',').map((s) => s.trim()).filter(Boolean)
+      : []
+    const traitementsFond = data.preventiveTreatment
+      ? data.preventiveTreatment.split(',').map((s) => s.trim()).filter(Boolean)
+      : []
+    saveProfile({
+      ...profile,
+      migraineType: TYPE_MAP[data.migraineType] ?? 'sans-aura',
+      traitementsCrise,
+      traitementsFond,
+      updatedAt: new Date().toISOString(),
+    })
     markMedicalProfileDone()
     navigate('/', { replace: true })
   }

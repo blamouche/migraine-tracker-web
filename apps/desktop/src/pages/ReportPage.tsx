@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useCrisisStore } from '@/stores/crisisStore'
+import { useMedicalProfileStore } from '@/stores/medicalProfileStore'
 import { generateMedicalReport } from '@/lib/export/pdf'
 
 type PeriodPreset = '1m' | '3m' | '6m' | 'custom'
@@ -40,10 +41,15 @@ function presetToRange(preset: PeriodPreset): { from: string; to: string } {
 export function ReportPage() {
   const navigate = useNavigate()
   const crises = useCrisisStore((s) => s.crises)
+  const { profile, loadProfile } = useMedicalProfileStore()
   const [preset, setPreset] = useState<PeriodPreset>('3m')
   const [customFrom, setCustomFrom] = useState('')
   const [customTo, setCustomTo] = useState('')
   const [generating, setGenerating] = useState(false)
+
+  useEffect(() => {
+    loadProfile()
+  }, [loadProfile])
 
   const range = preset === 'custom' && customFrom && customTo
     ? { from: customFrom, to: customTo }
@@ -54,7 +60,7 @@ export function ReportPage() {
   function handleGenerate() {
     setGenerating(true)
     try {
-      generateMedicalReport({ from: range.from, to: range.to, crises })
+      generateMedicalReport({ from: range.from, to: range.to, crises, medicalProfile: profile })
     } finally {
       setGenerating(false)
     }

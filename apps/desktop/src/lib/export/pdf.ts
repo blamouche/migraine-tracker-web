@@ -1,11 +1,18 @@
 import { jsPDF } from 'jspdf'
 import type { CrisisEntry } from '@/types/crisis'
 import { INTENSITY_LABELS, interpretHit6Score } from '@/types/crisis'
+import type { MedicalProfile } from '@/types/medicalProfile'
+import {
+  MIGRAINE_TYPE_LABELS,
+  CONTRACEPTION_LABELS,
+  DOCTOR_SPECIALITY_LABELS,
+} from '@/types/medicalProfile'
 
 export interface ReportOptions {
   from: string // YYYY-MM-DD
   to: string // YYYY-MM-DD
   crises: CrisisEntry[]
+  medicalProfile: MedicalProfile | undefined
 }
 
 function formatDate(dateStr: string): string {
@@ -23,7 +30,7 @@ function formatDuration(minutes: number): string {
   return m > 0 ? `${h}h ${m}min` : `${h}h`
 }
 
-export function generateMedicalReport({ from, to, crises }: ReportOptions): void {
+export function generateMedicalReport({ from, to, crises, medicalProfile }: ReportOptions): void {
   const filtered = crises
     .filter((c) => c.date >= from && c.date <= to)
     .sort((a, b) => a.date.localeCompare(b.date))
@@ -57,6 +64,50 @@ export function generateMedicalReport({ from, to, crises }: ReportOptions): void
   doc.text('Document généré côté client — aucune donnée transmise à un serveur.', margin, y)
   doc.setTextColor(0)
   y += 10
+
+  // --- Patient profile (US-09-03) ---
+  if (medicalProfile) {
+    doc.setFontSize(14)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Profil patient', margin, y)
+    y += 8
+
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+
+    const profileLines: string[] = []
+    profileLines.push(`Type de migraine : ${MIGRAINE_TYPE_LABELS[medicalProfile.migraineType]}${medicalProfile.migraineTypeAutre ? ` (${medicalProfile.migraineTypeAutre})` : ''}`)
+
+    if (medicalProfile.traitementsCrise.length > 0) {
+      profileLines.push(`Traitements de crise : ${medicalProfile.traitementsCrise.join(', ')}`)
+    }
+    if (medicalProfile.traitementsFond.length > 0) {
+      profileLines.push(`Traitements de fond : ${medicalProfile.traitementsFond.join(', ')}`)
+    }
+    if (medicalProfile.antecedentsCardiovasculaires.length > 0) {
+      profileLines.push(`Antécédents CV : ${medicalProfile.antecedentsCardiovasculaires.join(', ')}`)
+    }
+    if (medicalProfile.allergies.length > 0) {
+      profileLines.push(`Allergies : ${medicalProfile.allergies.join(', ')}`)
+    }
+    if (medicalProfile.contreIndications.length > 0) {
+      profileLines.push(`Contre-indications : ${medicalProfile.contreIndications.join(', ')}`)
+    }
+    if (medicalProfile.contraception !== 'aucune') {
+      profileLines.push(`Contraception : ${CONTRACEPTION_LABELS[medicalProfile.contraception]}`)
+    }
+    for (const doc_ of medicalProfile.medecins) {
+      if (doc_.nom) {
+        profileLines.push(`${DOCTOR_SPECIALITY_LABELS[doc_.specialite]} : ${doc_.nom}${doc_.coordonnees ? ` — ${doc_.coordonnees}` : ''}`)
+      }
+    }
+
+    for (const line of profileLines) {
+      doc.text(`• ${line}`, margin + 2, y)
+      y += 5
+    }
+    y += 5
+  }
 
   // --- Separator ---
   doc.setDrawColor(200)
