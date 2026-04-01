@@ -1,25 +1,21 @@
 import JSZip from 'jszip'
 import { downloadBlobRaw } from './csv'
+import { restoreVaultHandle, ensureVaultStructure } from '@/lib/vault/handle'
+import { useAuthStore } from '@/stores/authStore'
 
 export async function exportVaultZip(): Promise<void> {
-  // Use File System Access API to read vault directory
-  const handle = localStorage.getItem('migraine-ai-vault-handle')
-  if (!handle) {
+  const { user, anonymousId } = useAuthStore.getState()
+  const profileId = user?.id ?? anonymousId ?? 'default'
+
+  const parentHandle = await restoreVaultHandle(profileId)
+  if (!parentHandle) {
     throw new Error("Aucun vault sélectionné. Veuillez d'abord sélectionner un vault dans les préférences.")
   }
 
-  // Try to get the directory handle from the stored reference
-  let dirHandle: FileSystemDirectoryHandle
-
-  if ('showDirectoryPicker' in window) {
-    // Re-request access to vault directory
-    dirHandle = await window.showDirectoryPicker({ mode: 'read' })
-  } else {
-    throw new Error("Votre navigateur ne supporte pas l'accès au système de fichiers.")
-  }
+  const vaultRoot = await ensureVaultStructure(parentHandle)
 
   const zip = new JSZip()
-  await addDirectoryToZip(zip, dirHandle, '')
+  await addDirectoryToZip(zip, vaultRoot, '')
 
   const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' })
   const date = new Date().toISOString().slice(0, 10)
