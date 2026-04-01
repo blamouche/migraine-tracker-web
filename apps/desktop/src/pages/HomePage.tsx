@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useFoodStore } from '@/stores/foodStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
+import { AlertBanner } from '@/components/alerts/AlertBanner'
 import { MEAL_TYPE_LABELS } from '@/types/alimentaire'
 
 export function HomePage() {
@@ -49,6 +50,13 @@ export function HomePage() {
             )}
             <button
               type="button"
+              onClick={() => navigate('/alertes')}
+              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+            >
+              Alertes
+            </button>
+            <button
+              type="button"
               onClick={() => navigate('/export')}
               className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
             >
@@ -91,6 +99,9 @@ export function HomePage() {
               préférences et accéder aux fonctionnalités Pro.
             </div>
           )}
+
+          {/* Alerts (E06) */}
+          <AlertBanner />
 
           {/* Incomplete entries (US-02-13) */}
           <IncompleteEntries

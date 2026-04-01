@@ -6,6 +6,7 @@ import { useCrisisStore } from '@/stores/crisisStore'
 import { useFoodStore } from '@/stores/foodStore'
 import { useDashboardStore } from '@/stores/dashboardStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
+import { AlertBanner } from '@/components/alerts/AlertBanner'
 import { DateRangeSelector } from '@/components/dashboard/DateRangeSelector'
 import { KpiIndicators } from '@/components/dashboard/KpiIndicators'
 import { CalendarHeatmap } from '@/components/dashboard/CalendarHeatmap'
@@ -64,6 +65,11 @@ export function DashboardPage() {
               Accueil
             </button>
           </div>
+        </div>
+
+        {/* Alerts (E06) */}
+        <div className="mt-6">
+          <AlertBanner />
         </div>
 
         {/* Zone d'attention (US-02-13) */}

@@ -14,6 +14,7 @@ import { FoodHistoryPage } from '@/pages/FoodHistoryPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { ReportPage } from '@/pages/ReportPage'
 import { ExportPage } from '@/pages/ExportPage'
+import { AlertPreferencesPage } from '@/pages/AlertPreferencesPage'
 
 export const router = createBrowserRouter([
   {
@@ -78,6 +79,10 @@ export const router = createBrowserRouter([
       {
         path: '/export',
         element: <ExportPage />,
+      },
+      {
+        path: '/alertes',
+        element: <AlertPreferencesPage />,
       },
     ],
   },
