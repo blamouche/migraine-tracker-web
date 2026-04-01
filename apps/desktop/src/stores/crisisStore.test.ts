@@ -65,7 +65,6 @@ describe('crisisStore', () => {
 
     const completed = {
       ...mockCrisis,
-      endTime: '16:30',
       symptoms: ['Nausée'],
     }
 

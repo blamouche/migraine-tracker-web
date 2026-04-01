@@ -285,7 +285,6 @@ export function CrisisFormPage() {
 function getMissingFields(crisis: CrisisEntry): string[] {
   const missing: string[] = []
   if (crisis.symptoms.length === 0) missing.push('Symptômes')
-  if (crisis.endTime === null) missing.push('Heure de fin')
   return missing
 }
 
