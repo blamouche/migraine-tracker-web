@@ -14,7 +14,9 @@ createRoot(root).render(
   <StrictMode>
     <main className="min-h-screen bg-(--color-bg-base) p-8 text-(--color-text-primary)">
       <h1 className="text-2xl font-semibold">Migraine AI — Admin</h1>
-      <p className="mt-2 text-(--color-text-secondary)">Interface d&apos;administration en cours de développement.</p>
+      <p className="mt-2 text-(--color-text-secondary)">
+        Interface d&apos;administration en cours de développement.
+      </p>
     </main>
   </StrictMode>,
 )

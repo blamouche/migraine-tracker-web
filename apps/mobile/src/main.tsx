@@ -14,7 +14,9 @@ createRoot(root).render(
   <StrictMode>
     <main className="min-h-screen bg-(--color-bg-base) p-4 text-(--color-text-primary)">
       <h1 className="text-xl font-semibold">Migraine AI — Mobile</h1>
-      <p className="mt-2 text-(--color-text-secondary)">Interface mobile en cours de développement.</p>
+      <p className="mt-2 text-(--color-text-secondary)">
+        Interface mobile en cours de développement.
+      </p>
     </main>
   </StrictMode>,
 )
