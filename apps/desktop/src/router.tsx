@@ -19,6 +19,14 @@ import { TreatmentFormPage } from '@/pages/TreatmentFormPage'
 import { TreatmentHistoryPage } from '@/pages/TreatmentHistoryPage'
 import { PatternsPage } from '@/pages/PatternsPage'
 import { MedicalProfileFullPage } from '@/pages/MedicalProfileFullPage'
+import { CycleFormPage } from '@/pages/CycleFormPage'
+import { CycleHistoryPage } from '@/pages/CycleHistoryPage'
+import { ConsultationFormPage } from '@/pages/ConsultationFormPage'
+import { ConsultationHistoryPage } from '@/pages/ConsultationHistoryPage'
+import { TransportFormPage } from '@/pages/TransportFormPage'
+import { TransportHistoryPage } from '@/pages/TransportHistoryPage'
+import { SportFormPage } from '@/pages/SportFormPage'
+import { SportHistoryPage } from '@/pages/SportHistoryPage'
 
 export const router = createBrowserRouter([
   {
@@ -107,6 +115,58 @@ export const router = createBrowserRouter([
       {
         path: '/profil-medical',
         element: <MedicalProfileFullPage />,
+      },
+      // E10 — Cycle menstruel
+      {
+        path: '/cycle/nouveau',
+        element: <CycleFormPage />,
+      },
+      {
+        path: '/cycle/:cycleId/edit',
+        element: <CycleFormPage />,
+      },
+      {
+        path: '/cycle/historique',
+        element: <CycleHistoryPage />,
+      },
+      // E11 — Consultations
+      {
+        path: '/consultations/nouveau',
+        element: <ConsultationFormPage />,
+      },
+      {
+        path: '/consultations/:consultationId/edit',
+        element: <ConsultationFormPage />,
+      },
+      {
+        path: '/consultations/historique',
+        element: <ConsultationHistoryPage />,
+      },
+      // E12 — Transports
+      {
+        path: '/transports/nouveau',
+        element: <TransportFormPage />,
+      },
+      {
+        path: '/transports/:transportId/edit',
+        element: <TransportFormPage />,
+      },
+      {
+        path: '/transports/historique',
+        element: <TransportHistoryPage />,
+      },
+      // E13 — Sport
+      {
+        path: '/sport/nouveau',
+        element: <SportFormPage />,
+      },
+      {
+        path: '/sport/:sportId/edit',
+        element: <SportFormPage />,
+      },
+      {
+        path: '/sport/historique',
+        element: <SportHistoryPage />,
       },
     ],
   },

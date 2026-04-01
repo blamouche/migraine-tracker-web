@@ -4,10 +4,18 @@ import { useAuthStore } from '@/stores/authStore'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useFoodStore } from '@/stores/foodStore'
 import { useTreatmentStore } from '@/stores/treatmentStore'
+import { useCycleStore } from '@/stores/cycleStore'
+import { useConsultationStore } from '@/stores/consultationStore'
+import { useTransportStore } from '@/stores/transportStore'
+import { useSportStore } from '@/stores/sportStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
 import { AlertBanner } from '@/components/alerts/AlertBanner'
 import { RiskIndicator } from '@/components/patterns/RiskIndicator'
 import { MEAL_TYPE_LABELS } from '@/types/alimentaire'
+import { CYCLE_PHASE_LABELS } from '@/types/cycle'
+import { CONSULTATION_TYPE_LABELS } from '@/types/consultation'
+import { TRANSPORT_MOYEN_LABELS } from '@/types/transport'
+import { SPORT_TYPE_LABELS } from '@/types/sport'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -15,11 +23,19 @@ export function HomePage() {
   const { crises, loadCrises, purgeOldTrash } = useCrisisStore()
   const { entries: foodEntries, loadEntries: loadFoodEntries } = useFoodStore()
   const { treatments, loadTreatments } = useTreatmentStore()
+  const { entries: cycles, loadCycles } = useCycleStore()
+  const { entries: consultations, loadConsultations } = useConsultationStore()
+  const { entries: transports, loadTransports } = useTransportStore()
+  const { entries: sports, loadSports } = useSportStore()
 
   useEffect(() => {
     if (crises.length === 0) loadCrises()
     if (foodEntries.length === 0) loadFoodEntries()
     if (treatments.length === 0) loadTreatments()
+    if (cycles.length === 0) loadCycles()
+    if (consultations.length === 0) loadConsultations()
+    if (transports.length === 0) loadTransports()
+    if (sports.length === 0) loadSports()
     purgeOldTrash()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -29,6 +45,10 @@ export function HomePage() {
   const hasFood = foodEntries.length > 0
   const hasTreatments = treatments.length > 0
   const activeTreatments = treatments.filter((t) => !t.dateFin)
+  const hasCycles = cycles.length > 0
+  const hasConsultations = consultations.length > 0
+  const hasTransports = transports.length > 0
+  const hasSports = sports.length > 0
 
   return (
     <main className="min-h-screen bg-(--color-bg-base) text-(--color-text-primary)">
@@ -107,6 +127,42 @@ export function HomePage() {
                 className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
               >
                 Historique crises
+              </button>
+            )}
+            {hasCycles && (
+              <button
+                type="button"
+                onClick={() => navigate('/cycle/historique')}
+                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+              >
+                Cycles
+              </button>
+            )}
+            {hasConsultations && (
+              <button
+                type="button"
+                onClick={() => navigate('/consultations/historique')}
+                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+              >
+                Consultations
+              </button>
+            )}
+            {hasTransports && (
+              <button
+                type="button"
+                onClick={() => navigate('/transports/historique')}
+                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+              >
+                Transports
+              </button>
+            )}
+            {hasSports && (
+              <button
+                type="button"
+                onClick={() => navigate('/sport/historique')}
+                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+              >
+                Sport
               </button>
             )}
             {user && (
@@ -332,6 +388,205 @@ export function HomePage() {
               </>
             )}
           </div>
+          {/* Cycle menstruel section (E10) */}
+          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-(--color-text-primary)">
+                Cycle menstruel
+              </h2>
+              {hasCycles && (
+                <button type="button" onClick={() => navigate('/cycle/historique')} className="text-xs text-(--color-brand) hover:underline">
+                  Voir tout
+                </button>
+              )}
+            </div>
+            {!hasCycles ? (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-(--color-text-secondary)">
+                  Suivez votre cycle pour identifier la migraine cataméniale.
+                </p>
+                <button type="button" onClick={() => navigate('/cycle/nouveau')} className="mt-4 rounded-(--radius-md) bg-(--color-brand) px-6 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover)">
+                  Enregistrer mon premier cycle
+                </button>
+              </div>
+            ) : (
+              <>
+                <ul className="mt-3 divide-y divide-(--color-border)">
+                  {cycles.slice(0, 3).map((c) => (
+                    <li key={c.id} className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-(--color-brand-light) text-xs font-bold text-(--color-brand)">
+                          {c.dureeJours}j
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium">{formatDateShort(c.dateDebut)}</p>
+                          <p className="text-xs text-(--color-text-muted)">
+                            {CYCLE_PHASE_LABELS[c.phase]} · Intensité {c.intensiteSymptomes}/5
+                          </p>
+                        </div>
+                      </div>
+                      <button type="button" onClick={() => navigate(`/cycle/${c.id}/edit`)} className="text-xs text-(--color-brand) hover:underline">
+                        Détails
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button type="button" onClick={() => navigate('/cycle/nouveau')} className="mt-3 w-full rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)">
+                  + Nouveau cycle
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Consultations section (E11) */}
+          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-(--color-text-primary)">
+                Consultations médicales
+              </h2>
+              {hasConsultations && (
+                <button type="button" onClick={() => navigate('/consultations/historique')} className="text-xs text-(--color-brand) hover:underline">
+                  Voir tout
+                </button>
+              )}
+            </div>
+            {!hasConsultations ? (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-(--color-text-secondary)">
+                  Consignez vos consultations pour un historique complet de votre parcours de soins.
+                </p>
+                <button type="button" onClick={() => navigate('/consultations/nouveau')} className="mt-4 rounded-(--radius-md) bg-(--color-brand) px-6 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover)">
+                  Enregistrer ma première consultation
+                </button>
+              </div>
+            ) : (
+              <>
+                <ul className="mt-3 divide-y divide-(--color-border)">
+                  {consultations.slice(0, 3).map((c) => (
+                    <li key={c.id} className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-(--color-bg-subtle) text-sm">
+                          {consultationIcon(c.type)}
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium">{c.medecin}</p>
+                          <p className="text-xs text-(--color-text-muted)">
+                            {formatDateShort(c.date)} · {CONSULTATION_TYPE_LABELS[c.type]}
+                          </p>
+                        </div>
+                      </div>
+                      <button type="button" onClick={() => navigate(`/consultations/${c.id}/edit`)} className="text-xs text-(--color-brand) hover:underline">
+                        Détails
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button type="button" onClick={() => navigate('/consultations/nouveau')} className="mt-3 w-full rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)">
+                  + Nouvelle consultation
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Transports section (E12) */}
+          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-(--color-text-primary)">
+                Transports
+              </h2>
+              {hasTransports && (
+                <button type="button" onClick={() => navigate('/transports/historique')} className="text-xs text-(--color-brand) hover:underline">
+                  Voir tout
+                </button>
+              )}
+            </div>
+            {!hasTransports ? (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-(--color-text-secondary)">
+                  Trackez vos déplacements pour identifier si certains transports déclenchent vos migraines.
+                </p>
+                <button type="button" onClick={() => navigate('/transports/nouveau')} className="mt-4 rounded-(--radius-md) bg-(--color-brand) px-6 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover)">
+                  Enregistrer mon premier trajet
+                </button>
+              </div>
+            ) : (
+              <>
+                <ul className="mt-3 divide-y divide-(--color-border)">
+                  {transports.slice(0, 3).map((t) => (
+                    <li key={t.id} className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-(--color-bg-subtle) text-sm">
+                          {transportIconHome(t.moyen)}
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium">{TRANSPORT_MOYEN_LABELS[t.moyen]}</p>
+                          <p className="text-xs text-(--color-text-muted)">
+                            {formatDateShort(t.date)} · {formatDuration(t.dureeMinutes)}
+                          </p>
+                        </div>
+                      </div>
+                      <button type="button" onClick={() => navigate(`/transports/${t.id}/edit`)} className="text-xs text-(--color-brand) hover:underline">
+                        Détails
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button type="button" onClick={() => navigate('/transports/nouveau')} className="mt-3 w-full rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)">
+                  + Nouveau trajet
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Sport section (E13) */}
+          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-(--color-text-primary)">
+                Activités sportives
+              </h2>
+              {hasSports && (
+                <button type="button" onClick={() => navigate('/sport/historique')} className="text-xs text-(--color-brand) hover:underline">
+                  Voir tout
+                </button>
+              )}
+            </div>
+            {!hasSports ? (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-(--color-text-secondary)">
+                  Suivez votre activité physique pour comprendre son impact sur vos migraines.
+                </p>
+                <button type="button" onClick={() => navigate('/sport/nouveau')} className="mt-4 rounded-(--radius-md) bg-(--color-brand) px-6 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover)">
+                  Enregistrer ma première activité
+                </button>
+              </div>
+            ) : (
+              <>
+                <ul className="mt-3 divide-y divide-(--color-border)">
+                  {sports.slice(0, 3).map((s) => (
+                    <li key={s.id} className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-(--color-bg-subtle) text-sm">
+                          {sportIconHome(s.type)}
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium">{SPORT_TYPE_LABELS[s.type]}</p>
+                          <p className="text-xs text-(--color-text-muted)">
+                            {formatDateShort(s.date)} · {formatDuration(s.dureeMinutes)} · Intensité {s.intensite}/5
+                          </p>
+                        </div>
+                      </div>
+                      <button type="button" onClick={() => navigate(`/sport/${s.id}/edit`)} className="text-xs text-(--color-brand) hover:underline">
+                        Détails
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button type="button" onClick={() => navigate('/sport/nouveau')} className="mt-3 w-full rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)">
+                  + Nouvelle activité
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -371,4 +626,49 @@ function mealIcon(type: string): string {
 function formatDateShort(dateStr: string): string {
   const date = new Date(dateStr + 'T00:00:00')
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+}
+
+function formatDuration(minutes: number): string {
+  if (minutes < 60) return `${minutes} min`
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  return m > 0 ? `${h}h ${m}min` : `${h}h`
+}
+
+function consultationIcon(type: string): string {
+  const icons: Record<string, string> = {
+    cabinet: '\ud83c\udfe5',
+    teleconsultation: '\ud83d\udcf1',
+    urgences: '\ud83d\ude91',
+    hospitalisation: '\ud83c\udfe8',
+  }
+  return icons[type] ?? '\ud83c\udfe5'
+}
+
+function transportIconHome(moyen: string): string {
+  const icons: Record<string, string> = {
+    voiture: '\ud83d\ude97',
+    train: '\ud83d\ude84',
+    metro: '\ud83d\ude87',
+    bus: '\ud83d\ude8c',
+    avion: '\u2708\ufe0f',
+    velo: '\ud83d\udeb2',
+    marche: '\ud83d\udeb6',
+    moto: '\ud83c\udfcd\ufe0f',
+    autre: '\ud83d\ude8d',
+  }
+  return icons[moyen] ?? '\ud83d\ude8d'
+}
+
+function sportIconHome(type: string): string {
+  const icons: Record<string, string> = {
+    course: '\ud83c\udfc3',
+    velo: '\ud83d\udeb4',
+    natation: '\ud83c\udfca',
+    yoga: '\ud83e\uddd8',
+    musculation: '\ud83c\udfcb\ufe0f',
+    randonnee: '\u26f0\ufe0f',
+    autre: '\ud83c\udfc5',
+  }
+  return icons[type] ?? '\ud83c\udfc5'
 }
