@@ -84,6 +84,13 @@ export function HomePage() {
                 Patterns
               </button>
             )}
+            <button
+              type="button"
+              onClick={() => navigate('/profil-medical')}
+              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+            >
+              Profil médical
+            </button>
             {hasFood && (
               <button
                 type="button"
