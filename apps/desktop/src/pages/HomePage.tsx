@@ -2,22 +2,26 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useCrisisStore } from '@/stores/crisisStore'
+import { useFoodStore } from '@/stores/foodStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
+import { MEAL_TYPE_LABELS } from '@/types/alimentaire'
 
 export function HomePage() {
   const navigate = useNavigate()
   const { user, isAnonymous, signOut } = useAuthStore()
   const { crises, loadCrises, purgeOldTrash } = useCrisisStore()
+  const { entries: foodEntries, loadEntries: loadFoodEntries } = useFoodStore()
 
   useEffect(() => {
-    if (crises.length === 0) {
-      loadCrises()
-    }
+    if (crises.length === 0) loadCrises()
+    if (foodEntries.length === 0) loadFoodEntries()
     purgeOldTrash()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const recentCrises = crises.slice(0, 5)
   const hasCrises = crises.length > 0
+  const recentFood = foodEntries.slice(0, 5)
+  const hasFood = foodEntries.length > 0
 
   return (
     <main className="min-h-screen bg-(--color-bg-base) text-(--color-text-primary)">
@@ -25,13 +29,22 @@ export function HomePage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Migraine AI</h1>
           <div className="flex items-center gap-4">
+            {hasFood && (
+              <button
+                type="button"
+                onClick={() => navigate('/alimentaire/historique')}
+                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+              >
+                Journal alimentaire
+              </button>
+            )}
             {hasCrises && (
               <button
                 type="button"
                 onClick={() => navigate('/crisis/history')}
                 className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
               >
-                Historique
+                Historique crises
               </button>
             )}
             {user && (
@@ -119,6 +132,77 @@ export function HomePage() {
               </ul>
             </div>
           )}
+
+          {/* Food journal section (E03) */}
+          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-(--color-text-primary)">
+                Journal alimentaire
+              </h2>
+              {hasFood && (
+                <button
+                  type="button"
+                  onClick={() => navigate('/alimentaire/historique')}
+                  className="text-xs text-(--color-brand) hover:underline"
+                >
+                  Voir tout
+                </button>
+              )}
+            </div>
+
+            {!hasFood ? (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-(--color-text-secondary)">
+                  Suivez votre alimentation pour identifier les déclencheurs de vos crises.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => navigate('/alimentaire/nouveau')}
+                  className="mt-4 rounded-(--radius-md) bg-(--color-brand) px-6 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover)"
+                >
+                  Enregistrer mon premier repas
+                </button>
+              </div>
+            ) : (
+              <>
+                <ul className="mt-3 divide-y divide-(--color-border)">
+                  {recentFood.map((entry) => (
+                    <li key={entry.id} className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-(--color-bg-subtle) text-sm">
+                          {mealIcon(entry.mealType)}
+                        </span>
+                        <div>
+                          <p className="text-sm font-medium">
+                            {formatDateShort(entry.date)} — {MEAL_TYPE_LABELS[entry.mealType]}
+                          </p>
+                          <p className="text-xs text-(--color-text-muted)">
+                            {entry.time}
+                            {entry.foods.length > 0 && ` · ${entry.foods[0]}`}
+                            {entry.foods.length > 1 && ` +${entry.foods.length - 1}`}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/alimentaire/${entry.id}/edit`)}
+                        className="text-xs text-(--color-brand) hover:underline"
+                      >
+                        {entry.status === 'incomplet' ? 'Compléter' : 'Détails'}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  onClick={() => navigate('/alimentaire/nouveau')}
+                  className="mt-3 w-full rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)"
+                >
+                  + Ajouter un repas
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -143,6 +227,16 @@ function intensityColor(intensity: number): string {
   if (intensity <= 5) return 'var(--color-pain-5)'
   if (intensity <= 8) return 'var(--color-pain-7)'
   return 'var(--color-pain-9)'
+}
+
+function mealIcon(type: string): string {
+  const icons: Record<string, string> = {
+    'petit-dejeuner': '\u2600\ufe0f',
+    'dejeuner': '\ud83c\udf7d\ufe0f',
+    'diner': '\ud83c\udf19',
+    'collation': '\ud83c\udf4e',
+  }
+  return icons[type] ?? '\ud83c\udf74'
 }
 
 function formatDateShort(dateStr: string): string {

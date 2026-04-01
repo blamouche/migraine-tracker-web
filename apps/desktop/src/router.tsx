@@ -9,6 +9,8 @@ import { HomePage } from '@/pages/HomePage'
 import { CrisisModePage } from '@/pages/CrisisModePage'
 import { CrisisFormPage } from '@/pages/CrisisFormPage'
 import { CrisisHistoryPage } from '@/pages/CrisisHistoryPage'
+import { FoodFormPage } from '@/pages/FoodFormPage'
+import { FoodHistoryPage } from '@/pages/FoodHistoryPage'
 
 export const router = createBrowserRouter([
   {
@@ -49,6 +51,18 @@ export const router = createBrowserRouter([
       {
         path: '/crisis/history',
         element: <CrisisHistoryPage />,
+      },
+      {
+        path: '/alimentaire/nouveau',
+        element: <FoodFormPage />,
+      },
+      {
+        path: '/alimentaire/:foodId/edit',
+        element: <FoodFormPage />,
+      },
+      {
+        path: '/alimentaire/historique',
+        element: <FoodHistoryPage />,
       },
     ],
   },
