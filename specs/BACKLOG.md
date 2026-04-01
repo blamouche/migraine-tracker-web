@@ -59,11 +59,11 @@
 **afin de** partager les types, utilitaires et config entre desktop, mobile et admin sans duplication.
 
 **Critères d'acceptation :**
-- [ ] `pnpm-workspace.yaml` déclare `apps/*` et `packages/*`
-- [ ] `turbo.json` définit les pipelines `build`, `test`, `lint`
-- [ ] Les apps `desktop`, `mobile`, `admin` et le package `shared` sont scaffoldés avec leurs `package.json` respectifs
-- [ ] `pnpm install` depuis la racine installe toutes les dépendances sans erreur
-- [ ] `turbo build` compile toutes les apps depuis la racine
+- [x] `pnpm-workspace.yaml` déclare `apps/*` et `packages/*`
+- [x] `turbo.json` définit les pipelines `build`, `test`, `lint`
+- [x] Les apps `desktop`, `mobile`, `admin` et le package `shared` sont scaffoldés avec leurs `package.json` respectifs
+- [x] `pnpm install` depuis la racine installe toutes les dépendances sans erreur
+- [x] `turbo build` compile toutes les apps depuis la racine
 
 ---
 
@@ -73,10 +73,10 @@
 **afin d'** avoir une base de code cohérente et d'attraper les erreurs de type à la compilation.
 
 **Critères d'acceptation :**
-- [ ] `packages/tsconfig/` exporte `base.json` et `react.json` étendus dans chaque app
-- [ ] `tsconfig.json` de chaque app active `strict: true`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`
-- [ ] `packages/eslint-config/` exporte une config ESLint partagée (React, TypeScript, a11y)
-- [ ] `prettier.config.js` à la racine avec `printWidth: 100`, `singleQuote: true`, `semi: false`
+- [x] `packages/tsconfig/` exporte `base.json` et `react.json` étendus dans chaque app
+- [x] `tsconfig.json` de chaque app active `strict: true`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`
+- [x] `packages/eslint-config/` exporte une config ESLint partagée (React, TypeScript, a11y)
+- [x] `prettier.config.js` à la racine avec `printWidth: 100`, `singleQuote: true`, `semi: false`
 - [ ] `pnpm lint` et `pnpm typecheck` passent sans erreur sur le projet vide
 
 ---
@@ -88,11 +88,11 @@
 
 **Critères d'acceptation :**
 - [ ] Deux projets Supabase créés : `migraine-ai-staging` et `migraine-ai-prod`
-- [ ] Migration initiale appliquée : tables `user_profiles`, `user_usage`, `profile_plans`, `plan_config`, `mobile_transit`, `admin_log`
-- [ ] Seed `plan_config` appliqué (valeurs free/pro définies dans ARCHITECTURE_TECHNIQUE.md §11)
-- [ ] RLS activé sur toutes les tables avec les politiques définies
-- [ ] Variables d'environnement documentées dans `.env.example`
-- [ ] CRON job de purge `mobile_transit` (90 jours) configuré via pg_cron
+- [x] Migration initiale appliquée : tables `user_profiles`, `user_usage`, `profile_plans`, `plan_config`, `mobile_transit`, `admin_log`
+- [x] Seed `plan_config` appliqué (valeurs free/pro définies dans ARCHITECTURE_TECHNIQUE.md §11)
+- [x] RLS activé sur toutes les tables avec les politiques définies
+- [x] Variables d'environnement documentées dans `.env.example`
+- [x] CRON job de purge `mobile_transit` (90 jours) configuré via pg_cron
 
 ---
 
@@ -102,8 +102,8 @@
 **afin que** chaque PR soit validée automatiquement avant merge.
 
 **Critères d'acceptation :**
-- [ ] Workflow `ci.yml` : ESLint → Vitest (coverage ≥ 80 %) → Playwright E2E → axe-core → Vite build
-- [ ] Le workflow échoue et bloque le merge si une violation d'accessibilité est détectée
+- [x] Workflow `ci.yml` : ESLint → Vitest (coverage ≥ 80 %) → Playwright E2E → axe-core → Vite build
+- [x] Le workflow échoue et bloque le merge si une violation d'accessibilité est détectée
 - [ ] Les secrets Supabase et Netlify sont configurés dans GitHub Actions Secrets
 - [ ] Durée totale du pipeline < 10 min sur un projet vide
 - [ ] Badge CI visible dans le README
@@ -119,8 +119,8 @@
 - [ ] Site Netlify `migraine-ai-staging` déploie automatiquement à chaque PR avec une URL unique
 - [ ] Site Netlify `migraine-ai-prod` déploie uniquement sur merge vers `main`
 - [ ] Variables d'environnement Netlify configurées (Supabase URL, anon key, etc.)
-- [ ] Headers de sécurité configurés dans `netlify.toml` (CSP, HSTS, X-Frame-Options)
-- [ ] Redirect `/* → /index.html` configuré pour le routing SPA
+- [x] Headers de sécurité configurés dans `netlify.toml` (CSP, HSTS, X-Frame-Options)
+- [x] Redirect `/* → /index.html` configuré pour le routing SPA
 
 ---
 
@@ -145,9 +145,9 @@
 **afin que** l'application soit installable et fonctionne en mode hors-ligne.
 
 **Critères d'acceptation :**
-- [ ] `manifest.webmanifest` : `name`, `short_name`, `icons` (192 + 512px), `display: standalone`, `theme_color`
-- [ ] `vite-plugin-pwa` configuré avec stratégie `NetworkFirst` pour Open-Meteo et Photon
-- [ ] Stratégie `CacheFirst` pour les assets statiques (JS, CSS, polices)
+- [x] `manifest.webmanifest` : `name`, `short_name`, `icons` (192 + 512px), `display: standalone`, `theme_color`
+- [x] `vite-plugin-pwa` configuré avec stratégie `NetworkFirst` pour Open-Meteo et Photon
+- [x] Stratégie `CacheFirst` pour les assets statiques (JS, CSS, polices)
 - [ ] L'app passe le test "Installable" dans Lighthouse
 - [ ] Un prompt d'installation personnalisé s'affiche après la 2e visite
 - [ ] En mode offline, une page de fallback s'affiche si le réseau est requis
@@ -160,12 +160,12 @@
 **afin que** les custom properties CSS et les classes utilitaires soient disponibles dès le premier composant.
 
 **Critères d'acceptation :**
-- [ ] Tailwind v4 installé et configuré dans `packages/shared/src/styles/`
-- [ ] CSS custom properties `--color-*`, `--font-*`, `--radius-*` définies dans `globals.css`
-- [ ] Thèmes `[data-theme="light"]`, `[data-theme="dark"]` et `[data-theme="crisis"]` opérationnels
-- [ ] Le `nivoTheme` exporté depuis `packages/shared/src/charts/nivoTheme.ts` lit les custom properties
-- [ ] Polices Inter chargées via `@fontsource/inter` (subsets latin uniquement)
-- [ ] Un composant `ThemeProvider` applique le thème en fonction des préférences système et du store
+- [x] Tailwind v4 installé et configuré dans `packages/shared/src/styles/`
+- [x] CSS custom properties `--color-*`, `--font-*`, `--radius-*` définies dans `globals.css`
+- [x] Thèmes `[data-theme="light"]`, `[data-theme="dark"]` et `[data-theme="crisis"]` opérationnels
+- [x] Le `nivoTheme` exporté depuis `packages/shared/src/charts/nivoTheme.ts` lit les custom properties
+- [x] Polices Inter chargées via `@fontsource/inter` (subsets latin uniquement)
+- [x] Un composant `ThemeProvider` applique le thème en fonction des préférences système et du store
 
 ---
 
@@ -175,12 +175,12 @@
 **afin de** pouvoir écrire et lancer des tests dès la première feature.
 
 **Critères d'acceptation :**
-- [ ] `vitest.config.ts` configuré avec `jsdom`, coverage via `@vitest/coverage-v8`
-- [ ] `@testing-library/react` + `@testing-library/user-event` installés et un test smoke passe
-- [ ] `playwright.config.ts` configuré pour Chromium uniquement, base URL = `localhost:5173`
-- [ ] `@axe-core/playwright` intégré : chaque test E2E inclut un check `checkA11y()`
-- [ ] Commandes `pnpm test`, `pnpm test:e2e`, `pnpm test:coverage` fonctionnelles depuis la racine
-- [ ] Rapport de coverage généré en HTML dans `coverage/`
+- [x] `vitest.config.ts` configuré avec `jsdom`, coverage via `@vitest/coverage-v8`
+- [x] `@testing-library/react` + `@testing-library/user-event` installés et un test smoke passe
+- [x] `playwright.config.ts` configuré pour Chromium uniquement, base URL = `localhost:5173`
+- [x] `@axe-core/playwright` intégré : chaque test E2E inclut un check `checkA11y()`
+- [x] Commandes `pnpm test`, `pnpm test:e2e`, `pnpm test:coverage` fonctionnelles depuis la racine
+- [x] Rapport de coverage généré en HTML dans `coverage/`
 
 ---
 
@@ -190,12 +190,12 @@
 **afin de** ne jamais exposer de clés sensibles dans le code source ou les logs.
 
 **Critères d'acceptation :**
-- [ ] `.env.example` documenté avec toutes les variables requises et leur description
-- [ ] `.env` et `.env.local` ajoutés au `.gitignore`
-- [ ] La clé `ANTHROPIC_API_KEY` n'est accessible que côté Supabase Edge Function (jamais dans le bundle client)
-- [ ] Un script `scripts/check-env.ts` vérifie la présence de toutes les variables au démarrage en développement
+- [x] `.env.example` documenté avec toutes les variables requises et leur description
+- [x] `.env` et `.env.local` ajoutés au `.gitignore`
+- [x] La clé `ANTHROPIC_API_KEY` n'est accessible que côté Supabase Edge Function (jamais dans le bundle client)
+- [x] Un script `scripts/check-env.ts` vérifie la présence de toutes les variables au démarrage en développement
 - [ ] La Supabase Edge Function `claude-proxy` est déployée avec ses secrets via `supabase secrets set`
-- [ ] Documentation dans le README : setup local en < 5 commandes
+- [x] Documentation dans le README : setup local en < 5 commandes
 
 ---
 
