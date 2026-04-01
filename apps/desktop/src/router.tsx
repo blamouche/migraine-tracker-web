@@ -6,6 +6,9 @@ import { ConsentPage } from '@/pages/ConsentPage'
 import { VaultSelectionPage } from '@/pages/VaultSelectionPage'
 import { MedicalProfilePage } from '@/pages/MedicalProfilePage'
 import { HomePage } from '@/pages/HomePage'
+import { CrisisModePage } from '@/pages/CrisisModePage'
+import { CrisisFormPage } from '@/pages/CrisisFormPage'
+import { CrisisHistoryPage } from '@/pages/CrisisHistoryPage'
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +37,18 @@ export const router = createBrowserRouter([
       {
         path: '/',
         element: <HomePage />,
+      },
+      {
+        path: '/crisis/quick',
+        element: <CrisisModePage />,
+      },
+      {
+        path: '/crisis/:crisisId/edit',
+        element: <CrisisFormPage />,
+      },
+      {
+        path: '/crisis/history',
+        element: <CrisisHistoryPage />,
       },
     ],
   },

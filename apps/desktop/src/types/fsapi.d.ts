@@ -1,5 +1,7 @@
 interface FileSystemDirectoryHandle {
   requestPermission(descriptor?: { mode?: 'read' | 'readwrite' }): Promise<PermissionState>
+  entries(): AsyncIterableIterator<[string, FileSystemHandle]>
+  removeEntry(name: string, options?: { recursive?: boolean }): Promise<void>
 }
 
 interface Window {
