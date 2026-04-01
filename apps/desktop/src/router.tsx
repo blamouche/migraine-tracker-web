@@ -12,6 +12,8 @@ import { CrisisHistoryPage } from '@/pages/CrisisHistoryPage'
 import { FoodFormPage } from '@/pages/FoodFormPage'
 import { FoodHistoryPage } from '@/pages/FoodHistoryPage'
 import { DashboardPage } from '@/pages/DashboardPage'
+import { ReportPage } from '@/pages/ReportPage'
+import { ExportPage } from '@/pages/ExportPage'
 
 export const router = createBrowserRouter([
   {
@@ -68,6 +70,14 @@ export const router = createBrowserRouter([
       {
         path: '/dashboard',
         element: <DashboardPage />,
+      },
+      {
+        path: '/rapport',
+        element: <ReportPage />,
+      },
+      {
+        path: '/export',
+        element: <ExportPage />,
       },
     ],
   },
