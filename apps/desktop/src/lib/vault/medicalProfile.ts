@@ -58,7 +58,7 @@ function markdownToProfile(content: string): MedicalProfile {
 
   const fm = fmMatch[1]!
   const get = (key: string): string => {
-    const match = fm.match(new RegExp(`^${key}:\\s*(.*)$`, 'm'))
+    const match = fm.match(new RegExp(`^${key}: *(.*)$`, 'm'))
     return match?.[1]?.trim() ?? ''
   }
   const getArray = (key: string): string[] => {
