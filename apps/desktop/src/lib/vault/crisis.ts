@@ -1,8 +1,10 @@
 import type { CrisisEntry } from '@/types/crisis'
 import { restoreVaultHandle, ensureVaultStructure } from './handle'
+import { useAuthStore } from '@/stores/authStore'
 
 async function getVaultRoot(): Promise<FileSystemDirectoryHandle | null> {
-  const profileId = localStorage.getItem('migraine-ai-active-profile') ?? 'default'
+  const { user, anonymousId } = useAuthStore.getState()
+  const profileId = user?.id ?? anonymousId ?? 'default'
   const parentHandle = await restoreVaultHandle(profileId)
   if (!parentHandle) return null
   return ensureVaultStructure(parentHandle)
