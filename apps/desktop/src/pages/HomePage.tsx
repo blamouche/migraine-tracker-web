@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useFoodStore } from '@/stores/foodStore'
+import { useTreatmentStore } from '@/stores/treatmentStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
 import { AlertBanner } from '@/components/alerts/AlertBanner'
 import { MEAL_TYPE_LABELS } from '@/types/alimentaire'
@@ -12,10 +13,12 @@ export function HomePage() {
   const { user, isAnonymous, signOut } = useAuthStore()
   const { crises, loadCrises, purgeOldTrash } = useCrisisStore()
   const { entries: foodEntries, loadEntries: loadFoodEntries } = useFoodStore()
+  const { treatments, loadTreatments } = useTreatmentStore()
 
   useEffect(() => {
     if (crises.length === 0) loadCrises()
     if (foodEntries.length === 0) loadFoodEntries()
+    if (treatments.length === 0) loadTreatments()
     purgeOldTrash()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -23,6 +26,8 @@ export function HomePage() {
   const hasCrises = crises.length > 0
   const recentFood = foodEntries.slice(0, 5)
   const hasFood = foodEntries.length > 0
+  const hasTreatments = treatments.length > 0
+  const activeTreatments = treatments.filter((t) => !t.dateFin)
 
   return (
     <main className="min-h-screen bg-(--color-bg-base) text-(--color-text-primary)">
@@ -61,6 +66,13 @@ export function HomePage() {
               className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
             >
               Exporter
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/traitements/historique')}
+              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+            >
+              Traitements
             </button>
             {hasFood && (
               <button
@@ -235,6 +247,67 @@ export function HomePage() {
                   className="mt-3 w-full rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)"
                 >
                   + Ajouter un repas
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Treatments section (E07) */}
+          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-(--color-text-primary)">
+                Traitements
+              </h2>
+              {hasTreatments && (
+                <button
+                  type="button"
+                  onClick={() => navigate('/traitements/historique')}
+                  className="text-xs text-(--color-brand) hover:underline"
+                >
+                  Voir tout
+                </button>
+              )}
+            </div>
+
+            {!hasTreatments ? (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-(--color-text-secondary)">
+                  Enregistrez vos traitements pour suivre leur efficacité dans le temps.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => navigate('/traitements/nouveau')}
+                  className="mt-4 rounded-(--radius-md) bg-(--color-brand) px-6 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover)"
+                >
+                  Ajouter un traitement
+                </button>
+              </div>
+            ) : (
+              <>
+                {activeTreatments.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-xs text-(--color-text-muted) mb-2">Traitements actifs</p>
+                    <div className="flex flex-wrap gap-2">
+                      {activeTreatments.map((t) => (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => navigate(`/traitements/${t.id}/edit`)}
+                          className="rounded-(--radius-full) border border-(--color-brand) bg-(--color-brand-light) px-3 py-1.5 text-sm text-(--color-brand) hover:bg-(--color-brand) hover:text-(--color-text-inverse) transition-colors"
+                          title={`${t.posologie} — ${t.molecule}`}
+                        >
+                          {t.nom}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={() => navigate('/traitements/nouveau')}
+                  className="mt-3 w-full rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)"
+                >
+                  + Ajouter un traitement
                 </button>
               </>
             )}

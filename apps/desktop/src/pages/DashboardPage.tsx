@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { MotionConfigProvider } from '@nivo/core'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useFoodStore } from '@/stores/foodStore'
+import { useTreatmentStore } from '@/stores/treatmentStore'
 import { useDashboardStore } from '@/stores/dashboardStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
 import { AlertBanner } from '@/components/alerts/AlertBanner'
@@ -13,6 +14,7 @@ import { CalendarHeatmap } from '@/components/dashboard/CalendarHeatmap'
 import { CrisisFrequencyChart } from '@/components/dashboard/CrisisFrequencyChart'
 import { IntensityEvolutionChart } from '@/components/dashboard/IntensityEvolutionChart'
 import { TreatmentEfficacyChart } from '@/components/dashboard/TreatmentEfficacyChart'
+import { TreatmentTimelineChart } from '@/components/dashboard/TreatmentTimelineChart'
 import type { DashboardTab } from '@/types/dashboard'
 
 const TABS: { id: DashboardTab; label: string }[] = [
@@ -26,11 +28,13 @@ export function DashboardPage() {
   const navigate = useNavigate()
   const { crises, loadCrises } = useCrisisStore()
   const { entries: foodEntries, loadEntries: loadFoodEntries } = useFoodStore()
+  const { treatments, loadTreatments } = useTreatmentStore()
   const { activeTab, setActiveTab } = useDashboardStore()
 
   useEffect(() => {
     if (crises.length === 0) loadCrises()
     if (foodEntries.length === 0) loadFoodEntries()
+    if (treatments.length === 0) loadTreatments()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const incompleteCrises = crises.filter((c) => c.status === 'incomplet')
@@ -177,9 +181,15 @@ function MeteoTab() {
 
 function TraitementsTab() {
   return (
-    <ChartSection title="Utilisation des traitements" chartId="treatments">
-      <TreatmentEfficacyChart />
-    </ChartSection>
+    <>
+      <ChartSection title="Timeline des traitements" chartId="treatments">
+        <TreatmentTimelineChart />
+      </ChartSection>
+
+      <ChartSection title="Utilisation des traitements de crise" chartId="treatments-efficacy">
+        <TreatmentEfficacyChart />
+      </ChartSection>
+    </>
   )
 }
 
