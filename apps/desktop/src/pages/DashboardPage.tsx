@@ -41,13 +41,29 @@ export function DashboardPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Tableau de bord</h1>
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-          >
-            Accueil
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => navigate('/export')}
+              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+            >
+              Exporter
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/rapport')}
+              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+            >
+              Rapport PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+            >
+              Accueil
+            </button>
+          </div>
         </div>
 
         {/* Zone d'attention (US-02-13) */}

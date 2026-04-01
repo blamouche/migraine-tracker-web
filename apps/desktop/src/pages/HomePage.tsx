@@ -38,6 +38,22 @@ export function HomePage() {
                 Tableau de bord
               </button>
             )}
+            {hasCrises && (
+              <button
+                type="button"
+                onClick={() => navigate('/rapport')}
+                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+              >
+                Rapport
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => navigate('/export')}
+              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
+            >
+              Exporter
+            </button>
             {hasFood && (
               <button
                 type="button"
