@@ -46,7 +46,7 @@ export function AuthCallbackPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-(--color-bg-base) px-4">
+      <main className="flex min-h-screen items-center justify-center bg-(--color-bg-base) px-4">
         <div className="w-full max-w-[400px] rounded-(--radius-xl) bg-(--color-bg-elevated) p-8 text-center shadow-lg">
           <div className="mb-4 rounded-(--radius-md) bg-(--color-danger-light) px-4 py-3 text-sm text-(--color-danger)">
             {error}
@@ -59,13 +59,13 @@ export function AuthCallbackPage() {
             Retour à la connexion
           </button>
         </div>
-      </div>
+      </main>
     )
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-(--color-bg-base)">
+    <main className="flex min-h-screen items-center justify-center bg-(--color-bg-base)">
       <p className="text-sm text-(--color-text-secondary)">Connexion en cours...</p>
-    </div>
+    </main>
   )
 }

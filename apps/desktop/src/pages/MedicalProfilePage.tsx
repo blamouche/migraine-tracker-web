@@ -41,7 +41,7 @@ export function MedicalProfilePage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-(--color-bg-base) px-4">
+    <main className="flex min-h-screen items-center justify-center bg-(--color-bg-base) px-4">
       <div className="w-full max-w-[480px] rounded-(--radius-xl) bg-(--color-bg-elevated) p-8 shadow-lg">
         <h1 className="text-xl font-bold text-(--color-text-primary)">Profil médical rapide</h1>
         <p className="mt-2 text-sm text-(--color-text-secondary)">
@@ -126,6 +126,6 @@ export function MedicalProfilePage() {
           </p>
         </form>
       </div>
-    </div>
+    </main>
   )
 }

@@ -89,7 +89,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-(--color-bg-base) px-4">
+    <main className="flex min-h-screen items-center justify-center bg-(--color-bg-base) px-4">
       <div className="w-full max-w-[400px] rounded-(--radius-xl) bg-(--color-bg-elevated) p-8 shadow-lg">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-(--color-text-primary)">Migraine AI</h1>
@@ -366,7 +366,7 @@ export function LoginPage() {
           </p>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
 
