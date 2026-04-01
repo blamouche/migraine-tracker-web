@@ -28,7 +28,6 @@ function today(): string {
 function isComplete(crisis: CrisisEntry): boolean {
   return (
     crisis.intensity > 0 &&
-    crisis.treatments.length > 0 &&
     crisis.symptoms.length > 0
   )
 }
