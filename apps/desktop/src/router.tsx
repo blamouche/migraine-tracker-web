@@ -19,6 +19,13 @@ import { TreatmentFormPage } from '@/pages/TreatmentFormPage'
 import { TreatmentHistoryPage } from '@/pages/TreatmentHistoryPage'
 import { PatternsPage } from '@/pages/PatternsPage'
 import { MedicalProfileFullPage } from '@/pages/MedicalProfileFullPage'
+import { ChargeMentaleFormPage } from '@/pages/ChargeMentaleFormPage'
+import { ChargeMentaleHistoryPage } from '@/pages/ChargeMentaleHistoryPage'
+import { EvenementVieFormPage } from '@/pages/EvenementVieFormPage'
+import { DailyPainFormPage } from '@/pages/DailyPainFormPage'
+import { DailyPainHistoryPage } from '@/pages/DailyPainHistoryPage'
+import { ProfileManagerPage } from '@/pages/ProfileManagerPage'
+import { EnvironnementSettingsPage } from '@/pages/EnvironnementSettingsPage'
 import { CycleFormPage } from '@/pages/CycleFormPage'
 import { CycleHistoryPage } from '@/pages/CycleHistoryPage'
 import { ConsultationFormPage } from '@/pages/ConsultationFormPage'
@@ -167,6 +174,50 @@ export const router = createBrowserRouter([
       {
         path: '/sport/historique',
         element: <SportHistoryPage />,
+      },
+      // E15 — Charge mentale
+      {
+        path: '/charge-mentale/nouveau',
+        element: <ChargeMentaleFormPage />,
+      },
+      {
+        path: '/charge-mentale/:chargeId/edit',
+        element: <ChargeMentaleFormPage />,
+      },
+      {
+        path: '/charge-mentale/historique',
+        element: <ChargeMentaleHistoryPage />,
+      },
+      {
+        path: '/evenement/nouveau',
+        element: <EvenementVieFormPage />,
+      },
+      {
+        path: '/evenement/:evenementId/edit',
+        element: <EvenementVieFormPage />,
+      },
+      // E16 — Douleur quotidienne
+      {
+        path: '/douleur/nouveau',
+        element: <DailyPainFormPage />,
+      },
+      {
+        path: '/douleur/:painId/edit',
+        element: <DailyPainFormPage />,
+      },
+      {
+        path: '/douleur/historique',
+        element: <DailyPainHistoryPage />,
+      },
+      // E17 — Multi-profil
+      {
+        path: '/profils',
+        element: <ProfileManagerPage />,
+      },
+      // E18 — Environnement
+      {
+        path: '/environnement',
+        element: <EnvironnementSettingsPage />,
       },
     ],
   },
