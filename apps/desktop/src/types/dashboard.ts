@@ -1,4 +1,4 @@
-export type DateRangePreset = '7d' | '1m' | '3m' | '6m' | '1y' | 'all'
+export type DateRangePreset = '7d' | '1m' | '3m' | '6m' | '1y' | 'ytd' | 'all'
 
 export interface DateRange {
   from: string // YYYY-MM-DD

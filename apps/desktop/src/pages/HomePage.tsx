@@ -10,6 +10,7 @@ import { useTransportStore } from '@/stores/transportStore'
 import { useSportStore } from '@/stores/sportStore'
 import { useChargeMentaleStore } from '@/stores/chargeMentaleStore'
 import { useDailyPainStore } from '@/stores/dailyPainStore'
+import { useEnvironnementStore } from '@/stores/environnementStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
 import { AlertBanner } from '@/components/alerts/AlertBanner'
 import { RiskIndicator } from '@/components/patterns/RiskIndicator'
@@ -33,18 +34,26 @@ export function HomePage() {
   const { entries: sports, loadSports } = useSportStore()
   const { entries: charges, loadCharges } = useChargeMentaleStore()
   const { entries: pains, loadPains } = useDailyPainStore()
+  const { loadEnvironnements, backfillWeather } = useEnvironnementStore()
 
   useEffect(() => {
-    if (crises.length === 0) loadCrises()
-    if (foodEntries.length === 0) loadFoodEntries()
-    if (treatments.length === 0) loadTreatments()
-    if (cycles.length === 0) loadCycles()
-    if (consultations.length === 0) loadConsultations()
-    if (transports.length === 0) loadTransports()
-    if (sports.length === 0) loadSports()
-    if (charges.length === 0) loadCharges()
-    if (pains.length === 0) loadPains()
-    purgeOldTrash()
+    async function init() {
+      await Promise.all([
+        crises.length === 0 ? loadCrises() : Promise.resolve(),
+        foodEntries.length === 0 ? loadFoodEntries() : Promise.resolve(),
+        treatments.length === 0 ? loadTreatments() : Promise.resolve(),
+        cycles.length === 0 ? loadCycles() : Promise.resolve(),
+        consultations.length === 0 ? loadConsultations() : Promise.resolve(),
+        transports.length === 0 ? loadTransports() : Promise.resolve(),
+        sports.length === 0 ? loadSports() : Promise.resolve(),
+        charges.length === 0 ? loadCharges() : Promise.resolve(),
+        pains.length === 0 ? loadPains() : Promise.resolve(),
+        loadEnvironnements(),
+      ])
+      purgeOldTrash()
+      backfillWeather()
+    }
+    init()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const recentCrises = crises.slice(0, 5)

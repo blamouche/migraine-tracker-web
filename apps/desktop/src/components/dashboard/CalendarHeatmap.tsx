@@ -60,12 +60,15 @@ export function CalendarHeatmap() {
   const crises = useCrisisStore((s) => s.crises)
   const pains = useDailyPainStore((s) => s.entries)
   const getDateRange = useDashboardStore((s) => s.getDateRange)
-  const { from, to } = getDateRange('calendar')
+  const { from, to } = getDateRange()
 
   const data = useMemo(() => buildCalendarData(crises, pains, from, to), [crises, pains, from, to])
 
-  const fromStr = from.toISOString().slice(0, 10)
-  const toStr = to.toISOString().slice(0, 10)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  const localIso = (d: Date) =>
+    `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+  const fromStr = localIso(from)
+  const toStr = localIso(to)
 
   if (data.length === 0) {
     return (

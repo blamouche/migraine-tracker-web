@@ -4,13 +4,13 @@ import type { DateRangePreset, DateRange, DashboardTab } from '@/types/dashboard
 
 interface DashboardState {
   activeTab: DashboardTab
-  dateRanges: Record<string, DateRangePreset>
-  customRanges: Record<string, DateRange>
+  globalPreset: DateRangePreset | null
+  globalCustomRange: DateRange | null
 
   setActiveTab: (tab: DashboardTab) => void
-  setPreset: (chartId: string, preset: DateRangePreset) => void
-  setCustomRange: (chartId: string, range: DateRange) => void
-  getDateRange: (chartId: string) => { from: Date; to: Date }
+  setPreset: (preset: DateRangePreset) => void
+  setCustomRange: (range: DateRange) => void
+  getDateRange: () => { from: Date; to: Date }
 }
 
 function presetToDateRange(preset: DateRangePreset): { from: Date; to: Date } {
@@ -33,6 +33,12 @@ function presetToDateRange(preset: DateRangePreset): { from: Date; to: Date } {
     case '1y':
       from.setFullYear(to.getFullYear() - 1)
       break
+    case 'ytd':
+      from.setMonth(0, 1)
+      from.setHours(0, 0, 0, 0)
+      to.setMonth(11, 31)
+      to.setHours(23, 59, 59, 999)
+      break
     case 'all':
       from.setFullYear(2020, 0, 1)
       break
@@ -45,36 +51,28 @@ export const useDashboardStore = create<DashboardState>()(
   persist(
     (set, get) => ({
       activeTab: 'crises',
-      dateRanges: {},
-      customRanges: {},
+      globalPreset: '3m',
+      globalCustomRange: null,
 
       setActiveTab: (tab) => set({ activeTab: tab }),
 
-      setPreset: (chartId, preset) =>
-        set((state) => ({
-          dateRanges: { ...state.dateRanges, [chartId]: preset },
-        })),
+      setPreset: (preset) =>
+        set({ globalPreset: preset, globalCustomRange: null }),
 
-      setCustomRange: (chartId, range) =>
-        set((state) => ({
-          customRanges: { ...state.customRanges, [chartId]: range },
-          dateRanges: { ...state.dateRanges, [chartId]: undefined as unknown as DateRangePreset },
-        })),
+      setCustomRange: (range) =>
+        set({ globalCustomRange: range, globalPreset: null }),
 
-      getDateRange: (chartId) => {
+      getDateRange: () => {
         const state = get()
-        const preset = state.dateRanges[chartId]
-        if (preset) return presetToDateRange(preset)
+        if (state.globalPreset) return presetToDateRange(state.globalPreset)
 
-        const custom = state.customRanges[chartId]
-        if (custom) {
+        if (state.globalCustomRange) {
           return {
-            from: new Date(custom.from + 'T00:00:00'),
-            to: new Date(custom.to + 'T23:59:59'),
+            from: new Date(state.globalCustomRange.from + 'T00:00:00'),
+            to: new Date(state.globalCustomRange.to + 'T23:59:59'),
           }
         }
 
-        // Default: 3 months
         return presetToDateRange('3m')
       },
     }),
@@ -83,8 +81,8 @@ export const useDashboardStore = create<DashboardState>()(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         activeTab: state.activeTab,
-        dateRanges: state.dateRanges,
-        customRanges: state.customRanges,
+        globalPreset: state.globalPreset,
+        globalCustomRange: state.globalCustomRange,
       }),
     },
   ),
