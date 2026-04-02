@@ -1,9 +1,9 @@
 # Migraine AI — Backlog Produit
 
-**Version :** 1.0
+**Version :** 1.1
 **Date :** Avril 2026
 **Statut :** Draft
-**Référence :** PRD v1.0
+**Référence :** PRD v1.0 (sections 3.20–3.24 ajoutées)
 
 > Ce document liste l'ensemble des Epics et User Stories du projet Migraine AI pour la v1.0. Les stories sont rédigées du point de vue des trois personas principaux : **Patient** (utilisateur solo), **Aidant** (gère le profil d'un proche), et **Admin** (administrateur de la plateforme). Chaque story inclut des critères d'acceptation.
 
@@ -44,8 +44,12 @@
 | E20 | Saisie mobile — mode Crise à distance          | 3.19    | 7       |
 | E21 | Administration & feature flags                 | 3.17    | 7       |
 | E22 | Infrastructure, robustesse & qualité           | 6.5/6.6 | 9       |
+| E23 | Navigation & shell applicatif                  | 3.20    | 5       |
+| E24 | Animations, transitions & états de chargement  | 3.21    | 5       |
+| E25 | Feedback, empty states & polish UI             | 3.22    | 6       |
+| E26 | Accessibilité avancée & raccourcis clavier     | 3.24    | 4       |
 
-**Total : 157 User Stories**
+**Total : 168 User Stories**
 
 ---
 
@@ -2325,4 +2329,344 @@
 
 ---
 
-_Fin du backlog v1.0 — 147 User Stories réparties en 22 Epics_
+---
+
+## EPIC E23 — Navigation & shell applicatif
+
+> En tant qu'utilisateur, je veux naviguer facilement entre toutes les sections de l'application via une navigation persistante et intuitive, afin de ne jamais perdre mon contexte et d'accéder à n'importe quel module en un clic.
+
+### US-23-01 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** disposer d'une sidebar de navigation permanente regroupant tous les modules par catégorie,
+**afin de** naviguer vers n'importe quelle section sans revenir à l'accueil.
+
+**Critères d'acceptation :**
+
+- [ ] Sidebar fixe à gauche (240px) visible sur desktop (≥ 1024px)
+- [ ] Modules regroupés par catégorie avec séparateurs : Accès rapide, Suivi, Santé, Analyse, Système
+- [ ] Le lien actif est visuellement distingué (fond `--color-bg-interactive`, bordure gauche `--color-brand` 3px)
+- [ ] Bouton « Nouvelle crise » en CTA proéminent en haut de la sidebar
+- [ ] Un badge numérique apparaît à côté des sections contenant des entrées incomplètes
+- [ ] Le sélecteur de profil est visible en bas de la sidebar (avatar + nom + couleur)
+
+---
+
+### US-23-02 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** pouvoir réduire la sidebar en mode icônes,
+**afin de** gagner de l'espace de contenu quand j'en ai besoin.
+
+**Critères d'acceptation :**
+
+- [ ] Bouton toggle en bas de la sidebar pour basculer entre mode étendu (240px) et mode icônes (64px)
+- [ ] En mode icônes : seules les icônes Lucide sont affichées, avec tooltip au survol pour le label
+- [ ] Le mode est persisté en `localStorage`
+- [ ] Animation fluide de transition entre les deux modes (200ms ease)
+
+---
+
+### US-23-03 · 🔴 Critique · FREE
+
+**En tant que** patient utilisant un écran moyen (tablette, petit laptop),
+**je veux** que la navigation s'adapte à la taille de mon écran,
+**afin que** l'application soit utilisable quelle que soit ma résolution.
+
+**Critères d'acceptation :**
+
+- [ ] 768px – 1023px : sidebar masquée par défaut, ouverte en overlay au clic sur un bouton hamburger dans le header
+- [ ] Overlay semi-transparent sur le contenu quand la sidebar est ouverte en mode overlay
+- [ ] < 768px : sidebar en drawer plein écran + bottom bar fixe avec 4 raccourcis (Accueil, Nouvelle crise, Dashboard, Menu)
+- [ ] La bottom bar respecte `env(safe-area-inset-bottom)` pour iOS
+- [ ] Le bouton hamburger est visible dans le header uniquement quand la sidebar est masquée
+
+---
+
+### US-23-04 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** voir un fil d'Ariane (breadcrumb) en haut de chaque page,
+**afin de** savoir où je me trouve dans l'application et remonter facilement dans la hiérarchie.
+
+**Critères d'acceptation :**
+
+- [ ] Breadcrumb affiché sous le titre de page : `Accueil > Section > Page courante`
+- [ ] Chaque élément sauf le dernier est cliquable et navigue vers la page correspondante
+- [ ] Le dernier élément est affiché en texte non cliquable (`--color-text-muted`)
+- [ ] Sur mobile (< 768px), seul le lien parent direct est affiché (ex : `← Crises`)
+
+---
+
+### US-23-05 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** que toutes les pages de l'application partagent un layout commun (sidebar + header + contenu),
+**afin que** l'expérience soit cohérente et prévisible sur tous les écrans.
+
+**Critères d'acceptation :**
+
+- [ ] Composant `AppLayout` wrappant toutes les routes protégées
+- [ ] Header contextuel avec : titre de la page, breadcrumb, actions spécifiques à la page (ex : bouton Export sur le Dashboard)
+- [ ] La zone de contenu respecte `max-w-[1200px]` centré avec padding `--space-8`
+- [ ] Le mode Crise (`/crisis/quick`) bypass le layout (plein écran, pas de sidebar)
+- [ ] Le layout gère le scroll du contenu indépendamment de la sidebar (sidebar non scrollable ou scroll indépendant)
+
+---
+
+## EPIC E24 — Animations, transitions & états de chargement
+
+> En tant qu'utilisateur, je veux que l'application soit fluide et réactive visuellement, avec des transitions naturelles et un feedback immédiat, afin que l'expérience soit agréable et professionnelle.
+
+### US-24-01 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** que la navigation entre les pages soit accompagnée d'une transition visuelle fluide,
+**afin de** percevoir le changement de contexte sans effet de « saut » brutal.
+
+**Critères d'acceptation :**
+
+- [ ] Transition `fade + slide` (150ms `ease-out`) entre les pages via React Router
+- [ ] Le contenu sortant fade-out, le contenu entrant fade-in
+- [ ] La transition est désactivée si `prefers-reduced-motion: reduce` est actif
+- [ ] La transition est désactivée en mode Crise (`--transition-speed: 0ms`)
+- [ ] Implémentation via `@react-spring/web` (déjà en dépendance) ou Framer Motion
+
+---
+
+### US-24-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** voir des skeleton screens pendant le chargement des données,
+**afin de** percevoir que l'app charge sans voir un écran vide.
+
+**Critères d'acceptation :**
+
+- [ ] Skeleton screens pour : les cartes KPI du dashboard, les graphiques Nivo, les listes d'historique, les formulaires pré-remplis
+- [ ] Les skeletons reprennent les dimensions exactes des composants finaux (pas de saut de layout)
+- [ ] Animation pulsante subtile (`opacity: 0.4 → 0.7`, boucle infinie, 1.5s)
+- [ ] Couleur du skeleton : `--color-bg-subtle` sur fond `--color-bg-base`
+- [ ] Les skeletons sont remplacés par les données réelles sans flash
+
+---
+
+### US-24-03 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** que les interactions courantes (sélection de chip, ouverture de panneau, suppression) soient accompagnées de micro-animations,
+**afin que** l'interface soit vivante et que chaque action ait un feedback visuel.
+
+**Critères d'acceptation :**
+
+- [ ] Sélection de chip : `scale(0 → 1)` avec léger rebond (200ms)
+- [ ] Ouverture de panneau expansible : hauteur animée `max-height` (200ms ease-out)
+- [ ] Suppression d'une ligne d'historique : fade-out + collapse (200ms)
+- [ ] Hover sur carte : `scale(1.01)` + ombre portée légère (120ms ease)
+- [ ] Changement d'onglet (dashboard) : cross-fade du contenu (150ms)
+- [ ] Toutes les animations respectent `prefers-reduced-motion`
+
+---
+
+### US-24-04 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** voir un indicateur de progression lors des opérations longues (export PDF, chargement initial),
+**afin de** savoir que l'opération est en cours et estimer le temps restant.
+
+**Critères d'acceptation :**
+
+- [ ] Barre de progression horizontale sous le header pour les exports (PDF, ZIP)
+- [ ] Spinner discret dans le bouton de sauvegarde + texte « Enregistrement… » pendant l'écriture
+- [ ] L'écran de chargement initial (démarrage app) affiche un logo animé + barre de progression des 11 étapes de démarrage
+- [ ] En cas d'opération bloquée > 10s, un bouton « Annuler » apparaît
+
+---
+
+### US-24-05 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** que les toasts de confirmation soient plus informatifs et contrôlables,
+**afin de** ne pas manquer un feedback important ou pouvoir annuler une action.
+
+**Critères d'acceptation :**
+
+- [ ] Toast enrichi avec : icône de statut (✓/⚠/✕), message, barre de progression pour l'auto-dismiss
+- [ ] Toast de suppression avec bouton « Annuler » pendant 5 secondes (undo pattern)
+- [ ] Position : fixe en bas-droit, empilables (max 3 visibles simultanément)
+- [ ] Dismissable au clic ou au swipe (mobile)
+- [ ] Les toasts d'erreur ne se ferment pas automatiquement — fermeture manuelle requise
+
+---
+
+## EPIC E25 — Feedback, empty states & polish UI
+
+> En tant qu'utilisateur, je veux que chaque écran de l'application communique clairement son état (vide, chargement, erreur, succès), afin de toujours savoir ce qui se passe et ce que je peux faire.
+
+### US-25-01 · 🟠 Haute · FREE
+
+**En tant que** nouveau patient qui n'a pas encore de données,
+**je veux** voir un message d'accueil clair et engageant sur chaque section vide,
+**afin de** comprendre à quoi sert le module et comment commencer.
+
+**Critères d'acceptation :**
+
+- [ ] Chaque module sans données affiche un empty state : illustration SVG + titre + sous-texte + CTA
+- [ ] Les illustrations sont mono-couleur `--color-brand`, légères et non infantilisantes
+- [ ] Les CTA sont contextuels : « Enregistrer ma première crise », « Ajouter un repas », « Déclarer un traitement »
+- [ ] Les messages sont bienveillants et non culpabilisants (pas de « Rien ici ! »)
+- [ ] En mode sombre, les illustrations s'adaptent au thème (opacité réduite ou couleurs inversées)
+
+---
+
+### US-25-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** voir un indicateur clair de sauvegarde automatique sur les formulaires,
+**afin de** savoir que mes données ne sont pas perdues si je quitte la page.
+
+**Critères d'acceptation :**
+
+- [ ] Indicateur pulsant vert « ● Sauvegarde auto » en haut du formulaire quand l'auto-save est actif
+- [ ] Texte « Brouillon sauvegardé il y a Xs » affiché discrètement sous le titre, mis à jour en temps réel
+- [ ] Si des modifications non sauvegardées existent : point orange à côté du titre de page
+- [ ] Confirmation modale si l'utilisateur tente de quitter avec des modifications non sauvegardées (via `beforeunload` + React Router blocker)
+
+---
+
+### US-25-03 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** que la validation des formulaires soit visible en temps réel (inline),
+**afin de** corriger mes erreurs au fur et à mesure plutôt qu'à la soumission.
+
+**Critères d'acceptation :**
+
+- [ ] Validation inline : le champ est validé au `blur` (perte de focus)
+- [ ] Champ requis non rempli : label rouge + icône ⚠ + bordure `--color-danger`
+- [ ] Champ valide : icône ✓ verte discrète à droite du champ
+- [ ] Message d'erreur affiché sous le champ (pas dans un toast) via `aria-describedby`
+- [ ] Le bouton de soumission est désactivé visuellement si des erreurs existent, avec tooltip explicatif
+
+---
+
+### US-25-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** pouvoir annuler une suppression pendant quelques secondes,
+**afin de** ne pas regretter une action irréversible faite par erreur.
+
+**Critères d'acceptation :**
+
+- [ ] La suppression d'une entrée (crise, repas, traitement…) affiche un toast avec bouton « Annuler » pendant 5 secondes
+- [ ] Pendant ces 5 secondes, l'entrée est masquée de la liste mais pas encore supprimée du vault
+- [ ] Si « Annuler » est cliqué, l'entrée réapparaît immédiatement
+- [ ] Après 5 secondes sans action, la suppression est définitive (déplacement vers la corbeille)
+- [ ] L'animation de disparition/réapparition est fluide (fade + collapse/expand)
+
+---
+
+### US-25-05 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** que les cartes KPI du dashboard affichent des tendances visuelles,
+**afin de** voir immédiatement si ma situation s'améliore ou se dégrade.
+
+**Critères d'acceptation :**
+
+- [ ] Chaque carte KPI affiche : valeur principale en `--text-3xl` bold + tendance (flèche ↑↓ + %)
+- [ ] Tendance comparée à la période précédente : vert si amélioration, rouge si dégradation
+- [ ] Sparkline miniature (30 jours) sous la valeur principale
+- [ ] Tooltip au survol détaillant le calcul et la période de comparaison
+- [ ] Les 4 KPI couverts : crises/mois, intensité moyenne, jours sans crise, efficacité traitement
+
+---
+
+### US-25-06 · 🟢 Basse · FREE
+
+**En tant que** patient,
+**je veux** que les graphiques du dashboard offrent des interactions avancées,
+**afin d'** explorer mes données plus en profondeur sans quitter le dashboard.
+
+**Critères d'acceptation :**
+
+- [ ] Clic sur un jour du heatmap calendrier → panneau latéral avec le détail de la journée
+- [ ] Sélection d'une plage temporelle directement sur le graphique (brush/zoom)
+- [ ] Bouton d'export PNG/SVG par graphique individuel
+- [ ] Tooltips enrichis multi-données au survol (douleur + traitements + météo du jour)
+- [ ] Les filtres de date sont persistés dans l'URL (query params) pour le bookmark
+
+---
+
+## EPIC E26 — Accessibilité avancée & raccourcis clavier
+
+> En tant qu'utilisateur avancé ou en situation de handicap, je veux pouvoir naviguer et agir dans l'application entièrement au clavier, afin d'être efficace sans dépendre de la souris.
+
+### US-26-01 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** disposer de raccourcis clavier pour les actions les plus fréquentes,
+**afin de** naviguer plus vite dans l'application.
+
+**Critères d'acceptation :**
+
+- [ ] `Ctrl/Cmd + N` : ouvrir le mode Crise (nouvelle crise)
+- [ ] `Ctrl/Cmd + D` : aller au Dashboard
+- [ ] `Ctrl/Cmd + P` : ouvrir le sélecteur de profil
+- [ ] `Ctrl/Cmd + ,` : ouvrir les Préférences
+- [ ] `Escape` : fermer le panneau/modale actif
+- [ ] `?` : afficher un panneau overlay listant tous les raccourcis
+- [ ] Les raccourcis ne s'activent pas si un champ de saisie a le focus
+
+---
+
+### US-26-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** disposer d'une Command Palette pour rechercher et naviguer rapidement,
+**afin d'** accéder à n'importe quelle page ou entrée en quelques frappes.
+
+**Critères d'acceptation :**
+
+- [ ] Ouverte via `Ctrl/Cmd + K` — champ de recherche centré en overlay
+- [ ] Recherche dans : pages de l'app, crises récentes (par date), traitements actifs, actions rapides (« Nouvelle crise », « Exporter PDF »…)
+- [ ] Résultats affichés en temps réel avec icônes de catégorie
+- [ ] Navigation au clavier (flèches + Entrée pour sélectionner)
+- [ ] Historique des 5 dernières commandes affiché à l'ouverture (avant toute saisie)
+- [ ] Fermée via `Escape` ou clic en dehors
+
+---
+
+### US-26-03 · 🟡 Moyenne · FREE
+
+**En tant que** patient utilisant un lecteur d'écran ou naviguant au clavier,
+**je veux** que le focus soit géré correctement sur toutes les pages et modales,
+**afin de** ne jamais perdre mon contexte de navigation.
+
+**Critères d'acceptation :**
+
+- [ ] Focus automatiquement placé sur le premier champ interactif à l'ouverture de chaque page
+- [ ] Les modales piègent le focus (focus trap) — Tab ne sort pas de la modale
+- [ ] À la fermeture d'une modale, le focus revient à l'élément déclencheur
+- [ ] Skip-to-content link visible au premier `Tab`, masqué visuellement sinon
+- [ ] Tous les éléments interactifs ont un outline de focus visible (`2px --color-brand, offset 2px`)
+- [ ] L'ordre de tabulation suit l'ordre visuel de lecture (pas de `tabindex` positif)
+
+---
+
+### US-26-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** pouvoir naviguer dans les listes et historiques entièrement au clavier,
+**afin de** consulter et agir sur mes données sans souris.
+
+**Critères d'acceptation :**
+
+- [ ] Flèches haut/bas pour naviguer entre les lignes d'un historique
+- [ ] Entrée pour ouvrir/déplier une entrée
+- [ ] `e` pour éditer l'entrée sélectionnée, `Delete/Backspace` pour supprimer (avec confirmation)
+- [ ] Les filtres sont accessibles au clavier (Tab pour atteindre, Espace/Entrée pour activer)
+- [ ] L'entrée sélectionnée est visuellement distinguée (fond `--color-bg-interactive`)
+
+---
+
+_Fin du backlog v1.1 — 168 User Stories réparties en 26 Epics_
