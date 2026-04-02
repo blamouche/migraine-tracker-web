@@ -3,7 +3,7 @@
 **Version :** 1.1
 **Date :** Avril 2026
 **Statut :** Draft
-**Référence :** PRD v1.0 (sections 3.20–3.24 ajoutées)
+**Référence :** PRD v1.0 (sections 3.20–3.26 ajoutées)
 
 > Ce document liste l'ensemble des Epics et User Stories du projet Migraine AI pour la v1.0. Les stories sont rédigées du point de vue des trois personas principaux : **Patient** (utilisateur solo), **Aidant** (gère le profil d'un proche), et **Admin** (administrateur de la plateforme). Chaque story inclut des critères d'acceptation.
 
@@ -48,8 +48,11 @@
 | E24 | Animations, transitions & états de chargement  | 3.21    | 5       |
 | E25 | Feedback, empty states & polish UI             | 3.22    | 6       |
 | E26 | Accessibilité avancée & raccourcis clavier     | 3.24    | 4       |
+| E27 | Création du profil par défaut à l'onboarding   | 3.16/3.17 | 4     |
+| E28 | Vue calendrier consolidée                       | 3.25    | 6       |
+| E29 | Personnalisation des modules de suivi           | 3.26    | 5       |
 
-**Total : 168 User Stories**
+**Total : 183 User Stories**
 
 ---
 
@@ -85,7 +88,7 @@
 - [x] `tsconfig.json` de chaque app active `strict: true`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`
 - [x] `packages/eslint-config/` exporte une config ESLint partagée (React, TypeScript, a11y)
 - [x] `prettier.config.js` à la racine avec `printWidth: 100`, `singleQuote: true`, `semi: false`
-- [ ] `pnpm lint` et `pnpm typecheck` passent sans erreur sur le projet vide
+- [x] `pnpm lint` et `pnpm typecheck` passent sans erreur sur le projet vide
 
 ---
 
@@ -579,7 +582,7 @@
 - [x] Saisie horodatée par repas
 - [x] Base d'aliments préconfigurée avec étiquettes de risque (tyramine, histamine, caféine)
 - [x] Autocomplétion depuis l'historique personnel
-- [ ] Possibilité de sauvegarder un repas complet comme modèle réutilisable
+- [x] Possibilité de sauvegarder un repas complet comme modèle réutilisable
 
 ---
 
@@ -606,10 +609,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Le score est calculé depuis l'historique personnel (corrélation aliment → crise dans les 24-48h)
-- [ ] S'affiche à côté de chaque aliment dans le journal
-- [ ] Nécessite au minimum 5 occurrences pour afficher un score fiable
-- [ ] Distingué visuellement des étiquettes de risque génériques (tyramine, histamine…)
+- [x] Le score est calculé depuis l'historique personnel (corrélation aliment → crise dans les 24-48h)
+- [x] S'affiche à côté de chaque aliment dans le journal
+- [x] Nécessite au minimum 5 occurrences pour afficher un score fiable
+- [x] Distingué visuellement des étiquettes de risque génériques (tyramine, histamine…)
 
 ---
 
@@ -621,10 +624,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bouton « Utiliser un modèle » dans le formulaire du journal alimentaire
-- [ ] Liste des modèles enregistrés (triés par fréquence)
-- [ ] La sélection d'un modèle pré-remplit le repas entier
-- [ ] Les modèles sont stockés dans `templates/repas-types/`
+- [x] Bouton « Utiliser un modèle » dans le formulaire du journal alimentaire
+- [x] Liste des modèles enregistrés (triés par fréquence)
+- [x] La sélection d'un modèle pré-remplit le repas entier
+- [x] Les modèles sont stockés dans `templates/repas-types/`
 
 ---
 
@@ -636,9 +639,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Corrélations affichées dans la section Déclencheurs du dashboard
-- [ ] Seuil de confiance ≥ 60% et ≥ 5 occurrences avant affichage
-- [ ] Formulation factuelle : « Le fromage affiné précède une crise dans 78% des cas dans les 24h »
+- [x] Corrélations affichées dans la section Déclencheurs du dashboard
+- [x] Seuil de confiance ≥ 60% et ≥ 5 occurrences avant affichage
+- [x] Formulation factuelle : « Le fromage affiné précède une crise dans 78% des cas dans les 24h »
 
 ---
 
@@ -2669,4 +2672,253 @@
 
 ---
 
-_Fin du backlog v1.1 — 168 User Stories réparties en 26 Epics_
+---
+
+## EPIC E27 — Création du profil par défaut à l'onboarding
+
+> En tant que nouvel utilisateur, je veux indiquer le nom de mon profil lors de l'onboarding, afin qu'un premier profil soit créé automatiquement et disponible dans toute l'application dès le départ.
+
+### US-27-01 · 🔴 Critique · FREE
+
+**En tant que** nouveau patient,
+**je veux** saisir le nom de mon profil lors de l'onboarding (après le consentement et avant la sélection du vault),
+**afin que** mon premier profil soit identifié et utilisable immédiatement dans l'application.
+
+**Critères d'acceptation :**
+
+- [ ] L'étape de nommage du profil s'affiche entre le consentement CGU et la sélection du vault
+- [ ] Champ obligatoire : nom du profil (ex : « Moi », « Sarah », « Mon suivi »)
+- [ ] Valeur pré-remplie avec le prénom issu du provider social (si disponible), modifiable
+- [ ] Sélection optionnelle d'une couleur d'identification (palette issue du Design System, couleur par défaut attribuée automatiquement)
+- [ ] Bouton de validation : « Continuer » — désactivé tant que le nom est vide
+
+---
+
+### US-27-02 · 🔴 Critique · FREE
+
+**En tant que** nouveau patient,
+**je veux** que mon premier profil soit créé automatiquement à l'issue de l'étape de nommage,
+**afin de** pouvoir utiliser l'application sans configuration supplémentaire.
+
+**Critères d'acceptation :**
+
+- [ ] Un profil est créé en IndexedDB avec : UUID généré, nom saisi, couleur choisie, plan `free`
+- [ ] Le profil est synchronisé dans Supabase `user_profiles` dès que la connexion est disponible
+- [ ] Le profil est défini comme profil actif
+- [ ] Le vault sélectionné à l'étape suivante est automatiquement associé à ce profil
+- [ ] Le profil apparaît dans le header (nom + couleur) dès la fin de l'onboarding
+- [ ] En mode hors-ligne (UUID anonyme), le profil est créé localement et synchronisé au merge du compte
+
+---
+
+### US-27-03 · 🟠 Haute · FREE
+
+**En tant que** patient ayant terminé l'onboarding,
+**je veux** que mon profil créé à l'onboarding soit le même que celui visible dans le sélecteur multi-profil (E17),
+**afin que** je puisse ultérieurement ajouter d'autres profils à côté du mien sans incohérence.
+
+**Critères d'acceptation :**
+
+- [ ] Le profil créé à l'onboarding utilise exactement la même structure de données que les profils créés via le sélecteur multi-profil (US-17-01)
+- [ ] Le profil apparaît dans le sélecteur de profil (`Cmd/Ctrl + P`) comme premier profil de la liste
+- [ ] Le nom et la couleur sont modifiables depuis Préférences → Profil
+- [ ] Si l'utilisateur ajoute un second profil (E17), le profil d'onboarding reste inchangé
+
+---
+
+### US-27-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient ayant utilisé l'app en mode hors-ligne sans compte,
+**je veux** que le profil créé lors de l'onboarding offline soit conservé et rattaché à mon compte lors de la création ultérieure,
+**afin de** ne pas perdre mon profil ni devoir le recréer.
+
+**Critères d'acceptation :**
+
+- [ ] Le profil créé sous UUID anonyme est conservé en IndexedDB
+- [ ] Lors du merge du compte (US-01-04), le profil est synchronisé vers Supabase `user_profiles` avec le `user_id` définitif
+- [ ] Le `profile_local_id` reste identique (pas de changement d'UUID)
+- [ ] L'entrée `profile_plans` est créée avec le plan `free` associée au bon `user_id`
+
+---
+
+## EPIC E28 — Vue calendrier consolidée
+
+> En tant que patient, je veux voir l'ensemble de mes données enregistrées dans une vue calendrier visuelle et intuitive, afin d'avoir un aperçu rapide de mon suivi quotidien et d'être encouragé à compléter les jours manquants.
+
+### US-28-01 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** voir une vue calendrier mensuelle affichant des indicateurs visuels (icônes + couleurs) pour chaque type de donnée enregistré par jour (crises, douleur, alimentation, traitements, sport, transport, cycle, charge mentale, météo, RDV),
+**afin de** visualiser d'un coup d'œil l'ensemble de mon suivi sur le mois.
+
+**Critères d'acceptation :**
+
+- [ ] La vue calendrier affiche le mois en cours par défaut dans une grille mensuelle plein écran
+- [ ] Chaque cellule-jour affiche les indicateurs iconographiques des données enregistrées ce jour-là (selon la table définie en PRD 3.25)
+- [ ] Les jours sans aucune donnée ont un style visuel distinct (opacité réduite ou fond hachuré)
+- [ ] Seuls les indicateurs des modules activés par l'utilisateur (3.26) sont affichés
+- [ ] Une légende des icônes est accessible en permanence via un panneau rétractable
+
+---
+
+### US-28-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** naviguer entre les mois et cliquer sur un jour pour voir le détail complet de la journée,
+**afin de** pouvoir explorer mon historique et accéder rapidement aux données d'un jour précis.
+
+**Critères d'acceptation :**
+
+- [ ] Flèches mois précédent / suivant pour naviguer entre les mois
+- [ ] Sélecteur de mois/année pour accéder directement à un mois éloigné
+- [ ] Bouton « Aujourd'hui » pour revenir au mois courant
+- [ ] Clic sur un jour → ouverture d'un panneau latéral (drawer) avec le détail complet de la journée
+- [ ] Le panneau latéral liste toutes les entrées du jour avec un lien de navigation vers le formulaire d'édition de chaque entrée
+- [ ] Survol d'un jour → tooltip résumant les données clés
+
+---
+
+### US-28-03 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** filtrer les types de données affichés sur le calendrier,
+**afin de** me concentrer sur les éléments qui m'intéressent (ex : crises + alimentation uniquement).
+
+**Critères d'acceptation :**
+
+- [ ] Barre de filtres en haut de la vue calendrier avec un toggle par type de donnée
+- [ ] L'activation/désactivation d'un filtre met à jour le calendrier instantanément
+- [ ] Les filtres sélectionnés sont persistés en `sessionStorage` (conservés au rechargement de la page)
+- [ ] Les modules désactivés par l'utilisateur (3.26) n'apparaissent pas dans les filtres
+
+---
+
+### US-28-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** voir un message encourageant et une barre de progression quand mon taux de complétion mensuel est bas,
+**afin d'** être motivé à enregistrer mes données régulièrement pour améliorer la qualité de mes analyses.
+
+**Critères d'acceptation :**
+
+- [ ] Un bandeau s'affiche en haut de la vue calendrier si le taux de complétion du mois en cours est < 60 %
+- [ ] Message dynamique : _« Vous avez renseigné X jours sur Y ce mois-ci. Plus vos données sont complètes, plus les analyses seront pertinentes ! »_
+- [ ] Barre de progression visuelle du taux de complétion
+- [ ] Le bandeau est masqué dès que le taux atteint 60 %
+- [ ] Le taux de complétion prend en compte uniquement les modules activés par l'utilisateur
+
+---
+
+### US-28-05 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** pouvoir saisir rapidement des données depuis un jour vide du calendrier,
+**afin de** compléter facilement les jours manquants sans naviguer vers chaque formulaire individuellement.
+
+**Critères d'acceptation :**
+
+- [ ] Les jours sans données affichent un badge « + » cliquable
+- [ ] Au clic sur le badge, un menu rapide propose les types de saisie pertinents (nouvelle crise, douleur du jour, alimentation, etc.)
+- [ ] Seuls les modules activés par l'utilisateur sont proposés dans le menu
+- [ ] La saisie rapide pré-remplit la date du jour sélectionné dans le formulaire ouvert
+
+---
+
+### US-28-06 · 🟡 Moyenne · FREE
+
+**En tant que** patient utilisant un écran mobile ou étroit,
+**je veux** que la vue calendrier s'adapte en une liste chronologique lisible,
+**afin de** retrouver les mêmes informations sans perte de lisibilité sur petit écran.
+
+**Critères d'acceptation :**
+
+- [ ] Sur écrans < 768 px, la vue bascule automatiquement vers une liste chronologique verticale
+- [ ] Chaque entrée de la liste affiche la date, les icônes des données enregistrées et un résumé textuel
+- [ ] Clic sur une entrée → même panneau de détail que sur la vue calendrier
+- [ ] Navigation clavier complète : flèches pour se déplacer entre les jours, `Enter` pour ouvrir le détail
+
+---
+
+## EPIC E29 — Personnalisation des modules de suivi
+
+> En tant que patient, je veux choisir les modules de suivi actifs dans mon application, afin de simplifier mon interface en ne voyant que les éléments pertinents pour mon cas personnel.
+
+### US-29-01 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** accéder à une page Préférences → Modules de suivi listant tous les modules optionnels avec un toggle on/off,
+**afin de** choisir les éléments que je souhaite suivre dans l'application.
+
+**Critères d'acceptation :**
+
+- [ ] Page accessible depuis Préférences → Modules de suivi
+- [ ] Liste de tous les modules optionnels (selon la table définie en PRD 3.26) avec toggle, description courte et icône
+- [ ] Les modules du socle (Journal des crises, Dashboard, Rapport médical, Profil médical) ne sont pas listés — ils sont toujours actifs
+- [ ] Les modules désactivés par le plan (feature flags admin) sont affichés grisés avec le badge _« Disponible avec le plan Pro »_ et ne peuvent pas être activés
+- [ ] Message de confirmation lors de la désactivation : _« Vos données existantes sont conservées. Vous pouvez réactiver ce module à tout moment. »_
+- [ ] Les préférences sont stockées dans `config/modules.md` dans le vault
+
+---
+
+### US-29-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** que la navigation et les menus ne montrent que les modules que j'ai activés,
+**afin de** ne pas être encombré par des fonctionnalités que je n'utilise pas.
+
+**Critères d'acceptation :**
+
+- [ ] Les entrées de menu des modules désactivés sont complètement masquées (pas grisées)
+- [ ] La mise à jour de la navigation est immédiate au toggle d'un module dans les préférences
+- [ ] La Command Palette (3.24) ne propose pas les actions liées à des modules désactivés
+- [ ] Les raccourcis clavier liés à des modules désactivés sont inactifs
+
+---
+
+### US-29-03 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** que les formulaires de saisie, le dashboard et le rapport PDF n'affichent que les éléments des modules activés,
+**afin que** toute l'application soit cohérente avec ma sélection de modules.
+
+**Critères d'acceptation :**
+
+- [ ] Les champs de formulaire liés à un module désactivé ne sont pas affichés (ex : pas de section « Transport » dans le formulaire de crise si le module transport est désactivé)
+- [ ] Les graphiques et KPI du dashboard liés à un module désactivé ne sont pas affichés
+- [ ] Les sections du rapport PDF liées à un module désactivé sont exclues
+- [ ] Les indicateurs de la vue calendrier (E28) des modules désactivés ne sont pas affichés
+- [ ] La détection de patterns (3.7) ne calcule pas les corrélations avec des modules désactivés
+
+---
+
+### US-29-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient ayant désactivé un module,
+**je veux** que mes données existantes soient conservées et redeviennent visibles si je réactive le module,
+**afin de** ne jamais perdre de données en changeant ma configuration.
+
+**Critères d'acceptation :**
+
+- [ ] Désactiver un module ne supprime aucune donnée du vault
+- [ ] Réactiver un module rend immédiatement visibles toutes les données précédemment enregistrées
+- [ ] Les analyses et patterns recalculent en incluant les données du module réactivé
+- [ ] Le rapport PDF inclut à nouveau les sections du module réactivé
+
+---
+
+### US-29-05 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** que ma configuration de modules soit synchronisée entre mes appareils,
+**afin de** retrouver la même interface simplifiée partout.
+
+**Critères d'acceptation :**
+
+- [ ] Les préférences de modules sont stockées dans `config/modules.md` dans le vault
+- [ ] La synchronisation suit le même mécanisme que les autres données de configuration du vault
+- [ ] En cas de conflit (modification simultanée sur deux appareils), la dernière modification l'emporte (last-write-wins)
+- [ ] En mode hors-ligne, les préférences sont appliquées depuis le cache local et synchronisées au retour en ligne
+
+---
+
+_Fin du backlog v1.1 — 183 User Stories réparties en 29 Epics_

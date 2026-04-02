@@ -76,3 +76,35 @@ export const RISK_TAGS = [
 ] as const
 
 export type RiskTag = (typeof RISK_TAGS)[number]
+
+// ─── Meal templates (US-03-01 / US-03-04) ───
+
+export interface MealTemplate {
+  templateId: string
+  templateName: string
+  mealType: MealType
+  foods: string[]
+  notes: string | null
+  usageCount: number
+  createdAt: string // ISO
+  updatedAt: string // ISO
+}
+
+// ─── Food risk scores (US-03-03) ───
+
+export interface FoodRiskScore {
+  foodName: string
+  score: number // 0-100 (% of occurrences preceding a crisis)
+  occurrences: number
+  crisisPreceded: number
+}
+
+// ─── Food correlations (US-03-05) ───
+
+export interface FoodCorrelation {
+  foodName: string
+  crisisCount: number
+  occurrenceCount: number
+  confidence: number // 0-100
+  description: string
+}

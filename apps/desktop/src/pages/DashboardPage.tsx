@@ -20,6 +20,7 @@ import { TreatmentTimelineChart } from '@/components/dashboard/TreatmentTimeline
 import { TriggerFrequencyChart } from '@/components/dashboard/TriggerFrequencyChart'
 import { TriggerCorrelationChart } from '@/components/dashboard/TriggerCorrelationChart'
 import { TriggerTimelineChart } from '@/components/dashboard/TriggerTimelineChart'
+import { FoodCorrelationChart } from '@/components/dashboard/FoodCorrelationChart'
 import { WeatherOverviewChart } from '@/components/dashboard/WeatherOverviewChart'
 import { PressureCrisisChart } from '@/components/dashboard/PressureCrisisChart'
 import { LunarPhaseChart } from '@/components/dashboard/LunarPhaseChart'
@@ -149,6 +150,10 @@ function DeclencheursTab() {
 
       <ChartSection title="Intensité moyenne par déclencheur">
         <TriggerCorrelationChart />
+      </ChartSection>
+
+      <ChartSection title="Corrélations alimentaires">
+        <FoodCorrelationChart />
       </ChartSection>
 
       <ChartSection title="Évolution des déclencheurs dans le temps">
