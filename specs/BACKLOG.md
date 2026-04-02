@@ -51,8 +51,9 @@
 | E27 | Création du profil par défaut à l'onboarding   | 3.16/3.17 | 4     |
 | E28 | Vue calendrier consolidée                       | 3.25    | 6       |
 | E29 | Personnalisation des modules de suivi           | 3.26    | 5       |
+| E30 | Prérequis déploiement & activation admin        | —       | 6       |
 
-**Total : 183 User Stories**
+**Total : 189 User Stories**
 
 ---
 
@@ -95,12 +96,12 @@
 ### US-00-03 · 🔴 Critique · TECH
 
 **En tant que** développeur,
-**je veux** créer et configurer le projet Supabase (staging + production) et appliquer le schéma SQL initial,
+**je veux** créer et configurer le projet Supabase et appliquer le schéma SQL initial,
 **afin d'** avoir la base de données, l'authentification et le stockage prêts avant le développement des features.
 
 **Critères d'acceptation :**
 
-- [ ] Deux projets Supabase créés : `migraine-ai-staging` et `migraine-ai-prod`
+- [ ] Un projet Supabase créé : `migraine-ai` (unique pour dev/staging/prod)
 - [x] Migration initiale appliquée : tables `user_profiles`, `user_usage`, `profile_plans`, `plan_config`, `mobile_transit`, `admin_log`
 - [x] Seed `plan_config` appliqué (valeurs free/pro définies dans ARCHITECTURE_TECHNIQUE.md §11)
 - [x] RLS activé sur toutes les tables avec les politiques définies
@@ -2161,10 +2162,13 @@
 
 **Critères d'acceptation :**
 
-- [ ] Suppression de l'entrée Supabase Auth + `user_usage`
+- [ ] Suppression de l'entrée Supabase Auth + `user_usage` via Edge Function `delete-user` (nécessite `service_role_key`)
+- [ ] Suppression en cascade : `user_profiles`, `profile_plans`, `mobile_transit` (via `ON DELETE CASCADE`)
 - [ ] L'utilisateur ne peut plus se connecter
 - [ ] Le vault local n'est pas touché
-- [ ] Action journalisée et irréversible (confirmation en deux étapes)
+- [ ] Action journalisée dans `admin_log` avant suppression (irréversible)
+- [ ] Confirmation en deux étapes : saisie de l'email utilisateur pour valider
+- [ ] Composant `DeleteUserDialog.tsx` avec double confirmation
 
 ---
 
@@ -2921,4 +2925,103 @@
 
 ---
 
-_Fin du backlog v1.1 — 183 User Stories réparties en 29 Epics_
+---
+
+## EPIC E30 — Prérequis déploiement & activation admin
+
+> En tant qu'équipe de développement, nous voulons préparer l'infrastructure technique nécessaire au déploiement des 3 apps et à l'activation du panel admin avec de vraies données Supabase, afin de passer de l'environnement local à la production.
+
+### US-30-01 · 🔴 Critique · TECH
+
+**En tant que** développeur,
+**je veux** configurer le client Supabase et les dépendances dans l'app admin,
+**afin que** le panel admin puisse se connecter à la base de données réelle.
+
+**Critères d'acceptation :**
+
+- [ ] `@supabase/supabase-js` ajouté à `apps/admin/package.json`
+- [ ] `apps/admin/vite.config.ts` inclut `envDir: resolve(__dirname, '../..')` pour lire les variables d'environnement depuis la racine du monorepo
+- [ ] `apps/admin/src/lib/supabase.ts` créé avec le client Supabase typé (même pattern que `apps/desktop/src/lib/supabase.ts`)
+- [ ] Le client est utilisable dans les hooks et composants admin
+- [ ] Les types Supabase sont partagés via `@migraine-ai/shared`
+
+---
+
+### US-30-02 · 🔴 Critique · TECH
+
+**En tant que** développeur,
+**je veux** ajouter une migration SQL pour la policy d'écriture `plan_config` par les admins,
+**afin que** les administrateurs puissent modifier les feature flags depuis l'interface.
+
+**Critères d'acceptation :**
+
+- [ ] Migration `supabase/migrations/00002_admin_plan_config_policy.sql` créée
+- [ ] Policy `INSERT`, `UPDATE`, `DELETE` sur `plan_config` pour les utilisateurs avec `(auth.jwt() ->> 'role') = 'admin'`
+- [ ] La policy `SELECT` publique existante est conservée
+- [ ] Migration testée en staging avant application en production
+
+---
+
+### US-30-03 · 🔴 Critique · TECH
+
+**En tant que** développeur,
+**je veux** créer une fonction Postgres `get_admin_user_list()` pour le panel admin,
+**afin de** pouvoir lister les utilisateurs avec leurs métriques sans exposer `auth.users` côté client.
+
+**Critères d'acceptation :**
+
+- [ ] Migration `supabase/migrations/00003_admin_user_list_function.sql` créée
+- [ ] Fonction `SECURITY DEFINER` qui joint `auth.users` avec `user_usage`, `user_profiles`, `profile_plans`
+- [ ] Retourne : `user_id`, email masqué (`a***@gmail.com`), date d'inscription, plan actif, dernière connexion, nombre de profils, fréquence 30 jours
+- [ ] Accessible uniquement aux admins (vérification `(auth.jwt() ->> 'role') = 'admin'` dans la fonction)
+- [ ] Fonction `reveal_user_email(target_user_id)` séparée qui journalise l'action dans `admin_log`
+
+---
+
+### US-30-04 · 🟠 Haute · TECH
+
+**En tant que** développeur,
+**je veux** créer une Edge Function `delete-user` pour la suppression RGPD,
+**afin que** les administrateurs puissent supprimer définitivement un compte sans accès direct au `service_role_key` côté client.
+
+**Critères d'acceptation :**
+
+- [ ] `supabase/functions/delete-user/index.ts` créé (Deno Edge Function)
+- [ ] Vérifie que l'appelant est admin (JWT `role = 'admin'`)
+- [ ] Utilise `supabase.auth.admin.deleteUser()` avec le `service_role_key`
+- [ ] Journalise l'action dans `admin_log` avant suppression
+- [ ] Retourne un statut de confirmation ou une erreur détaillée
+- [ ] Secret `SUPABASE_SERVICE_ROLE_KEY` configuré via `supabase secrets set`
+
+---
+
+### US-30-05 · 🟠 Haute · TECH
+
+**En tant que** développeur,
+**je veux** créer les configurations Netlify pour les apps admin et mobile,
+**afin que** les 3 apps soient déployables sur Netlify avec leurs domaines respectifs.
+
+**Critères d'acceptation :**
+
+- [ ] `apps/admin/netlify.toml` créé avec : `publish = "dist"`, redirect SPA `/* → /index.html`, headers de sécurité (CSP, HSTS, X-Frame-Options)
+- [ ] `apps/mobile/netlify.toml` créé avec la même structure adaptée au mobile
+- [ ] Les headers CSP de l'admin incluent `connect-src 'self' https://*.supabase.co`
+- [ ] Les trois apps sont buildables indépendamment via `pnpm --filter @migraine-ai/admin build`
+
+---
+
+### US-30-06 · 🟠 Haute · TECH
+
+**En tant que** développeur,
+**je veux** mettre à jour le document d'architecture technique pour refléter le choix Netlify pour les 3 apps,
+**afin que** la documentation soit alignée avec la décision d'hébergement.
+
+**Critères d'acceptation :**
+
+- [ ] Section 15.2 de `specs/ARCHITECTURE_TECHNIQUE.md` mise à jour : admin sur Netlify (pas Vercel)
+- [ ] Les 3 sous-domaines documentés : `migraine-ai.app` (desktop), `m.migraine-ai.app` (mobile), `admin.migraine-ai.app` (admin)
+- [ ] Schéma de déploiement cohérent avec `netlify.toml` de chaque app
+
+---
+
+_Fin du backlog v1.1 — 189 User Stories réparties en 30 Epics_

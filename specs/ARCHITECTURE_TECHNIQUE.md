@@ -123,7 +123,7 @@ Migraine AI est une **Progressive Web App offline-first** dont toutes les donné
 | --------------- | ----------------------------- | --------------------------------------------------------- |
 | App desktop     | GitHub Pages / Netlify        | Fichiers statiques, CDN global                            |
 | App mobile      | `m.migraine-ai.app` (Netlify) | Build séparé, même repo — route `/mobile` ou sous-domaine |
-| Interface admin | Vercel                        | `admin.migraine-ai.app` — React + Supabase admin          |
+| Interface admin | Netlify                       | `admin.migraine-ai.app` — React + Supabase admin          |
 
 ---
 
@@ -989,11 +989,11 @@ Le manifest PWA et le Service Worker sont générés par `vite-plugin-pwa`. L'ap
 ### 15.2 Interface admin
 
 ```
-Branche main → build Vite → Vercel
+Branche main → build Vite → Netlify
   └── admin.migraine-ai.app
 ```
 
-Accès protégé par Supabase Auth + vérification du rôle `admin` côté serveur (RLS + middleware Vercel).
+Accès protégé par Supabase Auth + vérification du rôle `admin` côté client (RLS + vérification JWT `role = 'admin'`). Configuration Netlify dédiée dans `apps/admin/netlify.toml`.
 
 ### 15.3 Supabase
 

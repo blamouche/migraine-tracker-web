@@ -121,12 +121,14 @@ CREATE POLICY "admin full access" ON admin_log
 
 -- ============================================================
 -- CRON — purge mobile_transit > 90 jours non synchronisé
+-- Nécessite l'extension pg_cron activée dans Database > Extensions
 -- ============================================================
 
-SELECT cron.schedule(
-  'purge-mobile-transit',
-  '0 3 * * *',
-  $$DELETE FROM mobile_transit
-    WHERE synced_at IS NULL
-    AND created_at < NOW() - INTERVAL '90 days'$$
-);
+-- Décommenter après activation de pg_cron :
+-- SELECT cron.schedule(
+--   'purge-mobile-transit',
+--   '0 3 * * *',
+--   $$DELETE FROM mobile_transit
+--     WHERE synced_at IS NULL
+--     AND created_at < NOW() - INTERVAL '90 days'$$
+-- );
