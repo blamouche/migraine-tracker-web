@@ -72,8 +72,8 @@ export function CrisisHistoryPage() {
         <div className="mt-4">
           <CrisisCalendar
             crises={crises}
+            selectedDate={periodFrom === periodTo && periodFrom ? periodFrom : null}
             onDayClick={(date) => {
-              // Toggle: if already filtering on this day, clear the filter
               if (periodFrom === date && periodTo === date) {
                 setPeriodFrom('')
                 setPeriodTo('')
