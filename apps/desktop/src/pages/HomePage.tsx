@@ -8,6 +8,8 @@ import { useCycleStore } from '@/stores/cycleStore'
 import { useConsultationStore } from '@/stores/consultationStore'
 import { useTransportStore } from '@/stores/transportStore'
 import { useSportStore } from '@/stores/sportStore'
+import { useChargeMentaleStore } from '@/stores/chargeMentaleStore'
+import { useDailyPainStore } from '@/stores/dailyPainStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
 import { AlertBanner } from '@/components/alerts/AlertBanner'
 import { RiskIndicator } from '@/components/patterns/RiskIndicator'
@@ -16,6 +18,8 @@ import { CYCLE_PHASE_LABELS } from '@/types/cycle'
 import { CONSULTATION_TYPE_LABELS } from '@/types/consultation'
 import { TRANSPORT_MOYEN_LABELS } from '@/types/transport'
 import { SPORT_TYPE_LABELS } from '@/types/sport'
+import { CHARGE_DOMAINE_LABELS, HUMEUR_LABELS } from '@/types/chargeMentale'
+import { PAIN_NIVEAU_LABELS } from '@/types/dailyPain'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -27,6 +31,8 @@ export function HomePage() {
   const { entries: consultations, loadConsultations } = useConsultationStore()
   const { entries: transports, loadTransports } = useTransportStore()
   const { entries: sports, loadSports } = useSportStore()
+  const { entries: charges, loadCharges } = useChargeMentaleStore()
+  const { entries: pains, loadPains } = useDailyPainStore()
 
   useEffect(() => {
     if (crises.length === 0) loadCrises()
@@ -36,6 +42,8 @@ export function HomePage() {
     if (consultations.length === 0) loadConsultations()
     if (transports.length === 0) loadTransports()
     if (sports.length === 0) loadSports()
+    if (charges.length === 0) loadCharges()
+    if (pains.length === 0) loadPains()
     purgeOldTrash()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -49,6 +57,8 @@ export function HomePage() {
   const hasConsultations = consultations.length > 0
   const hasTransports = transports.length > 0
   const hasSports = sports.length > 0
+  const hasCharges = charges.length > 0
+  const hasPains = pains.length > 0
 
   return (
     <main className="min-h-screen bg-(--color-bg-base) text-(--color-text-primary)">
@@ -165,6 +175,22 @@ export function HomePage() {
                 Sport
               </button>
             )}
+            {hasCharges && (
+              <button type="button" onClick={() => navigate('/charge-mentale/historique')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
+                Charge mentale
+              </button>
+            )}
+            {hasPains && (
+              <button type="button" onClick={() => navigate('/douleur/historique')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
+                Douleur
+              </button>
+            )}
+            <button type="button" onClick={() => navigate('/profils')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
+              Profils
+            </button>
+            <button type="button" onClick={() => navigate('/environnement')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
+              Environnement
+            </button>
             {user && (
               <button
                 type="button"
@@ -388,6 +414,77 @@ export function HomePage() {
               </>
             )}
           </div>
+          {/* Daily pain section (E16) */}
+          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-(--color-text-primary)">Douleur quotidienne</h2>
+              {hasPains && (
+                <button type="button" onClick={() => navigate('/douleur/historique')} className="text-xs text-(--color-brand) hover:underline">Voir tout</button>
+              )}
+            </div>
+            {!hasPains ? (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-(--color-text-secondary)">Enregistrez votre niveau de douleur chaque jour pour un suivi continu.</p>
+                <button type="button" onClick={() => navigate('/douleur/nouveau')} className="mt-4 rounded-(--radius-md) bg-(--color-brand) px-6 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover)">Enregistrer la douleur du jour</button>
+              </div>
+            ) : (
+              <>
+                <ul className="mt-3 divide-y divide-(--color-border)">
+                  {pains.slice(0, 5).map((p) => (
+                    <li key={p.id} className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white" style={{ backgroundColor: painColorHome(p.niveau) }}>{p.niveau}</span>
+                        <div>
+                          <p className="text-sm font-medium">{formatDateShort(p.date)}</p>
+                          <p className="text-xs text-(--color-text-muted)">{PAIN_NIVEAU_LABELS[p.niveau]}{p.lieeACrise ? ' · Crise' : ''}</p>
+                        </div>
+                      </div>
+                      <button type="button" onClick={() => navigate(`/douleur/${p.id}/edit`)} className="text-xs text-(--color-brand) hover:underline">Détails</button>
+                    </li>
+                  ))}
+                </ul>
+                <button type="button" onClick={() => navigate('/douleur/nouveau')} className="mt-3 w-full rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)">+ Douleur du jour</button>
+              </>
+            )}
+          </div>
+
+          {/* Charge mentale section (E15) */}
+          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-(--color-text-primary)">Charge mentale</h2>
+              {hasCharges && (
+                <button type="button" onClick={() => navigate('/charge-mentale/historique')} className="text-xs text-(--color-brand) hover:underline">Voir tout</button>
+              )}
+            </div>
+            {!hasCharges ? (
+              <div className="mt-4 text-center">
+                <p className="text-sm text-(--color-text-secondary)">Suivez votre charge mentale pour identifier les migraines de décompression.</p>
+                <button type="button" onClick={() => navigate('/charge-mentale/nouveau')} className="mt-4 rounded-(--radius-md) bg-(--color-brand) px-6 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover)">Enregistrer ma charge du jour</button>
+              </div>
+            ) : (
+              <>
+                <ul className="mt-3 divide-y divide-(--color-border)">
+                  {charges.slice(0, 5).map((c) => (
+                    <li key={c.id} className="flex items-center justify-between py-3">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white" style={{ backgroundColor: chargeColorHome(c.niveau) }}>{c.niveau}</span>
+                        <div>
+                          <p className="text-sm font-medium">{formatDateShort(c.date)}</p>
+                          <p className="text-xs text-(--color-text-muted)">{CHARGE_DOMAINE_LABELS[c.domaine]} · {HUMEUR_LABELS[c.humeur]}</p>
+                        </div>
+                      </div>
+                      <button type="button" onClick={() => navigate(`/charge-mentale/${c.id}/edit`)} className="text-xs text-(--color-brand) hover:underline">Détails</button>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-3 flex gap-2">
+                  <button type="button" onClick={() => navigate('/charge-mentale/nouveau')} className="flex-1 rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)">+ Charge du jour</button>
+                  <button type="button" onClick={() => navigate('/evenement/nouveau')} className="flex-1 rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)">+ Événement de vie</button>
+                </div>
+              </>
+            )}
+          </div>
+
           {/* Cycle menstruel section (E10) */}
           <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
             <div className="flex items-center justify-between">
@@ -658,6 +755,18 @@ function transportIconHome(moyen: string): string {
     autre: '\ud83d\ude8d',
   }
   return icons[moyen] ?? '\ud83d\ude8d'
+}
+
+function painColorHome(niveau: number): string {
+  if (niveau <= 2) return 'var(--color-success)'
+  if (niveau <= 5) return 'var(--color-warning)'
+  return 'var(--color-danger)'
+}
+
+function chargeColorHome(niveau: number): string {
+  if (niveau <= 3) return 'var(--color-success)'
+  if (niveau <= 6) return 'var(--color-warning)'
+  return 'var(--color-danger)'
 }
 
 function sportIconHome(type: string): string {
