@@ -97,7 +97,11 @@ export function FoodFormPage() {
   useEffect(() => {
     if (isEdit && !entry) {
       const found = entries.find((e) => e.id === foodId)
-      if (found) setEntry({ ...found })
+      if (found) {
+        setEntry({ ...found })
+        const custom = found.foods.filter((f) => !DEFAULT_FOOD_NAMES.includes(f))
+        if (custom.length > 0) setCustomFoods((prev) => [...new Set([...prev, ...custom])])
+      }
     }
   }, [entries, foodId, isEdit]) // eslint-disable-line react-hooks/exhaustive-deps
 
