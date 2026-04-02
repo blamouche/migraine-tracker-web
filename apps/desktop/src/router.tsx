@@ -40,6 +40,7 @@ import { SportFormPage } from '@/pages/SportFormPage'
 import { SportHistoryPage } from '@/pages/SportHistoryPage'
 import { ModulePreferencesPage } from '@/pages/ModulePreferencesPage'
 import { CalendarPage } from '@/pages/CalendarPage'
+import { VaultReconnectPage } from '@/pages/VaultReconnectPage'
 
 export const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ export const router = createBrowserRouter([
   {
     path: '/onboarding/medical-profile',
     element: <MedicalProfilePage />,
+  },
+  {
+    path: '/vault/reconnect',
+    element: <VaultReconnectPage />,
   },
   {
     element: <OnboardingGuard />,

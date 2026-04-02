@@ -25,6 +25,17 @@ export async function restoreVaultHandle(
   return handle
 }
 
+export async function checkVaultAccess(profileId: string): Promise<boolean> {
+  try {
+    const handle = await idbGet<FileSystemDirectoryHandle>(handleKey(profileId))
+    if (!handle) return false
+    const permission = await (handle as FileSystemDirectoryHandle & { queryPermission: (desc: { mode: string }) => Promise<string> }).queryPermission({ mode: 'readwrite' })
+    return permission === 'granted'
+  } catch {
+    return false
+  }
+}
+
 export async function pickVaultFolder(): Promise<FileSystemDirectoryHandle> {
   const handle = await window.showDirectoryPicker({ mode: 'readwrite' })
   return handle
