@@ -10,12 +10,31 @@ import {
 import type { ConsultationEntry } from '@/types/consultation'
 import { CONSULTATION_TYPE_LABELS } from '@/types/consultation'
 
+export interface ReportSections {
+  profile: boolean
+  summary: boolean
+  triggers: boolean
+  treatments: boolean
+  consultations: boolean
+  crisisDetails: boolean
+}
+
+export const DEFAULT_REPORT_SECTIONS: ReportSections = {
+  profile: true,
+  summary: true,
+  triggers: true,
+  treatments: true,
+  consultations: true,
+  crisisDetails: true,
+}
+
 export interface ReportOptions {
   from: string // YYYY-MM-DD
   to: string // YYYY-MM-DD
   crises: CrisisEntry[]
   medicalProfile: MedicalProfile | undefined
   consultations?: ConsultationEntry[]
+  sections?: ReportSections
 }
 
 function formatDate(dateStr: string): string {
@@ -33,7 +52,8 @@ function formatDuration(minutes: number): string {
   return m > 0 ? `${h}h ${m}min` : `${h}h`
 }
 
-export function generateMedicalReport({ from, to, crises, medicalProfile, consultations }: ReportOptions): void {
+export function generateMedicalReport({ from, to, crises, medicalProfile, consultations, sections: sectionsOpt }: ReportOptions): void {
+  const sections = { ...DEFAULT_REPORT_SECTIONS, ...sectionsOpt }
   const filtered = crises
     .filter((c) => c.date >= from && c.date <= to)
     .sort((a, b) => a.date.localeCompare(b.date))
@@ -69,7 +89,7 @@ export function generateMedicalReport({ from, to, crises, medicalProfile, consul
   y += 10
 
   // --- Patient profile (US-09-03) ---
-  if (medicalProfile) {
+  if (sections.profile && medicalProfile) {
     doc.setFontSize(14)
     doc.setFont('helvetica', 'bold')
     doc.text('Profil patient', margin, y)
@@ -118,93 +138,99 @@ export function generateMedicalReport({ from, to, crises, medicalProfile, consul
   y += 8
 
   // --- Summary ---
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'bold')
-  doc.text('Résumé de la période', margin, y)
-  y += 8
-
-  const totalCrises = filtered.length
-  const months = Math.max(1, (new Date(to + 'T00:00:00').getTime() - new Date(from + 'T00:00:00').getTime()) / (1000 * 60 * 60 * 24 * 30))
-  const frequency = Math.round((totalCrises / months) * 10) / 10
-
-  const intensities = filtered.map((c) => c.intensity)
-  const avgIntensity = intensities.length > 0 ? Math.round((intensities.reduce((a, b) => a + b, 0) / intensities.length) * 10) / 10 : 0
-
-  const durations = filtered.map((c) => c.estimatedDuration).filter((d): d is number => d != null)
-  const avgDuration = durations.length > 0 ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length) : 0
-  const minDuration = durations.length > 0 ? Math.min(...durations) : 0
-  const maxDuration = durations.length > 0 ? Math.max(...durations) : 0
-
-  const hit6Scores = filtered.filter((c) => !c.completionForcee && c.hit6Score != null).map((c) => c.hit6Score!)
-  const avgHit6 = hit6Scores.length > 0 ? Math.round(hit6Scores.reduce((a, b) => a + b, 0) / hit6Scores.length) : null
-
-  const highFrequency = frequency >= 4
-
-  doc.setFontSize(10)
-  doc.setFont('helvetica', 'normal')
-
-  const summaryLines = [
-    `Nombre total de crises : ${totalCrises}`,
-    `Fréquence mensuelle : ${frequency} crises/mois${highFrequency ? ' (fréquence élevée ≥ 4/mois)' : ''}`,
-    `Intensité moyenne : ${avgIntensity}/10`,
-    `Durée moyenne : ${formatDuration(avgDuration)} (min : ${formatDuration(minDuration)}, max : ${formatDuration(maxDuration)})`,
-    ...(avgHit6 != null ? [`Score HIT-6 moyen : ${avgHit6} — ${interpretHit6Score(avgHit6)}`] : []),
-  ]
-
-  for (const line of summaryLines) {
-    doc.text(`• ${line}`, margin + 2, y)
-    y += 5
-  }
-  y += 5
-
-  // --- Top triggers ---
-  const triggerCounts = new Map<string, number>()
-  for (const c of filtered) {
-    for (const t of c.triggers) {
-      triggerCounts.set(t, (triggerCounts.get(t) ?? 0) + 1)
-    }
-  }
-  const topTriggers = [...triggerCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5)
-
-  if (topTriggers.length > 0) {
-    checkNewPage(30)
-    doc.setFontSize(12)
+  if (sections.summary) {
+    doc.setFontSize(14)
     doc.setFont('helvetica', 'bold')
-    doc.text('Top 5 déclencheurs suspectés', margin, y)
-    y += 7
+    doc.text('Résumé de la période', margin, y)
+    y += 8
+
+    const totalCrises = filtered.length
+    const months = Math.max(1, (new Date(to + 'T00:00:00').getTime() - new Date(from + 'T00:00:00').getTime()) / (1000 * 60 * 60 * 24 * 30))
+    const frequency = Math.round((totalCrises / months) * 10) / 10
+
+    const intensities = filtered.map((c) => c.intensity)
+    const avgIntensity = intensities.length > 0 ? Math.round((intensities.reduce((a, b) => a + b, 0) / intensities.length) * 10) / 10 : 0
+
+    const durations = filtered.map((c) => c.estimatedDuration).filter((d): d is number => d != null)
+    const avgDuration = durations.length > 0 ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length) : 0
+    const minDuration = durations.length > 0 ? Math.min(...durations) : 0
+    const maxDuration = durations.length > 0 ? Math.max(...durations) : 0
+
+    const hit6Scores = filtered.filter((c) => !c.completionForcee && c.hit6Score != null).map((c) => c.hit6Score!)
+    const avgHit6 = hit6Scores.length > 0 ? Math.round(hit6Scores.reduce((a, b) => a + b, 0) / hit6Scores.length) : null
+
+    const highFrequency = frequency >= 4
 
     doc.setFontSize(10)
     doc.setFont('helvetica', 'normal')
-    for (const [name, count] of topTriggers) {
-      doc.text(`• ${name} (${count} occurrence${count > 1 ? 's' : ''})`, margin + 2, y)
+
+    const summaryLines = [
+      `Nombre total de crises : ${totalCrises}`,
+      `Fréquence mensuelle : ${frequency} crises/mois${highFrequency ? ' (fréquence élevée ≥ 4/mois)' : ''}`,
+      `Intensité moyenne : ${avgIntensity}/10`,
+      `Durée moyenne : ${formatDuration(avgDuration)} (min : ${formatDuration(minDuration)}, max : ${formatDuration(maxDuration)})`,
+      ...(avgHit6 != null ? [`Score HIT-6 moyen : ${avgHit6} — ${interpretHit6Score(avgHit6)}`] : []),
+    ]
+
+    for (const line of summaryLines) {
+      doc.text(`• ${line}`, margin + 2, y)
       y += 5
     }
     y += 5
+  }
+
+  // --- Top triggers ---
+  if (sections.triggers) {
+    const triggerCounts = new Map<string, number>()
+    for (const c of filtered) {
+      for (const t of c.triggers) {
+        triggerCounts.set(t, (triggerCounts.get(t) ?? 0) + 1)
+      }
+    }
+    const topTriggers = [...triggerCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5)
+
+    if (topTriggers.length > 0) {
+      checkNewPage(30)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Top 5 déclencheurs suspectés', margin, y)
+      y += 7
+
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'normal')
+      for (const [name, count] of topTriggers) {
+        doc.text(`• ${name} (${count} occurrence${count > 1 ? 's' : ''})`, margin + 2, y)
+        y += 5
+      }
+      y += 5
+    }
   }
 
   // --- Treatments ---
-  const treatmentCounts = new Map<string, number>()
-  for (const c of filtered) {
-    for (const t of c.treatments) {
-      treatmentCounts.set(t, (treatmentCounts.get(t) ?? 0) + 1)
+  if (sections.treatments) {
+    const treatmentCounts = new Map<string, number>()
+    for (const c of filtered) {
+      for (const t of c.treatments) {
+        treatmentCounts.set(t, (treatmentCounts.get(t) ?? 0) + 1)
+      }
     }
-  }
-  const topTreatments = [...treatmentCounts.entries()].sort((a, b) => b[1] - a[1])
+    const topTreatments = [...treatmentCounts.entries()].sort((a, b) => b[1] - a[1])
 
-  if (topTreatments.length > 0) {
-    checkNewPage(30)
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.text('Traitements utilisés', margin, y)
-    y += 7
+    if (topTreatments.length > 0) {
+      checkNewPage(30)
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Traitements utilisés', margin, y)
+      y += 7
 
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'normal')
-    for (const [name, count] of topTreatments) {
-      doc.text(`• ${name} — ${count} prise${count > 1 ? 's' : ''}`, margin + 2, y)
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'normal')
+      for (const [name, count] of topTreatments) {
+        doc.text(`• ${name} — ${count} prise${count > 1 ? 's' : ''}`, margin + 2, y)
+        y += 5
+      }
       y += 5
     }
-    y += 5
   }
 
   // --- Consultations (US-11-02) ---
@@ -212,7 +238,7 @@ export function generateMedicalReport({ from, to, crises, medicalProfile, consul
     .filter((c) => c.date >= from && c.date <= to)
     .sort((a, b) => a.date.localeCompare(b.date))
 
-  if (filteredConsultations.length > 0) {
+  if (sections.consultations && filteredConsultations.length > 0) {
     checkNewPage(25)
     doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
@@ -235,7 +261,7 @@ export function generateMedicalReport({ from, to, crises, medicalProfile, consul
   }
 
   // --- Crisis list table ---
-  if (filtered.length > 0) {
+  if (sections.crisisDetails && filtered.length > 0) {
     checkNewPage(25)
     doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
