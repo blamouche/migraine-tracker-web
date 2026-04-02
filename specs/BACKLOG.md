@@ -48,8 +48,9 @@
 | E24 | Animations, transitions & états de chargement  | 3.21    | 5       |
 | E25 | Feedback, empty states & polish UI             | 3.22    | 6       |
 | E26 | Accessibilité avancée & raccourcis clavier     | 3.24    | 4       |
+| E27 | Création du profil par défaut à l'onboarding   | 3.16/3.17 | 4     |
 
-**Total : 168 User Stories**
+**Total : 172 User Stories**
 
 ---
 
@@ -85,7 +86,7 @@
 - [x] `tsconfig.json` de chaque app active `strict: true`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`
 - [x] `packages/eslint-config/` exporte une config ESLint partagée (React, TypeScript, a11y)
 - [x] `prettier.config.js` à la racine avec `printWidth: 100`, `singleQuote: true`, `semi: false`
-- [ ] `pnpm lint` et `pnpm typecheck` passent sans erreur sur le projet vide
+- [x] `pnpm lint` et `pnpm typecheck` passent sans erreur sur le projet vide
 
 ---
 
@@ -579,7 +580,7 @@
 - [x] Saisie horodatée par repas
 - [x] Base d'aliments préconfigurée avec étiquettes de risque (tyramine, histamine, caféine)
 - [x] Autocomplétion depuis l'historique personnel
-- [ ] Possibilité de sauvegarder un repas complet comme modèle réutilisable
+- [x] Possibilité de sauvegarder un repas complet comme modèle réutilisable
 
 ---
 
@@ -606,10 +607,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Le score est calculé depuis l'historique personnel (corrélation aliment → crise dans les 24-48h)
-- [ ] S'affiche à côté de chaque aliment dans le journal
-- [ ] Nécessite au minimum 5 occurrences pour afficher un score fiable
-- [ ] Distingué visuellement des étiquettes de risque génériques (tyramine, histamine…)
+- [x] Le score est calculé depuis l'historique personnel (corrélation aliment → crise dans les 24-48h)
+- [x] S'affiche à côté de chaque aliment dans le journal
+- [x] Nécessite au minimum 5 occurrences pour afficher un score fiable
+- [x] Distingué visuellement des étiquettes de risque génériques (tyramine, histamine…)
 
 ---
 
@@ -621,10 +622,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bouton « Utiliser un modèle » dans le formulaire du journal alimentaire
-- [ ] Liste des modèles enregistrés (triés par fréquence)
-- [ ] La sélection d'un modèle pré-remplit le repas entier
-- [ ] Les modèles sont stockés dans `templates/repas-types/`
+- [x] Bouton « Utiliser un modèle » dans le formulaire du journal alimentaire
+- [x] Liste des modèles enregistrés (triés par fréquence)
+- [x] La sélection d'un modèle pré-remplit le repas entier
+- [x] Les modèles sont stockés dans `templates/repas-types/`
 
 ---
 
@@ -636,9 +637,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Corrélations affichées dans la section Déclencheurs du dashboard
-- [ ] Seuil de confiance ≥ 60% et ≥ 5 occurrences avant affichage
-- [ ] Formulation factuelle : « Le fromage affiné précède une crise dans 78% des cas dans les 24h »
+- [x] Corrélations affichées dans la section Déclencheurs du dashboard
+- [x] Seuil de confiance ≥ 60% et ≥ 5 occurrences avant affichage
+- [x] Formulation factuelle : « Le fromage affiné précède une crise dans 78% des cas dans les 24h »
 
 ---
 
@@ -2669,4 +2670,73 @@
 
 ---
 
-_Fin du backlog v1.1 — 168 User Stories réparties en 26 Epics_
+---
+
+## EPIC E27 — Création du profil par défaut à l'onboarding
+
+> En tant que nouvel utilisateur, je veux indiquer le nom de mon profil lors de l'onboarding, afin qu'un premier profil soit créé automatiquement et disponible dans toute l'application dès le départ.
+
+### US-27-01 · 🔴 Critique · FREE
+
+**En tant que** nouveau patient,
+**je veux** saisir le nom de mon profil lors de l'onboarding (après le consentement et avant la sélection du vault),
+**afin que** mon premier profil soit identifié et utilisable immédiatement dans l'application.
+
+**Critères d'acceptation :**
+
+- [ ] L'étape de nommage du profil s'affiche entre le consentement CGU et la sélection du vault
+- [ ] Champ obligatoire : nom du profil (ex : « Moi », « Sarah », « Mon suivi »)
+- [ ] Valeur pré-remplie avec le prénom issu du provider social (si disponible), modifiable
+- [ ] Sélection optionnelle d'une couleur d'identification (palette issue du Design System, couleur par défaut attribuée automatiquement)
+- [ ] Bouton de validation : « Continuer » — désactivé tant que le nom est vide
+
+---
+
+### US-27-02 · 🔴 Critique · FREE
+
+**En tant que** nouveau patient,
+**je veux** que mon premier profil soit créé automatiquement à l'issue de l'étape de nommage,
+**afin de** pouvoir utiliser l'application sans configuration supplémentaire.
+
+**Critères d'acceptation :**
+
+- [ ] Un profil est créé en IndexedDB avec : UUID généré, nom saisi, couleur choisie, plan `free`
+- [ ] Le profil est synchronisé dans Supabase `user_profiles` dès que la connexion est disponible
+- [ ] Le profil est défini comme profil actif
+- [ ] Le vault sélectionné à l'étape suivante est automatiquement associé à ce profil
+- [ ] Le profil apparaît dans le header (nom + couleur) dès la fin de l'onboarding
+- [ ] En mode hors-ligne (UUID anonyme), le profil est créé localement et synchronisé au merge du compte
+
+---
+
+### US-27-03 · 🟠 Haute · FREE
+
+**En tant que** patient ayant terminé l'onboarding,
+**je veux** que mon profil créé à l'onboarding soit le même que celui visible dans le sélecteur multi-profil (E17),
+**afin que** je puisse ultérieurement ajouter d'autres profils à côté du mien sans incohérence.
+
+**Critères d'acceptation :**
+
+- [ ] Le profil créé à l'onboarding utilise exactement la même structure de données que les profils créés via le sélecteur multi-profil (US-17-01)
+- [ ] Le profil apparaît dans le sélecteur de profil (`Cmd/Ctrl + P`) comme premier profil de la liste
+- [ ] Le nom et la couleur sont modifiables depuis Préférences → Profil
+- [ ] Si l'utilisateur ajoute un second profil (E17), le profil d'onboarding reste inchangé
+
+---
+
+### US-27-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient ayant utilisé l'app en mode hors-ligne sans compte,
+**je veux** que le profil créé lors de l'onboarding offline soit conservé et rattaché à mon compte lors de la création ultérieure,
+**afin de** ne pas perdre mon profil ni devoir le recréer.
+
+**Critères d'acceptation :**
+
+- [ ] Le profil créé sous UUID anonyme est conservé en IndexedDB
+- [ ] Lors du merge du compte (US-01-04), le profil est synchronisé vers Supabase `user_profiles` avec le `user_id` définitif
+- [ ] Le `profile_local_id` reste identique (pas de changement d'UUID)
+- [ ] L'entrée `profile_plans` est créée avec le plan `free` associée au bon `user_id`
+
+---
+
+_Fin du backlog v1.1 — 172 User Stories réparties en 27 Epics_

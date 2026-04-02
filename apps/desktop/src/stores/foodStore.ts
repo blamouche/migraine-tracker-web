@@ -1,17 +1,21 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import type { FoodEntry, FoodFormData, DailyFactors } from '@/types/alimentaire'
+import type { FoodEntry, FoodFormData, DailyFactors, MealTemplate } from '@/types/alimentaire'
 import {
   writeFoodEntry,
   readAllFoodEntries,
   deleteFoodEntry as vaultDeleteFood,
   writeDailyFactors,
   readAllDailyFactors,
+  writeMealTemplate,
+  readAllMealTemplates,
+  deleteMealTemplate as vaultDeleteTemplate,
 } from '@/lib/vault/alimentaire'
 
 interface FoodState {
   entries: FoodEntry[]
   dailyFactors: DailyFactors[]
+  mealTemplates: MealTemplate[]
   isLoading: boolean
   error: string | null
 
@@ -23,6 +27,11 @@ interface FoodState {
   loadDailyFactors: () => Promise<void>
   saveDailyFactors: (factors: DailyFactors) => Promise<void>
   getFactorsForDate: (date: string) => DailyFactors | undefined
+
+  loadMealTemplates: () => Promise<void>
+  saveMealAsTemplate: (entry: FoodEntry, templateName: string) => Promise<void>
+  useTemplate: (templateId: string) => Promise<void>
+  deleteTemplate: (templateId: string) => Promise<void>
 
   clearError: () => void
 }
@@ -44,6 +53,7 @@ export const useFoodStore = create<FoodState>()(
     (set, get) => ({
       entries: [],
       dailyFactors: [],
+      mealTemplates: [],
       isLoading: false,
       error: null,
 
@@ -138,6 +148,61 @@ export const useFoodStore = create<FoodState>()(
         return get().dailyFactors.find((f) => f.date === date)
       },
 
+      loadMealTemplates: async () => {
+        try {
+          const templates = await readAllMealTemplates()
+          if (templates.length > 0) {
+            set({ mealTemplates: templates })
+          }
+        } catch {
+          // silent — templates are secondary
+        }
+      },
+
+      saveMealAsTemplate: async (entry: FoodEntry, templateName: string) => {
+        const now = new Date().toISOString()
+        const template: MealTemplate = {
+          templateId: generateId(),
+          templateName,
+          mealType: entry.mealType,
+          foods: [...entry.foods],
+          notes: entry.notes,
+          usageCount: 0,
+          createdAt: now,
+          updatedAt: now,
+        }
+
+        writeMealTemplate(template).catch(() => {})
+        set((state) => ({
+          mealTemplates: [template, ...state.mealTemplates],
+        }))
+      },
+
+      useTemplate: async (templateId: string) => {
+        const template = get().mealTemplates.find((t) => t.templateId === templateId)
+        if (!template) return
+
+        const updated: MealTemplate = {
+          ...template,
+          usageCount: template.usageCount + 1,
+          updatedAt: new Date().toISOString(),
+        }
+
+        writeMealTemplate(updated).catch(() => {})
+        set((state) => ({
+          mealTemplates: state.mealTemplates
+            .map((t) => (t.templateId === templateId ? updated : t))
+            .sort((a, b) => b.usageCount - a.usageCount),
+        }))
+      },
+
+      deleteTemplate: async (templateId: string) => {
+        set((state) => ({
+          mealTemplates: state.mealTemplates.filter((t) => t.templateId !== templateId),
+        }))
+        vaultDeleteTemplate(templateId).catch(() => {})
+      },
+
       clearError: () => set({ error: null }),
     }),
     {
@@ -146,6 +211,7 @@ export const useFoodStore = create<FoodState>()(
       partialize: (state) => ({
         entries: state.entries,
         dailyFactors: state.dailyFactors,
+        mealTemplates: state.mealTemplates,
       }),
     },
   ),

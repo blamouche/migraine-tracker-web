@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { ChipSelector, initDefaultSet } from '@/components/crisis/ChipSelector'
 import { DailyFactorsForm } from '@/components/alimentaire/DailyFactorsForm'
@@ -6,8 +6,10 @@ import {
   DEFAULT_FOODS,
   MEAL_TYPE_LABELS,
 } from '@/types/alimentaire'
-import type { FoodEntry, MealType, DailyFactors } from '@/types/alimentaire'
+import type { FoodEntry, MealType, MealTemplate, DailyFactors } from '@/types/alimentaire'
 import { useFoodStore } from '@/stores/foodStore'
+import { useCrisisStore } from '@/stores/crisisStore'
+import { computeFoodRiskScores } from '@/lib/patterns/foodCorrelation'
 
 const DEFAULT_FOOD_NAMES = DEFAULT_FOODS.map((f) => f.name)
 initDefaultSet(DEFAULT_FOOD_NAMES)
@@ -44,7 +46,13 @@ export function FoodFormPage() {
     loadDailyFactors,
     saveDailyFactors,
     getFactorsForDate,
+    mealTemplates,
+    loadMealTemplates,
+    saveMealAsTemplate,
+    useTemplate: incrementTemplateUsage,
   } = useFoodStore()
+
+  const crises = useCrisisStore((s) => s.crises)
 
   const [entry, setEntry] = useState<FoodEntry | null>(
     isEdit
@@ -65,15 +73,25 @@ export function FoodFormPage() {
   const [factors, setFactors] = useState<DailyFactors | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [customFoods, setCustomFoods] = useState<string[]>([])
+  const [showTemplates, setShowTemplates] = useState(false)
+  const [templateName, setTemplateName] = useState('')
+  const [showSaveTemplate, setShowSaveTemplate] = useState(false)
 
   const foodOptions = [...DEFAULT_FOOD_NAMES, ...customFoods]
   const autoSaveTimer = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  // US-03-03: Personal food risk scores
+  const foodRiskScores = useMemo(
+    () => computeFoodRiskScores(entries, crises),
+    [entries, crises],
+  )
 
   // Load data
   useEffect(() => {
     if (entries.length === 0) loadEntries()
     if (dailyFactors.length === 0) loadDailyFactors()
-  }, [entries.length, dailyFactors.length, loadEntries, loadDailyFactors])
+    loadMealTemplates()
+  }, [entries.length, dailyFactors.length, loadEntries, loadDailyFactors, loadMealTemplates])
 
   // For edit mode: load entry from store
   useEffect(() => {
@@ -131,6 +149,23 @@ export function FoodFormPage() {
     setEntry((prev) => (prev ? { ...prev, ...partial } : prev))
   }
 
+  const handleSelectTemplate = (template: MealTemplate) => {
+    setEntry((prev) =>
+      prev
+        ? { ...prev, foods: [...template.foods], notes: template.notes, mealType: template.mealType }
+        : prev,
+    )
+    incrementTemplateUsage(template.templateId)
+    setShowTemplates(false)
+  }
+
+  const handleSaveAsTemplate = async () => {
+    if (!entry || !templateName.trim()) return
+    await saveMealAsTemplate(entry, templateName.trim())
+    setTemplateName('')
+    setShowSaveTemplate(false)
+  }
+
   const handleSave = async () => {
     setIsSaving(true)
     try {
@@ -161,14 +196,50 @@ export function FoodFormPage() {
           <h1 className="text-xl font-semibold">
             {isEdit ? 'Modifier le repas' : 'Nouveau repas'}
           </h1>
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="text-sm text-(--color-text-muted) hover:text-(--color-text-primary)"
-          >
-            Retour
-          </button>
+          <div className="flex items-center gap-3">
+            {!isEdit && mealTemplates.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setShowTemplates(!showTemplates)}
+                className="rounded-(--radius-md) border border-(--color-brand) px-3 py-1.5 text-sm text-(--color-brand) hover:bg-(--color-brand) hover:text-(--color-text-inverse) transition-colors"
+              >
+                Utiliser un modèle
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="text-sm text-(--color-text-muted) hover:text-(--color-text-primary)"
+            >
+              Retour
+            </button>
+          </div>
         </div>
+
+        {/* US-03-04: Template selector */}
+        {showTemplates && (
+          <div className="mt-3 rounded-(--radius-lg) border border-(--color-border) bg-(--color-bg-elevated) p-4 space-y-2">
+            <p className="text-sm font-medium text-(--color-text-secondary)">Modèles enregistrés</p>
+            {mealTemplates.map((t) => (
+              <button
+                key={t.templateId}
+                type="button"
+                onClick={() => handleSelectTemplate(t)}
+                className="flex w-full items-center justify-between rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-base) px-3 py-2 text-left text-sm hover:border-(--color-brand) transition-colors"
+              >
+                <div>
+                  <span className="font-medium">{t.templateName}</span>
+                  <span className="ml-2 text-(--color-text-muted)">
+                    {MEAL_TYPE_LABELS[t.mealType]} · {t.foods.length} aliment{t.foods.length > 1 ? 's' : ''}
+                  </span>
+                </div>
+                <span className="text-xs text-(--color-text-muted)">
+                  {t.usageCount > 0 ? `${t.usageCount}×` : 'Jamais utilisé'}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
 
         <form className="mt-6 space-y-6" onSubmit={(e) => { e.preventDefault(); handleSave() }}>
           {/* Date & Time */}
@@ -242,6 +313,29 @@ export function FoodFormPage() {
             </div>
           )}
 
+          {/* US-03-03: Personal food risk scores */}
+          {entry.foods.some((f) => foodRiskScores.has(f)) && (
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-(--color-text-muted)">Scores de risque personnels</p>
+              <div className="flex flex-wrap gap-1">
+                {entry.foods
+                  .filter((f) => foodRiskScores.has(f))
+                  .map((f) => {
+                    const risk = foodRiskScores.get(f)!
+                    return (
+                      <span
+                        key={f}
+                        className="rounded-(--radius-full) border border-(--color-danger) bg-(--color-bg-elevated) px-2 py-0.5 text-xs text-(--color-danger)"
+                        title={`${risk.crisisPreceded} crise(s) sur ${risk.occurrences} consommation(s) dans les 48h`}
+                      >
+                        {f} : {risk.score}%
+                      </span>
+                    )
+                  })}
+              </div>
+            </div>
+          )}
+
           {/* Notes */}
           <div>
             <label htmlFor="food-notes" className="text-sm font-medium">Notes</label>
@@ -261,6 +355,50 @@ export function FoodFormPage() {
               factors={factors}
               onChange={setFactors}
             />
+          )}
+
+          {/* US-03-01: Save as template */}
+          {entry.foods.length > 0 && (
+            <div>
+              {showSaveTemplate ? (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={templateName}
+                    onChange={(e) => setTemplateName(e.target.value)}
+                    placeholder="Nom du modèle…"
+                    className="flex-1 rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-elevated) px-3 py-2 text-sm"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') { e.preventDefault(); handleSaveAsTemplate() }
+                      if (e.key === 'Escape') setShowSaveTemplate(false)
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSaveAsTemplate}
+                    disabled={!templateName.trim()}
+                    className="rounded-(--radius-md) bg-(--color-brand) px-4 py-2 text-sm text-(--color-text-inverse) hover:bg-(--color-brand-hover) disabled:opacity-50"
+                  >
+                    Sauver
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowSaveTemplate(false)}
+                    className="rounded-(--radius-md) border border-(--color-border) px-3 py-2 text-sm text-(--color-text-muted)"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowSaveTemplate(true)}
+                  className="text-sm text-(--color-brand) hover:underline"
+                >
+                  Sauvegarder comme modèle
+                </button>
+              )}
+            </div>
           )}
 
           {/* Submit */}
