@@ -35,7 +35,7 @@ export function ConsentPage() {
     }
 
     acceptConsent(cgu, marketing)
-    navigate('/onboarding/vault', { replace: true })
+    navigate('/onboarding/profile', { replace: true })
   }
 
   return (

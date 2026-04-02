@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 export type OnboardingStep =
   | 'login'
   | 'consent'
+  | 'profile-setup'
   | 'vault-selection'
   | 'medical-profile'
   | 'complete'
@@ -13,11 +14,13 @@ interface OnboardingState {
   consentCGU: boolean
   consentMarketing: boolean
   consentMarketingAt: string | null
+  profileCreated: boolean
   vaultReady: boolean
   medicalProfileDone: boolean
 
   setStep: (step: OnboardingStep) => void
   acceptConsent: (cgu: boolean, marketing: boolean) => void
+  markProfileCreated: () => void
   markVaultReady: () => void
   markMedicalProfileDone: () => void
   completeOnboarding: () => void
@@ -31,6 +34,7 @@ export const useOnboardingStore = create<OnboardingState>()(
       consentCGU: false,
       consentMarketing: false,
       consentMarketingAt: null,
+      profileCreated: false,
       vaultReady: false,
       medicalProfileDone: false,
 
@@ -41,8 +45,10 @@ export const useOnboardingStore = create<OnboardingState>()(
           consentCGU: cgu,
           consentMarketing: marketing,
           consentMarketingAt: marketing ? new Date().toISOString() : null,
-          step: 'vault-selection',
+          step: 'profile-setup',
         }),
+
+      markProfileCreated: () => set({ profileCreated: true, step: 'vault-selection' }),
 
       markVaultReady: () => set({ vaultReady: true, step: 'medical-profile' }),
 
@@ -56,6 +62,7 @@ export const useOnboardingStore = create<OnboardingState>()(
           consentCGU: false,
           consentMarketing: false,
           consentMarketingAt: null,
+          profileCreated: false,
           vaultReady: false,
           medicalProfileDone: false,
         }),

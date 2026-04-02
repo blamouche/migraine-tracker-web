@@ -8,6 +8,7 @@ import { useTreatmentStore } from '@/stores/treatmentStore'
 import { useDailyPainStore } from '@/stores/dailyPainStore'
 import { useDashboardStore } from '@/stores/dashboardStore'
 import { useEnvironnementStore } from '@/stores/environnementStore'
+import { useModuleStore } from '@/stores/moduleStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
 import { AlertBanner } from '@/components/alerts/AlertBanner'
 import { DateRangeSelector } from '@/components/dashboard/DateRangeSelector'
@@ -25,12 +26,13 @@ import { WeatherOverviewChart } from '@/components/dashboard/WeatherOverviewChar
 import { PressureCrisisChart } from '@/components/dashboard/PressureCrisisChart'
 import { LunarPhaseChart } from '@/components/dashboard/LunarPhaseChart'
 import type { DashboardTab } from '@/types/dashboard'
+import type { ModuleId } from '@/types/modules'
 
-const TABS: { id: DashboardTab; label: string }[] = [
+const ALL_TABS: { id: DashboardTab; label: string; requiredModule?: ModuleId }[] = [
   { id: 'crises', label: 'Crises' },
   { id: 'declencheurs', label: 'Déclencheurs' },
-  { id: 'meteo', label: 'Météo' },
-  { id: 'traitements', label: 'Traitements' },
+  { id: 'meteo', label: 'Météo', requiredModule: 'environnement' },
+  { id: 'traitements', label: 'Traitements', requiredModule: 'traitements' },
 ]
 
 export function DashboardPage() {
@@ -41,6 +43,9 @@ export function DashboardPage() {
   const { entries: pains, loadPains } = useDailyPainStore()
   const { loadEnvironnements, backfillWeather } = useEnvironnementStore()
   const { activeTab, setActiveTab } = useDashboardStore()
+  const moduleConfig = useModuleStore((s) => s.config)
+
+  const tabs = ALL_TABS.filter((tab) => !tab.requiredModule || moduleConfig[tab.requiredModule])
 
   useEffect(() => {
     async function init() {
@@ -95,7 +100,7 @@ export function DashboardPage() {
 
         {/* Tabs */}
         <div className="mt-8 flex gap-1 border-b border-(--color-border)">
-          {TABS.map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.id}
               type="button"
@@ -142,6 +147,8 @@ function CrisesTab() {
 }
 
 function DeclencheursTab() {
+  const alimentaireEnabled = useModuleStore((s) => s.config.alimentaire)
+
   return (
     <>
       <ChartSection title="Fréquence des déclencheurs">
@@ -152,9 +159,11 @@ function DeclencheursTab() {
         <TriggerCorrelationChart />
       </ChartSection>
 
-      <ChartSection title="Corrélations alimentaires">
-        <FoodCorrelationChart />
-      </ChartSection>
+      {alimentaireEnabled && (
+        <ChartSection title="Corrélations alimentaires">
+          <FoodCorrelationChart />
+        </ChartSection>
+      )}
 
       <ChartSection title="Évolution des déclencheurs dans le temps">
         <TriggerTimelineChart />

@@ -4,6 +4,7 @@ import { useNavigationStore } from '@/stores/navigationStore'
 import { useProfileStore } from '@/stores/profileStore'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useAuthStore } from '@/stores/authStore'
+import { useModuleStore } from '@/stores/moduleStore'
 
 
 interface NavItem {
@@ -23,6 +24,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: 'Accueil', path: '/', icon: <HomeIcon /> },
       { label: 'Dashboard', path: '/dashboard', icon: <ChartIcon /> },
+      { label: 'Calendrier', path: '/calendrier', icon: <CalendarViewIcon /> },
     ],
   },
   {
@@ -57,6 +59,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: 'Système',
     items: [
+      { label: 'Modules', path: '/modules', icon: <SlidersIcon /> },
       { label: 'Alertes', path: '/alertes', icon: <BellIcon /> },
       { label: 'Profils', path: '/profils', icon: <UsersIcon /> },
       { label: 'Environnement', path: '/environnement', icon: <SettingsIcon /> },
@@ -75,6 +78,16 @@ export function Sidebar() {
   const crises = useCrisisStore((s) => s.crises)
   const incompleteCount = useMemo(() => crises.filter((c) => c.status === 'incomplet').length, [crises])
   const { user, signOut } = useAuthStore()
+  const moduleConfig = useModuleStore((s) => s.config)
+  const isRouteEnabled = useModuleStore((s) => s.isRouteEnabled)
+
+  const filteredGroups = useMemo(() => {
+    return NAV_GROUPS.map((group) => ({
+      ...group,
+      items: group.items.filter((item) => isRouteEnabled(item.path)),
+    })).filter((group) => group.items.length > 0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moduleConfig])
 
   const handleNav = (path: string) => {
     navigate(path)
@@ -110,7 +123,7 @@ export function Sidebar() {
 
       {/* Navigation groups */}
       <nav className="flex-1 overflow-y-auto px-2 py-1" aria-label="Navigation principale">
-        {NAV_GROUPS.map((group) => (
+        {filteredGroups.map((group) => (
           <div key={group.title} className="mb-3">
             {!sidebarCollapsed && (
               <p className="mb-1 px-2 text-[11px] font-semibold uppercase tracking-wider text-(--color-text-muted)">
@@ -363,6 +376,24 @@ function SmartphoneIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect width="14" height="20" x="5" y="2" rx="2" ry="2" /><line x1="12" x2="12.01" y1="18" y2="18" />
+    </svg>
+  )
+}
+
+function SlidersIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="4" x2="4" y1="21" y2="14" /><line x1="4" x2="4" y1="10" y2="3" /><line x1="12" x2="12" y1="21" y2="12" /><line x1="12" x2="12" y1="8" y2="3" /><line x1="20" x2="20" y1="21" y2="16" /><line x1="20" x2="20" y1="12" y2="3" /><line x1="2" x2="6" y1="14" y2="14" /><line x1="10" x2="14" y1="8" y2="8" /><line x1="18" x2="22" y1="16" y2="16" />
+    </svg>
+  )
+}
+
+function CalendarViewIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+      <line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" />
+      <rect x="6" y="13" width="4" height="3" rx="0.5" /><rect x="14" y="13" width="4" height="3" rx="0.5" />
     </svg>
   )
 }

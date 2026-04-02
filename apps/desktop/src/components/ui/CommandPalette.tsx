@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useTreatmentStore } from '@/stores/treatmentStore'
+import { useModuleStore } from '@/stores/moduleStore'
 
 interface CommandItem {
   id: string
@@ -32,6 +33,7 @@ const PAGE_COMMANDS: { label: string; path: string; icon: string }[] = [
   { label: 'Alertes', path: '/alertes', icon: '\ud83d\udd14' },
   { label: 'Profils', path: '/profils', icon: '\ud83d\udc65' },
   { label: 'Environnement', path: '/environnement', icon: '\u2699\ufe0f' },
+  { label: 'Modules de suivi', path: '/modules', icon: '\ud83d\udd27' },
 ]
 
 const ACTION_COMMANDS: { label: string; path: string; icon: string }[] = [
@@ -57,6 +59,7 @@ export function CommandPalette() {
   const navigate = useNavigate()
   const crises = useCrisisStore((s) => s.crises)
   const treatments = useTreatmentStore((s) => s.treatments)
+  const isRouteEnabled = useModuleStore((s) => s.isRouteEnabled)
 
   // Open/close with Ctrl+K
   useEffect(() => {
@@ -98,8 +101,9 @@ export function CommandPalette() {
   const allCommands: CommandItem[] = useMemo(() => {
     const items: CommandItem[] = []
 
-    // Actions
+    // Actions (filtered by enabled modules)
     for (const cmd of ACTION_COMMANDS) {
+      if (!isRouteEnabled(cmd.path)) continue
       items.push({
         id: `action:${cmd.path}`,
         label: cmd.label,
@@ -109,8 +113,9 @@ export function CommandPalette() {
       })
     }
 
-    // Pages
+    // Pages (filtered by enabled modules)
     for (const cmd of PAGE_COMMANDS) {
+      if (!isRouteEnabled(cmd.path)) continue
       items.push({
         id: `page:${cmd.path}`,
         label: cmd.label,
@@ -143,7 +148,7 @@ export function CommandPalette() {
     }
 
     return items
-  }, [crises, treatments, navigate])
+  }, [crises, treatments, navigate, isRouteEnabled])
 
   const filtered = useMemo(() => {
     if (!query.trim()) {
