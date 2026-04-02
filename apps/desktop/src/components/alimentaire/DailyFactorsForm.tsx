@@ -41,7 +41,7 @@ export function DailyFactorsForm({ factors, onChange }: DailyFactorsFormProps) {
 
       <ScaleSlider
         id="sleep-slider"
-        label="Qualit\u00e9 du sommeil"
+        label="Qualité du sommeil"
         value={factors.sleepQuality}
         onChange={(v) => update({ sleepQuality: v })}
         labels={SLEEP_LABELS}

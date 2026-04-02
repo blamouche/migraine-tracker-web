@@ -18,7 +18,7 @@ const PAGE_COMMANDS: { label: string; path: string; icon: string }[] = [
   { label: 'Alimentation', path: '/alimentaire/historique', icon: '\ud83c\udf7d\ufe0f' },
   { label: 'Traitements', path: '/traitements/historique', icon: '\ud83d\udc8a' },
   { label: 'Patterns', path: '/patterns', icon: '\ud83d\udcc8' },
-  { label: 'Profil m\u00e9dical', path: '/profil-medical', icon: '\ud83d\udccb' },
+  { label: 'Profil médical', path: '/profil-medical', icon: '\ud83d\udccb' },
   { label: 'Cycle menstruel', path: '/cycle/historique', icon: '\ud83d\udcc5' },
   { label: 'Consultations', path: '/consultations/historique', icon: '\ud83c\udfe5' },
   { label: 'Transports', path: '/transports/historique', icon: '\ud83d\ude97' },
@@ -124,7 +124,7 @@ export function CommandPalette() {
     for (const crisis of crises.slice(0, 5)) {
       items.push({
         id: `crise:${crisis.id}`,
-        label: `Crise du ${crisis.date} (intensit\u00e9 ${crisis.intensity})`,
+        label: `Crise du ${crisis.date} (intensité ${crisis.intensity})`,
         category: 'crise',
         icon: '\u26a1',
         action: () => navigate(`/crisis/${crisis.id}/edit`),
@@ -177,7 +177,7 @@ export function CommandPalette() {
   const CATEGORY_LABELS: Record<string, string> = {
     action: 'Actions',
     page: 'Pages',
-    crise: 'Crises r\u00e9centes',
+    crise: 'Crises récentes',
     traitement: 'Traitements actifs',
   }
 

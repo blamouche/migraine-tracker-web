@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useDailyPainStore } from '@/stores/dailyPainStore'
+import { PainCalendar } from '@/components/pain/PainCalendar'
 import type { DailyPainEntry } from '@/types/dailyPain'
 import { PAIN_NIVEAU_LABELS } from '@/types/dailyPain'
 
@@ -9,10 +10,16 @@ export function DailyPainHistoryPage() {
   const { entries, isLoading, loadPains, deletePain } = useDailyPainStore()
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   useEffect(() => { if (entries.length === 0) loadPains() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const sorted = useMemo(() => [...entries].sort((a, b) => b.date.localeCompare(a.date)), [entries])
+  const sorted = useMemo(() => {
+    const list = selectedDate
+      ? entries.filter((e) => e.date === selectedDate)
+      : entries
+    return [...list].sort((a, b) => b.date.localeCompare(a.date))
+  }, [entries, selectedDate])
 
   const handleDelete = async (entry: DailyPainEntry) => { await deletePain(entry); setDeleteConfirm(null); setExpandedId(null) }
 
@@ -27,7 +34,23 @@ export function DailyPainHistoryPage() {
           </div>
         </div>
 
-        <p className="mt-4 text-xs text-(--color-text-muted)">{sorted.length} entrée{sorted.length !== 1 ? 's' : ''}</p>
+        {/* Calendar */}
+        <div className="mt-4">
+          <PainCalendar
+            entries={entries}
+            selectedDate={selectedDate}
+            onDayClick={(date) => setSelectedDate(selectedDate === date ? null : date)}
+          />
+        </div>
+
+        <p className="mt-4 text-xs text-(--color-text-muted)">
+          {sorted.length} entrée{sorted.length !== 1 ? 's' : ''}
+          {selectedDate && (
+            <button type="button" onClick={() => setSelectedDate(null)} className="ml-2 text-(--color-brand) hover:underline">
+              Effacer le filtre
+            </button>
+          )}
+        </p>
 
         {isLoading ? (
           <p className="mt-8 text-center text-(--color-text-muted)">Chargement…</p>
