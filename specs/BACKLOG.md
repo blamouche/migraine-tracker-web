@@ -1860,10 +1860,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Écran de consentement au premier accès au module IA
-- [ ] Liste précise des données envoyées (anonymisées) et celles exclues
-- [ ] Bouton « Voir ce qui sera envoyé » disponible avant chaque analyse
-- [ ] L'utilisateur peut désactiver le module à tout moment
+- [x] Écran de consentement au premier accès au module IA
+- [x] Liste précise des données envoyées (anonymisées) et celles exclues
+- [x] Bouton « Voir ce qui sera envoyé » disponible avant chaque analyse
+- [x] L'utilisateur peut désactiver le module à tout moment
 
 ---
 
@@ -1875,11 +1875,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Appel à la demande ou automatique hebdomadaire (opt-in, décoché par défaut)
-- [ ] Données envoyées anonymisées côté client avant envoi
-- [ ] Résultats stockés dans `ia/patterns-ia.md`
-- [ ] Badge IA distinctif sur les patterns générés par l'IA
-- [ ] L'utilisateur peut valider ou rejeter chaque pattern IA
+- [x] Appel à la demande ou automatique hebdomadaire (opt-in, décoché par défaut)
+- [x] Données envoyées anonymisées côté client avant envoi
+- [x] Résultats stockés dans `ia/patterns-ia.md`
+- [x] Badge IA distinctif sur les patterns générés par l'IA
+- [x] L'utilisateur peut valider ou rejeter chaque pattern IA
 
 ---
 
@@ -1891,11 +1891,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Recommandations formulées en langage non médical, jamais prescriptives sur les médicaments
-- [ ] Basées exclusivement sur les données personnelles
-- [ ] Chaque recommandation accompagnée d'un indice de confiance
-- [ ] Stockées dans `ia/recommandations.md`
-- [ ] Rafraîchissables à la demande ou automatiquement (opt-in)
+- [x] Recommandations formulées en langage non médical, jamais prescriptives sur les médicaments
+- [x] Basées exclusivement sur les données personnelles
+- [x] Chaque recommandation accompagnée d'un indice de confiance
+- [x] Stockées dans `ia/recommandations.md`
+- [x] Rafraîchissables à la demande ou automatiquement (opt-in)
 
 ---
 
@@ -1907,11 +1907,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Résumé générable sur 1 mois / 3 mois / 6 mois
-- [ ] Niveau de détail : synthétique ou détaillé
-- [ ] Langue : français ou anglais
-- [ ] Intégrable dans le rapport PDF (section dédiée)
-- [ ] Stocké dans `ia/resumes/YYYY-MM-DD_resume.md`
+- [x] Résumé générable sur 1 mois / 3 mois / 6 mois
+- [x] Niveau de détail : synthétique ou détaillé
+- [x] Langue : français ou anglais
+- [x] Intégrable dans le rapport PDF (section dédiée)
+- [x] Stocké dans `ia/resumes/YYYY-MM-DD_resume.md`
 
 ---
 
@@ -1923,11 +1923,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bouton « Affiner avec l'IA » affiché sous l'indicateur de risque local
-- [ ] Déclenché à la demande uniquement par défaut
-- [ ] Option d'automatisation au démarrage (opt-in, décoché par défaut)
-- [ ] Probabilité affichée en % avec détail des facteurs contributeurs
-- [ ] Disclaimer permanent : « Ne remplace pas l'avis médical »
+- [x] Bouton « Affiner avec l'IA » affiché sous l'indicateur de risque local
+- [x] Déclenché à la demande uniquement par défaut
+- [x] Option d'automatisation au démarrage (opt-in, décoché par défaut)
+- [x] Probabilité affichée en % avec détail des facteurs contributeurs
+- [x] Disclaimer permanent : « Ne remplace pas l'avis médical »
 
 ---
 
@@ -1939,9 +1939,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Journal stocké dans `config/ia-log.md`
-- [ ] Contenu : date, type d'analyse, résumé des données envoyées, déclenchement (manuel/auto)
-- [ ] Accessible depuis Préférences → Module IA
+- [x] Journal stocké dans `config/ia-log.md`
+- [x] Contenu : date, type d'analyse, résumé des données envoyées, déclenchement (manuel/auto)
+- [x] Accessible depuis Préférences → Module IA
 
 ---
 
@@ -1953,9 +1953,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Option « Exclure les notes libres » dans les préférences du module IA
-- [ ] Si activée, le champ `notes` est supprimé avant anonymisation et envoi
-- [ ] L'utilisateur est informé que cette exclusion peut réduire la qualité des analyses
+- [x] Option « Exclure les notes libres » dans les préférences du module IA
+- [x] Si activée, le champ `notes` est supprimé avant anonymisation et envoi
+- [x] L'utilisateur est informé que cette exclusion peut réduire la qualité des analyses
 
 ---
 
@@ -1967,9 +1967,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] En dessous de 10 crises : module IA de prédiction désactivé avec message explicatif
-- [ ] L'indicateur de risque local (niveau 1) reste toujours actif
-- [ ] L'indice de confiance et le nombre de crises de calibration sont toujours affichés
+- [x] En dessous de 10 crises : module IA de prédiction désactivé avec message explicatif
+- [x] L'indicateur de risque local (niveau 1) reste toujours actif
+- [x] L'indice de confiance et le nombre de crises de calibration sont toujours affichés
 
 ---
 
@@ -1985,10 +1985,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Activation depuis Préférences → « Activer la saisie mobile »
-- [ ] Génération d'une clé AES-256-GCM stockée dans `config/mobile-sync.md`
-- [ ] QR code affiché contenant le secret de dérivation
-- [ ] L'utilisateur scanne le QR code depuis son téléphone — secret stocké dans localStorage mobile
+- [x] Activation depuis Préférences → « Activer la saisie mobile »
+- [x] Génération d'une clé AES-256-GCM stockée dans `config/mobile-sync.md`
+- [x] QR code affiché contenant le secret de dérivation
+- [x] L'utilisateur scanne le QR code depuis son téléphone — secret stocké dans localStorage mobile
 
 ---
 
@@ -2000,11 +2000,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Interface mobile disponible sur `m.migraine-ai.app`
-- [ ] 3 champs : heure (défaut : maintenant), intensité (curseur), traitement (chips)
-- [ ] Fond sombre permanent, zones tactiles ≥ 48px, aucun scroll
+- [x] Interface mobile disponible sur `m.migraine-ai.app`
+- [x] 3 champs : heure (défaut : maintenant), intensité (curseur), traitement (chips)
+- [x] Fond sombre permanent, zones tactiles ≥ 48px, aucun scroll
 - [ ] Données sérialisées en YAML, chiffrées (AES-256-GCM) et envoyées à Supabase
-- [ ] Confirmation : « Crise enregistrée. Elle sera intégrée à votre vault à la prochaine ouverture. »
+- [x] Confirmation : « Crise enregistrée. Elle sera intégrée à votre vault à la prochaine ouverture. »
 
 ---
 
@@ -2016,9 +2016,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Écran Douleur quotidienne : 1 champ (curseur 0-10), < 5 secondes
-- [ ] Écran Charge mentale : 1 champ (curseur 1-10), < 5 secondes
-- [ ] Même flux chiffré que la saisie de crise
+- [x] Écran Douleur quotidienne : 1 champ (curseur 0-10), < 5 secondes
+- [x] Écran Charge mentale : 1 champ (curseur 1-10), < 5 secondes
+- [x] Même flux chiffré que la saisie de crise
 
 ---
 
@@ -2061,10 +2061,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Option « Régénérer la clé » dans Préférences → Saisie mobile
-- [ ] Les anciens appareils ne peuvent plus chiffrer de nouvelles entrées
-- [ ] Les entrées non synchronisées avec l'ancienne clé restent déchiffrables (historique des clés)
-- [ ] Notification confirmant la révocation
+- [x] Option « Régénérer la clé » dans Préférences → Saisie mobile
+- [x] Les anciens appareils ne peuvent plus chiffrer de nouvelles entrées
+- [x] Les entrées non synchronisées avec l'ancienne clé restent déchiffrables (historique des clés)
+- [x] Notification confirmant la révocation
 
 ---
 
@@ -2094,10 +2094,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Connexion via Supabase Auth (même méthodes que l'app utilisateur)
-- [ ] Vérification du rôle `admin` en base de données (RLS)
-- [ ] Session timeout après 15 minutes d'inactivité
-- [ ] Toutes les actions sont journalisées dans `admin_log`
+- [x] Connexion via Supabase Auth (même méthodes que l'app utilisateur)
+- [x] Vérification du rôle `admin` en base de données (RLS)
+- [x] Session timeout après 15 minutes d'inactivité
+- [x] Toutes les actions sont journalisées dans `admin_log`
 
 ---
 
@@ -2109,10 +2109,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Nom, email masqué (`a***@gmail.com`), date d'inscription, plan, dernière connexion
-- [ ] Dernière utilisation, fréquence d'utilisation sur 30 jours glissants, nombre de profils
-- [ ] Plan actif par profil avec `stripe_subscription_id`
-- [ ] Bouton « Révéler l'email » — action journalisée
+- [x] Nom, email masqué (`a***@gmail.com`), date d'inscription, plan, dernière connexion
+- [x] Dernière utilisation, fréquence d'utilisation sur 30 jours glissants, nombre de profils
+- [x] Plan actif par profil avec `stripe_subscription_id`
+- [x] Bouton « Révéler l'email » — action journalisée
 
 ---
 
@@ -2124,10 +2124,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Écran dédié « Configuration des plans »
-- [ ] Tous les feature flags modifiables : modules, durée d'analyse, exports, saisie vocale, max profils
-- [ ] Modification prise en compte par chaque utilisateur à sa prochaine ouverture d'app
-- [ ] Chaque modification journalisée (date, admin, ancienne valeur, nouvelle valeur)
+- [x] Écran dédié « Configuration des plans »
+- [x] Tous les feature flags modifiables : modules, durée d'analyse, exports, saisie vocale, max profils
+- [x] Modification prise en compte par chaque utilisateur à sa prochaine ouverture d'app
+- [x] Chaque modification journalisée (date, admin, ancienne valeur, nouvelle valeur)
 
 ---
 
@@ -2139,10 +2139,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bascule `is_active: false` dans `user_usage`
-- [ ] L'utilisateur est bloqué au login dès la prochaine tentative
-- [ ] Message affiché à l'utilisateur : « Votre compte a été désactivé. Contactez le support. »
-- [ ] Le vault local de l'utilisateur n'est pas touché
+- [x] Bascule `is_active: false` dans `user_usage`
+- [x] L'utilisateur est bloqué au login dès la prochaine tentative
+- [x] Message affiché à l'utilisateur : « Votre compte a été désactivé. Contactez le support. »
+- [x] Le vault local de l'utilisateur n'est pas touché
 
 ---
 
@@ -2183,9 +2183,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Journal horodaté avec : admin, action, cible, ancienne/nouvelle valeur
-- [ ] Filtrable par admin, type d'action, période
-- [ ] Non modifiable — lecture seule
+- [x] Journal horodaté avec : admin, action, cible, ancienne/nouvelle valeur
+- [x] Filtrable par admin, type d'action, période
+- [x] Non modifiable — lecture seule
 
 ---
 
@@ -2201,9 +2201,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] 11 étapes exécutées séquentiellement (voir Architecture Technique section 12)
-- [ ] Chaque étape gère ses propres erreurs sans bloquer les suivantes (sauf FSAPI critique)
-- [ ] Temps total de démarrage < 2 secondes
+- [x] 11 étapes exécutées séquentiellement (voir Architecture Technique section 12)
+- [x] Chaque étape gère ses propres erreurs sans bloquer les suivantes (sauf FSAPI critique)
+- [x] Temps total de démarrage < 2 secondes
 
 ---
 
@@ -2215,10 +2215,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Scan de validation à chaque démarrage
-- [ ] Erreurs consignées dans `config/erreurs-vault.md`
-- [ ] Fichiers corrompus signalés dans la zone d'attention (non bloquants)
-- [ ] Fichiers vides ignorés silencieusement
+- [x] Scan de validation à chaque démarrage
+- [x] Erreurs consignées dans `config/erreurs-vault.md`
+- [x] Fichiers corrompus signalés dans la zone d'attention (non bloquants)
+- [x] Fichiers vides ignorés silencieusement
 
 ---
 
@@ -2230,9 +2230,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Verrou de session via BroadcastChannel
-- [ ] Le deuxième onglet propose de prendre le contrôle ou de rester en lecture seule
-- [ ] L'onglet original bascule en lecture seule si le verrou est cédé
+- [x] Verrou de session via BroadcastChannel
+- [x] Le deuxième onglet propose de prendre le contrôle ou de rester en lecture seule
+- [x] L'onglet original bascule en lecture seule si le verrou est cédé
 
 ---
 
@@ -2245,7 +2245,7 @@
 **Critères d'acceptation :**
 
 - [ ] Message non-bloquant avec bouton « Ré-autoriser »
-- [ ] Les données saisies en mémoire sont conservées jusqu'à restauration de l'accès
+- [x] Les données saisies en mémoire sont conservées jusqu'à restauration de l'accès
 - [ ] Si le vault est introuvable au démarrage : écran de re-localisation proposé
 
 ---
@@ -2272,7 +2272,7 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vitest configuré et intégré en CI
+- [x] Vitest configuré et intégré en CI
 - [ ] Modules couverts : moteur de patterns, parsing YAML, pipeline d'anonymisation IA, purge corbeille
 - [ ] Rapport de couverture généré à chaque push
 - [ ] Build bloqué si couverture < 80% sur les modules critiques
@@ -2287,7 +2287,7 @@
 
 **Critères d'acceptation :**
 
-- [ ] Playwright (Chromium headless) configuré en CI
+- [x] Playwright (Chromium headless) configuré en CI
 - [ ] Scénarios couverts : onboarding, mode Crise, complétion, rapport PDF, basculement de profil
 - [ ] Aucun test E2E en échec autorisé sur la branche `main`
 
@@ -2316,10 +2316,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] ESLint + Prettier sur chaque push et pull request
-- [ ] Tests unitaires + intégration sur chaque push
-- [ ] Tests E2E sur chaque PR vers `main`
-- [ ] Build Vite sur chaque merge sur `main`
+- [x] ESLint + Prettier sur chaque push et pull request
+- [x] Tests unitaires + intégration sur chaque push
+- [x] Tests E2E sur chaque PR vers `main`
+- [x] Build Vite sur chaque merge sur `main`
 - [ ] Déploiement staging (preview Netlify) sur chaque PR
 - [ ] Déploiement production automatique après passage de tous les tests
 

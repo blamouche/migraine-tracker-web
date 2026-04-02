@@ -191,6 +191,12 @@ export function HomePage() {
             <button type="button" onClick={() => navigate('/environnement')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
               Environnement
             </button>
+            <button type="button" onClick={() => navigate('/ia')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
+              IA
+            </button>
+            <button type="button" onClick={() => navigate('/mobile-sync')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
+              Mobile
+            </button>
             {user && (
               <button
                 type="button"
