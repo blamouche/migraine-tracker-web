@@ -159,6 +159,8 @@ export function FoodFormPage() {
         ? { ...prev, foods: [...template.foods], notes: template.notes, mealType: template.mealType }
         : prev,
     )
+    const custom = template.foods.filter((f) => !DEFAULT_FOOD_NAMES.includes(f))
+    if (custom.length > 0) setCustomFoods((prev) => [...new Set([...prev, ...custom])])
     incrementTemplateUsage(template.templateId)
     setShowTemplates(false)
   }
