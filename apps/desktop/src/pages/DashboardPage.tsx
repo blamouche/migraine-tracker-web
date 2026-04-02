@@ -41,35 +41,7 @@ export function DashboardPage() {
 
   return (
     <MotionConfigProvider animate={false}>
-    <main className="min-h-screen bg-(--color-bg-base) text-(--color-text-primary)">
-      <div className="mx-auto max-w-[1200px] px-8 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Tableau de bord</h1>
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={() => navigate('/export')}
-              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-            >
-              Exporter
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/rapport')}
-              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-            >
-              Rapport PDF
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-            >
-              Accueil
-            </button>
-          </div>
-        </div>
+    <div>
 
         {/* Alerts (E06) */}
         <div className="mt-6">
@@ -122,21 +94,7 @@ export function DashboardPage() {
           {activeTab === 'meteo' && <MeteoTab />}
           {activeTab === 'traitements' && <TraitementsTab />}
         </div>
-      </div>
-
-      {/* FAB — Crisis quick access */}
-      <button
-        type="button"
-        onClick={() => navigate('/crisis/quick')}
-        className="fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-(--color-danger) text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
-        aria-label="Enregistrer une crise"
-        title="Mode Crise"
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-        </svg>
-      </button>
-    </main>
+    </div>
     </MotionConfigProvider>
   )
 }

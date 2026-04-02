@@ -2343,12 +2343,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Sidebar fixe à gauche (240px) visible sur desktop (≥ 1024px)
-- [ ] Modules regroupés par catégorie avec séparateurs : Accès rapide, Suivi, Santé, Analyse, Système
-- [ ] Le lien actif est visuellement distingué (fond `--color-bg-interactive`, bordure gauche `--color-brand` 3px)
-- [ ] Bouton « Nouvelle crise » en CTA proéminent en haut de la sidebar
-- [ ] Un badge numérique apparaît à côté des sections contenant des entrées incomplètes
-- [ ] Le sélecteur de profil est visible en bas de la sidebar (avatar + nom + couleur)
+- [x] Sidebar fixe à gauche (240px) visible sur desktop (≥ 1024px)
+- [x] Modules regroupés par catégorie avec séparateurs : Accès rapide, Suivi, Santé, Analyse, Système
+- [x] Le lien actif est visuellement distingué (fond `--color-bg-interactive`, bordure gauche `--color-brand` 3px)
+- [x] Bouton « Nouvelle crise » en CTA proéminent en haut de la sidebar
+- [x] Un badge numérique apparaît à côté des sections contenant des entrées incomplètes
+- [x] Le sélecteur de profil est visible en bas de la sidebar (avatar + nom + couleur)
 
 ---
 
@@ -2360,10 +2360,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bouton toggle en bas de la sidebar pour basculer entre mode étendu (240px) et mode icônes (64px)
-- [ ] En mode icônes : seules les icônes Lucide sont affichées, avec tooltip au survol pour le label
-- [ ] Le mode est persisté en `localStorage`
-- [ ] Animation fluide de transition entre les deux modes (200ms ease)
+- [x] Bouton toggle en bas de la sidebar pour basculer entre mode étendu (240px) et mode icônes (64px)
+- [x] En mode icônes : seules les icônes Lucide sont affichées, avec tooltip au survol pour le label
+- [x] Le mode est persisté en `localStorage`
+- [x] Animation fluide de transition entre les deux modes (200ms ease)
 
 ---
 
@@ -2375,11 +2375,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] 768px – 1023px : sidebar masquée par défaut, ouverte en overlay au clic sur un bouton hamburger dans le header
-- [ ] Overlay semi-transparent sur le contenu quand la sidebar est ouverte en mode overlay
-- [ ] < 768px : sidebar en drawer plein écran + bottom bar fixe avec 4 raccourcis (Accueil, Nouvelle crise, Dashboard, Menu)
-- [ ] La bottom bar respecte `env(safe-area-inset-bottom)` pour iOS
-- [ ] Le bouton hamburger est visible dans le header uniquement quand la sidebar est masquée
+- [x] 768px – 1023px : sidebar masquée par défaut, ouverte en overlay au clic sur un bouton hamburger dans le header
+- [x] Overlay semi-transparent sur le contenu quand la sidebar est ouverte en mode overlay
+- [x] < 768px : sidebar en drawer plein écran + bottom bar fixe avec 4 raccourcis (Accueil, Nouvelle crise, Dashboard, Menu)
+- [x] La bottom bar respecte `env(safe-area-inset-bottom)` pour iOS
+- [x] Le bouton hamburger est visible dans le header uniquement quand la sidebar est masquée
 
 ---
 
@@ -2391,10 +2391,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Breadcrumb affiché sous le titre de page : `Accueil > Section > Page courante`
-- [ ] Chaque élément sauf le dernier est cliquable et navigue vers la page correspondante
-- [ ] Le dernier élément est affiché en texte non cliquable (`--color-text-muted`)
-- [ ] Sur mobile (< 768px), seul le lien parent direct est affiché (ex : `← Crises`)
+- [x] Breadcrumb affiché sous le titre de page : `Accueil > Section > Page courante`
+- [x] Chaque élément sauf le dernier est cliquable et navigue vers la page correspondante
+- [x] Le dernier élément est affiché en texte non cliquable (`--color-text-muted`)
+- [x] Sur mobile (< 768px), seul le lien parent direct est affiché (ex : `← Crises`)
 
 ---
 
@@ -2406,11 +2406,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Composant `AppLayout` wrappant toutes les routes protégées
-- [ ] Header contextuel avec : titre de la page, breadcrumb, actions spécifiques à la page (ex : bouton Export sur le Dashboard)
-- [ ] La zone de contenu respecte `max-w-[1200px]` centré avec padding `--space-8`
-- [ ] Le mode Crise (`/crisis/quick`) bypass le layout (plein écran, pas de sidebar)
-- [ ] Le layout gère le scroll du contenu indépendamment de la sidebar (sidebar non scrollable ou scroll indépendant)
+- [x] Composant `AppLayout` wrappant toutes les routes protégées
+- [x] Header contextuel avec : titre de la page, breadcrumb, actions spécifiques à la page (ex : bouton Export sur le Dashboard)
+- [x] La zone de contenu respecte `max-w-[1200px]` centré avec padding `--space-8`
+- [x] Le mode Crise (`/crisis/quick`) bypass le layout (plein écran, pas de sidebar)
+- [x] Le layout gère le scroll du contenu indépendamment de la sidebar (sidebar non scrollable ou scroll indépendant)
 
 ---
 
@@ -2426,11 +2426,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Transition `fade + slide` (150ms `ease-out`) entre les pages via React Router
-- [ ] Le contenu sortant fade-out, le contenu entrant fade-in
-- [ ] La transition est désactivée si `prefers-reduced-motion: reduce` est actif
-- [ ] La transition est désactivée en mode Crise (`--transition-speed: 0ms`)
-- [ ] Implémentation via `@react-spring/web` (déjà en dépendance) ou Framer Motion
+- [x] Transition `fade + slide` (150ms `ease-out`) entre les pages via React Router
+- [x] Le contenu sortant fade-out, le contenu entrant fade-in
+- [x] La transition est désactivée si `prefers-reduced-motion: reduce` est actif
+- [x] La transition est désactivée en mode Crise (`--transition-speed: 0ms`)
+- [x] Implémentation via `@react-spring/web` (déjà en dépendance) ou Framer Motion
 
 ---
 
@@ -2442,11 +2442,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Skeleton screens pour : les cartes KPI du dashboard, les graphiques Nivo, les listes d'historique, les formulaires pré-remplis
-- [ ] Les skeletons reprennent les dimensions exactes des composants finaux (pas de saut de layout)
-- [ ] Animation pulsante subtile (`opacity: 0.4 → 0.7`, boucle infinie, 1.5s)
-- [ ] Couleur du skeleton : `--color-bg-subtle` sur fond `--color-bg-base`
-- [ ] Les skeletons sont remplacés par les données réelles sans flash
+- [x] Skeleton screens pour : les cartes KPI du dashboard, les graphiques Nivo, les listes d'historique, les formulaires pré-remplis
+- [x] Les skeletons reprennent les dimensions exactes des composants finaux (pas de saut de layout)
+- [x] Animation pulsante subtile (`opacity: 0.4 → 0.7`, boucle infinie, 1.5s)
+- [x] Couleur du skeleton : `--color-bg-subtle` sur fond `--color-bg-base`
+- [x] Les skeletons sont remplacés par les données réelles sans flash
 
 ---
 
@@ -2458,12 +2458,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Sélection de chip : `scale(0 → 1)` avec léger rebond (200ms)
-- [ ] Ouverture de panneau expansible : hauteur animée `max-height` (200ms ease-out)
-- [ ] Suppression d'une ligne d'historique : fade-out + collapse (200ms)
-- [ ] Hover sur carte : `scale(1.01)` + ombre portée légère (120ms ease)
-- [ ] Changement d'onglet (dashboard) : cross-fade du contenu (150ms)
-- [ ] Toutes les animations respectent `prefers-reduced-motion`
+- [x] Sélection de chip : `scale(0 → 1)` avec léger rebond (200ms)
+- [x] Ouverture de panneau expansible : hauteur animée `max-height` (200ms ease-out)
+- [x] Suppression d'une ligne d'historique : fade-out + collapse (200ms)
+- [x] Hover sur carte : `scale(1.01)` + ombre portée légère (120ms ease)
+- [x] Changement d'onglet (dashboard) : cross-fade du contenu (150ms)
+- [x] Toutes les animations respectent `prefers-reduced-motion`
 
 ---
 
@@ -2475,10 +2475,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Barre de progression horizontale sous le header pour les exports (PDF, ZIP)
-- [ ] Spinner discret dans le bouton de sauvegarde + texte « Enregistrement… » pendant l'écriture
-- [ ] L'écran de chargement initial (démarrage app) affiche un logo animé + barre de progression des 11 étapes de démarrage
-- [ ] En cas d'opération bloquée > 10s, un bouton « Annuler » apparaît
+- [x] Barre de progression horizontale sous le header pour les exports (PDF, ZIP)
+- [x] Spinner discret dans le bouton de sauvegarde + texte « Enregistrement… » pendant l'écriture
+- [x] L'écran de chargement initial (démarrage app) affiche un logo animé + barre de progression des 11 étapes de démarrage
+- [x] En cas d'opération bloquée > 10s, un bouton « Annuler » apparaît
 
 ---
 
@@ -2490,11 +2490,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Toast enrichi avec : icône de statut (✓/⚠/✕), message, barre de progression pour l'auto-dismiss
-- [ ] Toast de suppression avec bouton « Annuler » pendant 5 secondes (undo pattern)
-- [ ] Position : fixe en bas-droit, empilables (max 3 visibles simultanément)
-- [ ] Dismissable au clic ou au swipe (mobile)
-- [ ] Les toasts d'erreur ne se ferment pas automatiquement — fermeture manuelle requise
+- [x] Toast enrichi avec : icône de statut (✓/⚠/✕), message, barre de progression pour l'auto-dismiss
+- [x] Toast de suppression avec bouton « Annuler » pendant 5 secondes (undo pattern)
+- [x] Position : fixe en bas-droit, empilables (max 3 visibles simultanément)
+- [x] Dismissable au clic ou au swipe (mobile)
+- [x] Les toasts d'erreur ne se ferment pas automatiquement — fermeture manuelle requise
 
 ---
 
@@ -2510,11 +2510,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Chaque module sans données affiche un empty state : illustration SVG + titre + sous-texte + CTA
-- [ ] Les illustrations sont mono-couleur `--color-brand`, légères et non infantilisantes
-- [ ] Les CTA sont contextuels : « Enregistrer ma première crise », « Ajouter un repas », « Déclarer un traitement »
-- [ ] Les messages sont bienveillants et non culpabilisants (pas de « Rien ici ! »)
-- [ ] En mode sombre, les illustrations s'adaptent au thème (opacité réduite ou couleurs inversées)
+- [x] Chaque module sans données affiche un empty state : illustration SVG + titre + sous-texte + CTA
+- [x] Les illustrations sont mono-couleur `--color-brand`, légères et non infantilisantes
+- [x] Les CTA sont contextuels : « Enregistrer ma première crise », « Ajouter un repas », « Déclarer un traitement »
+- [x] Les messages sont bienveillants et non culpabilisants (pas de « Rien ici ! »)
+- [x] En mode sombre, les illustrations s'adaptent au thème (opacité réduite ou couleurs inversées)
 
 ---
 
@@ -2526,10 +2526,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Indicateur pulsant vert « ● Sauvegarde auto » en haut du formulaire quand l'auto-save est actif
-- [ ] Texte « Brouillon sauvegardé il y a Xs » affiché discrètement sous le titre, mis à jour en temps réel
-- [ ] Si des modifications non sauvegardées existent : point orange à côté du titre de page
-- [ ] Confirmation modale si l'utilisateur tente de quitter avec des modifications non sauvegardées (via `beforeunload` + React Router blocker)
+- [x] Indicateur pulsant vert « ● Sauvegarde auto » en haut du formulaire quand l'auto-save est actif
+- [x] Texte « Brouillon sauvegardé il y a Xs » affiché discrètement sous le titre, mis à jour en temps réel
+- [x] Si des modifications non sauvegardées existent : point orange à côté du titre de page
+- [x] Confirmation modale si l'utilisateur tente de quitter avec des modifications non sauvegardées (via `beforeunload` + React Router blocker)
 
 ---
 
@@ -2541,11 +2541,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Validation inline : le champ est validé au `blur` (perte de focus)
-- [ ] Champ requis non rempli : label rouge + icône ⚠ + bordure `--color-danger`
-- [ ] Champ valide : icône ✓ verte discrète à droite du champ
-- [ ] Message d'erreur affiché sous le champ (pas dans un toast) via `aria-describedby`
-- [ ] Le bouton de soumission est désactivé visuellement si des erreurs existent, avec tooltip explicatif
+- [x] Validation inline : le champ est validé au `blur` (perte de focus)
+- [x] Champ requis non rempli : label rouge + icône ⚠ + bordure `--color-danger`
+- [x] Champ valide : icône ✓ verte discrète à droite du champ
+- [x] Message d'erreur affiché sous le champ (pas dans un toast) via `aria-describedby`
+- [x] Le bouton de soumission est désactivé visuellement si des erreurs existent, avec tooltip explicatif
 
 ---
 
@@ -2557,11 +2557,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] La suppression d'une entrée (crise, repas, traitement…) affiche un toast avec bouton « Annuler » pendant 5 secondes
-- [ ] Pendant ces 5 secondes, l'entrée est masquée de la liste mais pas encore supprimée du vault
-- [ ] Si « Annuler » est cliqué, l'entrée réapparaît immédiatement
-- [ ] Après 5 secondes sans action, la suppression est définitive (déplacement vers la corbeille)
-- [ ] L'animation de disparition/réapparition est fluide (fade + collapse/expand)
+- [x] La suppression d'une entrée (crise, repas, traitement…) affiche un toast avec bouton « Annuler » pendant 5 secondes
+- [x] Pendant ces 5 secondes, l'entrée est masquée de la liste mais pas encore supprimée du vault
+- [x] Si « Annuler » est cliqué, l'entrée réapparaît immédiatement
+- [x] Après 5 secondes sans action, la suppression est définitive (déplacement vers la corbeille)
+- [x] L'animation de disparition/réapparition est fluide (fade + collapse/expand)
 
 ---
 
@@ -2573,11 +2573,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Chaque carte KPI affiche : valeur principale en `--text-3xl` bold + tendance (flèche ↑↓ + %)
-- [ ] Tendance comparée à la période précédente : vert si amélioration, rouge si dégradation
-- [ ] Sparkline miniature (30 jours) sous la valeur principale
-- [ ] Tooltip au survol détaillant le calcul et la période de comparaison
-- [ ] Les 4 KPI couverts : crises/mois, intensité moyenne, jours sans crise, efficacité traitement
+- [x] Chaque carte KPI affiche : valeur principale en `--text-3xl` bold + tendance (flèche ↑↓ + %)
+- [x] Tendance comparée à la période précédente : vert si amélioration, rouge si dégradation
+- [x] Sparkline miniature (30 jours) sous la valeur principale
+- [x] Tooltip au survol détaillant le calcul et la période de comparaison
+- [x] Les 4 KPI couverts : crises/mois, intensité moyenne, jours sans crise, efficacité traitement
 
 ---
 
@@ -2589,11 +2589,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Clic sur un jour du heatmap calendrier → panneau latéral avec le détail de la journée
-- [ ] Sélection d'une plage temporelle directement sur le graphique (brush/zoom)
-- [ ] Bouton d'export PNG/SVG par graphique individuel
-- [ ] Tooltips enrichis multi-données au survol (douleur + traitements + météo du jour)
-- [ ] Les filtres de date sont persistés dans l'URL (query params) pour le bookmark
+- [x] Clic sur un jour du heatmap calendrier → panneau latéral avec le détail de la journée
+- [x] Sélection d'une plage temporelle directement sur le graphique (brush/zoom)
+- [x] Bouton d'export PNG/SVG par graphique individuel
+- [x] Tooltips enrichis multi-données au survol (douleur + traitements + météo du jour)
+- [x] Les filtres de date sont persistés dans l'URL (query params) pour le bookmark
 
 ---
 
@@ -2609,13 +2609,13 @@
 
 **Critères d'acceptation :**
 
-- [ ] `Ctrl/Cmd + N` : ouvrir le mode Crise (nouvelle crise)
-- [ ] `Ctrl/Cmd + D` : aller au Dashboard
-- [ ] `Ctrl/Cmd + P` : ouvrir le sélecteur de profil
-- [ ] `Ctrl/Cmd + ,` : ouvrir les Préférences
-- [ ] `Escape` : fermer le panneau/modale actif
-- [ ] `?` : afficher un panneau overlay listant tous les raccourcis
-- [ ] Les raccourcis ne s'activent pas si un champ de saisie a le focus
+- [x] `Ctrl/Cmd + N` : ouvrir le mode Crise (nouvelle crise)
+- [x] `Ctrl/Cmd + D` : aller au Dashboard
+- [x] `Ctrl/Cmd + P` : ouvrir le sélecteur de profil
+- [x] `Ctrl/Cmd + ,` : ouvrir les Préférences
+- [x] `Escape` : fermer le panneau/modale actif
+- [x] `?` : afficher un panneau overlay listant tous les raccourcis
+- [x] Les raccourcis ne s'activent pas si un champ de saisie a le focus
 
 ---
 
@@ -2627,12 +2627,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Ouverte via `Ctrl/Cmd + K` — champ de recherche centré en overlay
-- [ ] Recherche dans : pages de l'app, crises récentes (par date), traitements actifs, actions rapides (« Nouvelle crise », « Exporter PDF »…)
-- [ ] Résultats affichés en temps réel avec icônes de catégorie
-- [ ] Navigation au clavier (flèches + Entrée pour sélectionner)
-- [ ] Historique des 5 dernières commandes affiché à l'ouverture (avant toute saisie)
-- [ ] Fermée via `Escape` ou clic en dehors
+- [x] Ouverte via `Ctrl/Cmd + K` — champ de recherche centré en overlay
+- [x] Recherche dans : pages de l'app, crises récentes (par date), traitements actifs, actions rapides (« Nouvelle crise », « Exporter PDF »…)
+- [x] Résultats affichés en temps réel avec icônes de catégorie
+- [x] Navigation au clavier (flèches + Entrée pour sélectionner)
+- [x] Historique des 5 dernières commandes affiché à l'ouverture (avant toute saisie)
+- [x] Fermée via `Escape` ou clic en dehors
 
 ---
 
@@ -2644,12 +2644,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Focus automatiquement placé sur le premier champ interactif à l'ouverture de chaque page
-- [ ] Les modales piègent le focus (focus trap) — Tab ne sort pas de la modale
-- [ ] À la fermeture d'une modale, le focus revient à l'élément déclencheur
-- [ ] Skip-to-content link visible au premier `Tab`, masqué visuellement sinon
-- [ ] Tous les éléments interactifs ont un outline de focus visible (`2px --color-brand, offset 2px`)
-- [ ] L'ordre de tabulation suit l'ordre visuel de lecture (pas de `tabindex` positif)
+- [x] Focus automatiquement placé sur le premier champ interactif à l'ouverture de chaque page
+- [x] Les modales piègent le focus (focus trap) — Tab ne sort pas de la modale
+- [x] À la fermeture d'une modale, le focus revient à l'élément déclencheur
+- [x] Skip-to-content link visible au premier `Tab`, masqué visuellement sinon
+- [x] Tous les éléments interactifs ont un outline de focus visible (`2px --color-brand, offset 2px`)
+- [x] L'ordre de tabulation suit l'ordre visuel de lecture (pas de `tabindex` positif)
 
 ---
 
@@ -2661,11 +2661,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Flèches haut/bas pour naviguer entre les lignes d'un historique
-- [ ] Entrée pour ouvrir/déplier une entrée
-- [ ] `e` pour éditer l'entrée sélectionnée, `Delete/Backspace` pour supprimer (avec confirmation)
-- [ ] Les filtres sont accessibles au clavier (Tab pour atteindre, Espace/Entrée pour activer)
-- [ ] L'entrée sélectionnée est visuellement distinguée (fond `--color-bg-interactive`)
+- [x] Flèches haut/bas pour naviguer entre les lignes d'un historique
+- [x] Entrée pour ouvrir/déplier une entrée
+- [x] `e` pour éditer l'entrée sélectionnée, `Delete/Backspace` pour supprimer (avec confirmation)
+- [x] Les filtres sont accessibles au clavier (Tab pour atteindre, Espace/Entrée pour activer)
+- [x] L'entrée sélectionnée est visuellement distinguée (fond `--color-bg-interactive`)
 
 ---
 

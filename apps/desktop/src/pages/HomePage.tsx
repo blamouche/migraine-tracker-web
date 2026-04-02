@@ -23,7 +23,7 @@ import { PAIN_NIVEAU_LABELS } from '@/types/dailyPain'
 
 export function HomePage() {
   const navigate = useNavigate()
-  const { user, isAnonymous, signOut } = useAuthStore()
+  const { isAnonymous, signOut, user } = useAuthStore()
   const { crises, loadCrises, purgeOldTrash } = useCrisisStore()
   const { entries: foodEntries, loadEntries: loadFoodEntries } = useFoodStore()
   const { treatments, loadTreatments } = useTreatmentStore()
@@ -61,155 +61,8 @@ export function HomePage() {
   const hasPains = pains.length > 0
 
   return (
-    <main className="min-h-screen bg-(--color-bg-base) text-(--color-text-primary)">
-      <div className="mx-auto max-w-[1200px] px-8 py-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Migraine AI</h1>
-          <div className="flex items-center gap-4">
-            {hasCrises && (
-              <button
-                type="button"
-                onClick={() => navigate('/dashboard')}
-                className="text-sm text-(--color-brand) font-medium hover:underline"
-              >
-                Tableau de bord
-              </button>
-            )}
-            {hasCrises && (
-              <button
-                type="button"
-                onClick={() => navigate('/rapport')}
-                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-              >
-                Rapport
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => navigate('/alertes')}
-              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-            >
-              Alertes
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/export')}
-              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-            >
-              Exporter
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/traitements/historique')}
-              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-            >
-              Traitements
-            </button>
-            {hasCrises && (
-              <button
-                type="button"
-                onClick={() => navigate('/patterns')}
-                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-              >
-                Patterns
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => navigate('/profil-medical')}
-              className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-            >
-              Profil médical
-            </button>
-            {hasFood && (
-              <button
-                type="button"
-                onClick={() => navigate('/alimentaire/historique')}
-                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-              >
-                Journal alimentaire
-              </button>
-            )}
-            {hasCrises && (
-              <button
-                type="button"
-                onClick={() => navigate('/crisis/history')}
-                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-              >
-                Historique crises
-              </button>
-            )}
-            {hasCycles && (
-              <button
-                type="button"
-                onClick={() => navigate('/cycle/historique')}
-                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-              >
-                Cycles
-              </button>
-            )}
-            {hasConsultations && (
-              <button
-                type="button"
-                onClick={() => navigate('/consultations/historique')}
-                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-              >
-                Consultations
-              </button>
-            )}
-            {hasTransports && (
-              <button
-                type="button"
-                onClick={() => navigate('/transports/historique')}
-                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-              >
-                Transports
-              </button>
-            )}
-            {hasSports && (
-              <button
-                type="button"
-                onClick={() => navigate('/sport/historique')}
-                className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)"
-              >
-                Sport
-              </button>
-            )}
-            {hasCharges && (
-              <button type="button" onClick={() => navigate('/charge-mentale/historique')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
-                Charge mentale
-              </button>
-            )}
-            {hasPains && (
-              <button type="button" onClick={() => navigate('/douleur/historique')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
-                Douleur
-              </button>
-            )}
-            <button type="button" onClick={() => navigate('/profils')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
-              Profils
-            </button>
-            <button type="button" onClick={() => navigate('/environnement')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
-              Environnement
-            </button>
-            <button type="button" onClick={() => navigate('/ia')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
-              IA
-            </button>
-            <button type="button" onClick={() => navigate('/mobile-sync')} className="text-sm text-(--color-text-secondary) hover:text-(--color-text-primary)">
-              Mobile
-            </button>
-            {user && (
-              <button
-                type="button"
-                onClick={() => signOut()}
-                className="text-sm text-(--color-text-secondary) underline hover:text-(--color-text-primary)"
-              >
-                Déconnexion
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-8 space-y-6">
+    <>
+      <div className="space-y-6">
           {isAnonymous && (
             <div className="rounded-(--radius-md) bg-(--color-warning-light) px-4 py-3 text-sm text-(--color-warning)">
               Vous utilisez Migraine AI sans compte. Créez un compte pour sauvegarder vos
@@ -690,22 +543,20 @@ export function HomePage() {
               </>
             )}
           </div>
-        </div>
+          {/* Déconnexion */}
+          {user && (
+            <div className="pt-4 text-center">
+              <button
+                type="button"
+                onClick={() => signOut()}
+                className="text-sm text-(--color-text-muted) underline hover:text-(--color-text-primary)"
+              >
+                Déconnexion
+              </button>
+            </div>
+          )}
       </div>
-
-      {/* FAB — Crisis quick access (US-02-01: ≤ 2 taps) */}
-      <button
-        type="button"
-        onClick={() => navigate('/crisis/quick')}
-        className="fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-(--color-danger) text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
-        aria-label="Enregistrer une crise"
-        title="Mode Crise"
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-        </svg>
-      </button>
-    </main>
+    </>
   )
 }
 
