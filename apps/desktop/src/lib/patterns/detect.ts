@@ -37,7 +37,6 @@ export function detectSingleFactorPatterns(
 
   const patterns: DetectedPattern[] = []
   const factorsByDate = new Map(dailyFactors.map((f) => [f.date, f]))
-  const crisisDates = new Set(crises.map((c) => c.date))
   const totalCrises = crises.length
   const now = new Date().toISOString()
 
@@ -352,6 +351,7 @@ import type { DailyRisk, RiskFactor } from '@/types/patterns'
 export function calculateDailyRisk(
   validatedPatterns: DetectedPattern[],
   todayFactors: DailyFactors | undefined,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   crises: CrisisEntry[],
 ): DailyRisk {
   const now = new Date().toISOString()

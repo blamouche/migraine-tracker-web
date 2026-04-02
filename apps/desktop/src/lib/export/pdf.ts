@@ -7,12 +7,15 @@ import {
   CONTRACEPTION_LABELS,
   DOCTOR_SPECIALITY_LABELS,
 } from '@/types/medicalProfile'
+import type { ConsultationEntry } from '@/types/consultation'
+import { CONSULTATION_TYPE_LABELS } from '@/types/consultation'
 
 export interface ReportOptions {
   from: string // YYYY-MM-DD
   to: string // YYYY-MM-DD
   crises: CrisisEntry[]
   medicalProfile: MedicalProfile | undefined
+  consultations?: ConsultationEntry[]
 }
 
 function formatDate(dateStr: string): string {
@@ -30,7 +33,7 @@ function formatDuration(minutes: number): string {
   return m > 0 ? `${h}h ${m}min` : `${h}h`
 }
 
-export function generateMedicalReport({ from, to, crises, medicalProfile }: ReportOptions): void {
+export function generateMedicalReport({ from, to, crises, medicalProfile, consultations }: ReportOptions): void {
   const filtered = crises
     .filter((c) => c.date >= from && c.date <= to)
     .sort((a, b) => a.date.localeCompare(b.date))
@@ -200,6 +203,33 @@ export function generateMedicalReport({ from, to, crises, medicalProfile }: Repo
     for (const [name, count] of topTreatments) {
       doc.text(`• ${name} — ${count} prise${count > 1 ? 's' : ''}`, margin + 2, y)
       y += 5
+    }
+    y += 5
+  }
+
+  // --- Consultations (US-11-02) ---
+  const filteredConsultations = (consultations ?? [])
+    .filter((c) => c.date >= from && c.date <= to)
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  if (filteredConsultations.length > 0) {
+    checkNewPage(25)
+    doc.setFontSize(12)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Consultations médicales', margin, y)
+    y += 7
+
+    doc.setFontSize(10)
+    doc.setFont('helvetica', 'normal')
+    for (const c of filteredConsultations) {
+      checkNewPage(15)
+      const dateStr = new Date(c.date + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+      doc.text(`• ${dateStr} — ${c.medecin} (${CONSULTATION_TYPE_LABELS[c.type]})`, margin + 2, y)
+      y += 5
+      if (c.decisions.length > 0) {
+        doc.text(`  Décisions : ${c.decisions.join(', ')}`, margin + 4, y)
+        y += 5
+      }
     }
     y += 5
   }

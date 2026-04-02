@@ -1244,9 +1244,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Module désactivé par défaut — activation dans Préférences → Modules
-- [ ] Choix de contraception configurable (aucune / pilule combinée / progestative / DIU hormonal / DIU cuivre / autre)
-- [ ] Le module apparaît dans la navigation uniquement si activé
+- [x] Module désactivé par défaut — activation dans Préférences → Modules
+- [x] Choix de contraception configurable (aucune / pilule combinée / progestative / DIU hormonal / DIU cuivre / autre)
+- [x] Le module apparaît dans la navigation uniquement si activé
 
 ---
 
@@ -1258,11 +1258,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Date de début des règles, durée en jours
-- [ ] Intensité des symptômes : échelle 1-5 avec référentiel fonctionnel
-- [ ] Phase du cycle calculée automatiquement (menstruelle / folliculaire / ovulatoire / lutéale)
-- [ ] Notes libres
-- [ ] Stocké dans `cycle/YYYY-MM_cycle.md`
+- [x] Date de début des règles, durée en jours
+- [x] Intensité des symptômes : échelle 1-5 avec référentiel fonctionnel
+- [x] Phase du cycle calculée automatiquement (menstruelle / folliculaire / ovulatoire / lutéale)
+- [x] Notes libres
+- [x] Stocké dans `cycle/YYYY-MM_cycle.md`
 
 ---
 
@@ -1274,9 +1274,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Alerte déclenchée 2 jours avant le début des règles
-- [ ] Alerte maintenue jusqu'à 3 jours après le début
-- [ ] Message factuel, non alarmiste
+- [x] Alerte déclenchée 2 jours avant le début des règles
+- [x] Alerte maintenue jusqu'à 3 jours après le début
+- [ ] Message factuel, non alarmiste (fonction isInCatamenialWindow implémentée, alerte UI à connecter)
 
 ---
 
@@ -1319,10 +1319,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Champs : date/heure, médecin, spécialité, type, motif, résumé, décisions, ordonnances, prochain RDV
-- [ ] Type : En cabinet / Téléconsultation / Urgences / Hospitalisation
-- [ ] Résumé en Markdown (formatage simple)
-- [ ] Stocké dans `consultations/`
+- [x] Champs : date/heure, médecin, spécialité, type, motif, résumé, décisions, ordonnances, prochain RDV
+- [x] Type : En cabinet / Téléconsultation / Urgences / Hospitalisation
+- [x] Résumé en Markdown (formatage simple)
+- [x] Stocké dans `consultations/`
 
 ---
 
@@ -1334,8 +1334,8 @@
 
 **Critères d'acceptation :**
 
-- [ ] Section dédiée dans le rapport avec liste des consultations sur la période
-- [ ] Pour chaque consultation : date, médecin, décisions prises
+- [x] Section dédiée dans le rapport avec liste des consultations sur la période
+- [x] Pour chaque consultation : date, médecin, décisions prises
 
 ---
 
@@ -1361,9 +1361,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vue liste chronologique
-- [ ] Modification de tous les champs
-- [ ] Suppression avec confirmation (mécanisme corbeille)
+- [x] Vue liste chronologique
+- [x] Modification de tous les champs
+- [x] Suppression avec confirmation (mécanisme corbeille)
 
 ---
 
@@ -1379,10 +1379,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Champs : date/heure, moyen de transport, durée, conditions, distance (optionnel)
-- [ ] Moyen : voiture, train, métro, bus, avion, vélo, marche, moto + Autre
-- [ ] Conditions : conduite, passager, debout, foule, bruit fort, trajet long + Autre
-- [ ] Stocké dans `transports/`
+- [x] Champs : date/heure, moyen de transport, durée, conditions, distance (optionnel)
+- [x] Moyen : voiture, train, métro, bus, avion, vélo, marche, moto + Autre
+- [x] Conditions : conduite, passager, debout, foule, bruit fort, trajet long + Autre
+- [x] Stocké dans `transports/`
 
 ---
 
@@ -1408,8 +1408,8 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vue liste des trajets avec résumé
-- [ ] Modification et suppression (mécanisme corbeille)
+- [x] Vue liste des trajets avec résumé
+- [x] Modification et suppression (mécanisme corbeille)
 
 ---
 
@@ -1425,10 +1425,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Champs : date/heure, type, durée, intensité (1-5), conditions, FC max (optionnel), hydratation
-- [ ] Types extensibles : course, vélo, natation, yoga, musculation, randonnée + Autre
-- [ ] Référentiel d'intensité fonctionnel affiché au survol
-- [ ] Stocké dans `sport/`
+- [x] Champs : date/heure, type, durée, intensité (1-5), conditions, FC max (optionnel), hydratation
+- [x] Types extensibles : course, vélo, natation, yoga, musculation, randonnée + Autre
+- [x] Référentiel d'intensité fonctionnel affiché au survol
+- [x] Stocké dans `sport/`
 
 ---
 
@@ -1454,8 +1454,8 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vue liste chronologique avec type et intensité
-- [ ] Modification et suppression (mécanisme corbeille)
+- [x] Vue liste chronologique avec type et intensité
+- [x] Modification et suppression (mécanisme corbeille)
 
 ---
 
