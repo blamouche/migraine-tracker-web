@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useFoodStore } from '@/stores/foodStore'
+import { FoodCalendar } from '@/components/alimentaire/FoodCalendar'
 import { MEAL_TYPE_LABELS, STRESS_LABELS, SLEEP_LABELS } from '@/types/alimentaire'
 import type { FoodEntry } from '@/types/alimentaire'
 
@@ -17,6 +18,7 @@ export function FoodHistoryPage() {
   const [periodTo, setPeriodTo] = useState('')
   const [expandedDate, setExpandedDate] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   useEffect(() => {
     if (entries.length === 0) loadEntries()
@@ -85,6 +87,26 @@ export function FoodHistoryPage() {
               Retour
             </button>
           </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-4">
+          <FoodCalendar
+            entries={entries}
+            dailyFactors={dailyFactors}
+            onDayClick={(date) => {
+              if (selectedDate === date) {
+                setSelectedDate(null)
+                setPeriodFrom('')
+                setPeriodTo('')
+              } else {
+                setSelectedDate(date)
+                setPeriodFrom(date)
+                setPeriodTo(date)
+              }
+            }}
+            selectedDate={selectedDate}
+          />
         </div>
 
         {/* Filters */}

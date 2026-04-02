@@ -44,12 +44,12 @@ describe('authStore', () => {
     expect(state.user).toBeNull()
   })
 
-  it('initializes as anonymous when no session', async () => {
+  it('initializes with no session', async () => {
     await useAuthStore.getState().initialize()
     const state = useAuthStore.getState()
     expect(state.isLoading).toBe(false)
-    expect(state.isAnonymous).toBe(true)
-    expect(state.anonymousId).toBe('test-anon-id')
+    expect(state.isAnonymous).toBe(false)
+    expect(state.session).toBeNull()
   })
 
   it('clears error', () => {
@@ -102,12 +102,12 @@ describe('authStore', () => {
     expect(useAuthStore.getState().error).toBe('Email ou mot de passe incorrect')
   })
 
-  it('signs out and resets to anonymous', async () => {
+  it('signs out and resets state', async () => {
     useAuthStore.setState({ session: {} as never, user: {} as never, isAnonymous: false })
     await useAuthStore.getState().signOut()
     const state = useAuthStore.getState()
     expect(state.session).toBeNull()
     expect(state.user).toBeNull()
-    expect(state.isAnonymous).toBe(true)
+    expect(state.isAnonymous).toBe(false)
   })
 })
