@@ -195,6 +195,7 @@ export function CommandPalette() {
         className="fixed left-1/2 top-[20%] z-[81] w-[520px] max-w-[90vw] -translate-x-1/2 overflow-hidden rounded-(--radius-xl) bg-(--color-bg-elevated) shadow-2xl"
         role="combobox"
         aria-expanded="true"
+        aria-controls="command-palette-listbox"
         aria-label="Command Palette"
       >
         <div className="flex items-center gap-3 border-b border-(--color-border) px-4 py-3">
@@ -214,7 +215,7 @@ export function CommandPalette() {
           <kbd className="text-[11px] text-(--color-text-muted) border border-(--color-border) rounded px-1.5 py-0.5 bg-(--color-bg-subtle)">Esc</kbd>
         </div>
 
-        <ul className="max-h-[300px] overflow-y-auto py-2" role="listbox">
+        <ul id="command-palette-listbox" className="max-h-[300px] overflow-y-auto py-2" role="listbox">
           {filtered.length === 0 && (
             <li className="px-4 py-6 text-center text-sm text-(--color-text-muted)">
               Aucun résultat pour « {query} »

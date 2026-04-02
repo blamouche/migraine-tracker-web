@@ -38,7 +38,7 @@ export function DashboardPage() {
   const { entries: foodEntries, loadEntries: loadFoodEntries } = useFoodStore()
   const { treatments, loadTreatments } = useTreatmentStore()
   const { entries: pains, loadPains } = useDailyPainStore()
-  const { entries: envEntries, loadEnvironnements, backfillWeather } = useEnvironnementStore()
+  const { loadEnvironnements, backfillWeather } = useEnvironnementStore()
   const { activeTab, setActiveTab } = useDashboardStore()
 
   useEffect(() => {

@@ -105,14 +105,17 @@ function ToastItem({ toast: t }: { toast: Toast }) {
 
   return (
     <div
-      className={`flex min-w-[280px] max-w-[400px] items-start gap-3 rounded-(--radius-lg) ${config.bg} px-4 py-3 shadow-lg`}
-      role="alert"
+      className={`flex min-w-[280px] max-w-[400px] items-start gap-3 rounded-(--radius-lg) ${config.bg} px-4 py-3 shadow-lg cursor-pointer`}
+      role="button"
+      tabIndex={0}
+      aria-label="Fermer la notification"
       style={{
         transform: `translateX(${offsetX}px)`,
         opacity: Math.max(0, 1 - Math.abs(offsetX) / 150),
         transition: startX !== null ? 'none' : 'transform 200ms ease, opacity 200ms ease',
       }}
       onClick={dismiss}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') dismiss() }}
       onTouchStart={(e) => setStartX(e.touches[0]!.clientX)}
       onTouchMove={(e) => {
         if (startX !== null) setOffsetX(e.touches[0]!.clientX - startX)

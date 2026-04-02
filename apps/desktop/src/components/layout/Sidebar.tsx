@@ -4,7 +4,7 @@ import { useNavigationStore } from '@/stores/navigationStore'
 import { useProfileStore } from '@/stores/profileStore'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useAuthStore } from '@/stores/authStore'
-import type { UserProfile } from '@/types/profile'
+
 
 interface NavItem {
   label: string
