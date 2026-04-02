@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router'
 import { useNavigationStore } from '@/stores/navigationStore'
 import { useProfileStore } from '@/stores/profileStore'
@@ -67,8 +68,11 @@ export function Sidebar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { sidebarCollapsed, toggleCollapsed, setSidebarOpen } = useNavigationStore()
-  const activeProfile = useProfileStore((s) => s.profiles.find((p: UserProfile) => p.id === s.activeProfileId))
-  const incompleteCrises = useCrisisStore((s) => s.crises.filter((c) => c.status === 'incomplet'))
+  const profiles = useProfileStore((s) => s.profiles)
+  const activeProfileId = useProfileStore((s) => s.activeProfileId)
+  const activeProfile = useMemo(() => profiles.find((p) => p.id === activeProfileId) ?? null, [profiles, activeProfileId])
+  const crises = useCrisisStore((s) => s.crises)
+  const incompleteCount = useMemo(() => crises.filter((c) => c.status === 'incomplet').length, [crises])
 
   const handleNav = (path: string) => {
     navigate(path)
@@ -80,7 +84,7 @@ export function Sidebar() {
     return location.pathname.startsWith(path.replace('/historique', '').replace('/history', ''))
   }
 
-  const incompleteCount = incompleteCrises.length
+  // incompleteCount already computed above
 
   return (
     <aside
