@@ -1,10 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuthStore } from '@/stores/authStore'
-import { useOnboardingStore } from '@/stores/onboardingStore'
 
 type AuthTab = 'magic-link' | 'password'
 type PasswordMode = 'login' | 'signup'
@@ -36,9 +35,17 @@ export function LoginPage() {
     resetPassword,
     error,
     clearError,
+    user,
+    isLoading,
   } = useAuthStore()
   const navigate = useNavigate()
-  const setStep = useOnboardingStore((s) => s.setStep)
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!isLoading && user) {
+      navigate('/', { replace: true })
+    }
+  }, [user, isLoading, navigate])
 
   const magicLinkForm = useForm<EmailForm>({
     resolver: zodResolver(emailSchema),
@@ -84,11 +91,6 @@ export function LoginPage() {
     if (!useAuthStore.getState().error) {
       setResetSent(true)
     }
-  }
-
-  const handleSkip = () => {
-    setStep('consent')
-    navigate('/onboarding/consent')
   }
 
   return (
@@ -355,19 +357,10 @@ export function LoginPage() {
           </>
         )}
 
-        {/* Skip / offline mode */}
-        <div className="mt-6 text-center">
-          <button
-            type="button"
-            onClick={handleSkip}
-            className="text-sm text-(--color-text-muted) underline hover:text-(--color-text-secondary)"
-          >
-            Continuer sans compte
-          </button>
-          <p className="mt-1 text-xs text-(--color-text-muted)">
-            Vos données resteront sur cet appareil
-          </p>
-        </div>
+        {/* Info */}
+        <p className="mt-6 text-center text-xs text-(--color-text-muted)">
+          Un compte est requis pour utiliser Migraine AI.
+        </p>
       </div>
     </main>
   )

@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import type { Session, User } from '@supabase/supabase-js'
 import type { AuthProvider } from '@migraine-ai/shared/types'
 import { supabase } from '@/lib/supabase'
-import { getOrCreateAnonymousId } from '@/lib/anonymous'
 
 interface AuthState {
   session: Session | null
@@ -39,20 +38,18 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (session) {
         set({ session, user: session.user, isAnonymous: false, isLoading: false })
       } else {
-        const anonId = await getOrCreateAnonymousId()
-        set({ isAnonymous: true, anonymousId: anonId, isLoading: false })
+        set({ isAnonymous: false, isLoading: false })
       }
 
       supabase.auth.onAuthStateChange((_event, session) => {
         set({
           session,
           user: session?.user ?? null,
-          isAnonymous: !session,
+          isAnonymous: false,
         })
       })
     } catch {
-      const anonId = await getOrCreateAnonymousId()
-      set({ isAnonymous: true, anonymousId: anonId, isLoading: false })
+      set({ isAnonymous: false, isLoading: false })
     }
   },
 
@@ -99,7 +96,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signOut: async () => {
     await supabase.auth.signOut()
-    set({ session: null, user: null, isAnonymous: true })
+    set({ session: null, user: null, isAnonymous: false })
   },
 
   clearError: () => set({ error: null }),

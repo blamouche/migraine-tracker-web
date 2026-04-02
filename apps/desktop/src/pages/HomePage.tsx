@@ -23,7 +23,7 @@ import { PAIN_NIVEAU_LABELS } from '@/types/dailyPain'
 
 export function HomePage() {
   const navigate = useNavigate()
-  const { isAnonymous, signOut, user } = useAuthStore()
+  const { signOut, user } = useAuthStore()
   const { crises, loadCrises, purgeOldTrash } = useCrisisStore()
   const { entries: foodEntries, loadEntries: loadFoodEntries } = useFoodStore()
   const { treatments, loadTreatments } = useTreatmentStore()
@@ -63,13 +63,6 @@ export function HomePage() {
   return (
     <>
       <div className="space-y-6">
-          {isAnonymous && (
-            <div className="rounded-(--radius-md) bg-(--color-warning-light) px-4 py-3 text-sm text-(--color-warning)">
-              Vous utilisez Migraine AI sans compte. Créez un compte pour sauvegarder vos
-              préférences et accéder aux fonctionnalités Pro.
-            </div>
-          )}
-
           {/* Risk indicator (E08) — visible en premier */}
           <RiskIndicator />
 
