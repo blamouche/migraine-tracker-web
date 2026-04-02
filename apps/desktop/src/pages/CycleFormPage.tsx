@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { useCycleStore } from '@/stores/cycleStore'
-import type { CycleEntry, CyclePhase, ContraceptionType } from '@/types/cycle'
+import type { CycleEntry, ContraceptionType } from '@/types/cycle'
 import {
   CYCLE_PHASE_LABELS,
   CONTRACEPTION_TYPE_LABELS,
@@ -157,7 +157,7 @@ export function CycleFormPage() {
 
           {/* Phase (auto-calculated) */}
           <div>
-            <label className="text-sm font-medium">Phase calculée</label>
+            <span className="text-sm font-medium">Phase calculée</span>
             <p className="mt-1 rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-subtle) px-3 py-2 text-sm text-(--color-text-secondary)">
               {CYCLE_PHASE_LABELS[form.phase]}
             </p>

@@ -16,7 +16,7 @@ interface MedicalProfileState {
 
 export const useMedicalProfileStore = create<MedicalProfileState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       profile: { ...EMPTY_PROFILE },
       isLoading: false,
       error: null,
