@@ -177,3 +177,84 @@ body {
 *::after {
   box-sizing: border-box;
 }
+
+/* ============================================================
+   ANIMATIONS (E24)
+   ============================================================ */
+@keyframes pulse-skeleton {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-pulse {
+  animation: pulse-skeleton 1.5s ease-in-out infinite;
+}
+
+/* Micro-animations — hover card lift */
+.card-hover {
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.card-hover:hover {
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Chip selection animation */
+.chip-select {
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chip-select:active {
+  transform: scale(0.95);
+}
+
+/* Panel expand animation */
+.panel-expand {
+  overflow: hidden;
+  transition: max-height 200ms ease-out;
+}
+
+/* Focus outline — accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Skip-to-content link */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  padding: 8px 16px;
+  background: var(--color-brand);
+  color: white;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  transition: top 200ms ease;
+}
+.skip-to-content:focus {
+  top: 8px;
+}
+
+/* Reduced motion — respect system preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse,
+  .card-hover,
+  .chip-select,
+  .panel-expand {
+    animation: none !important;
+    transition: none !important;
+  }
+}
