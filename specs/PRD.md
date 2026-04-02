@@ -2448,6 +2448,96 @@ Inspirée de VS Code / Spotlight, accessible via `Ctrl/Cmd + K` :
 
 ---
 
+### 3.25 Vue calendrier consolidée
+
+Vue calendrier mensuelle plein écran regroupant **toutes les données enregistrées** par l'utilisateur sur une seule interface visuelle. L'objectif est de fournir un aperçu rapide et compréhensible de l'ensemble du suivi au quotidien.
+
+#### Affichage par jour
+
+Chaque cellule du calendrier affiche un résumé visuel compact de la journée via des **indicateurs iconographiques** (icônes + couleurs) pour chaque type de donnée enregistrée :
+
+| Donnée | Indicateur visuel |
+| --- | --- |
+| Crise (3.1) | Pastille rouge avec intensité (1-10) |
+| Douleur quotidienne (3.15) | Barre de couleur (gradient vert → rouge selon intensité) |
+| Alimentation (3.2) | Icône fourchette, colorée si aliment à risque détecté |
+| Traitement pris (3.6) | Icône pilule (verte = pris, grise = non renseigné) |
+| Activité sportive (3.12) | Icône sport avec type abrégé |
+| Transport (3.11) | Icône transport avec type |
+| Cycle menstruel (3.9) | Indicateur discret (point coloré selon phase) |
+| Charge mentale (3.14) | Jauge miniature (basse/moyenne/haute) |
+| Météo (4.2) | Icône météo + pression si disponible |
+| Rendez-vous médical (3.10) | Badge « RDV » |
+
+#### Interactions
+
+- **Clic sur un jour** : ouvre un panneau latéral (drawer) avec le détail complet de la journée — toutes les entrées listées avec possibilité de naviguer vers le formulaire d'édition
+- **Survol** : tooltip résumant les données clés du jour
+- **Navigation** : flèches mois précédent / suivant, sélecteur de mois/année, bouton « Aujourd'hui »
+- **Filtrage** : barre de filtres en haut permettant d'afficher/masquer chaque type de donnée sur le calendrier (ex : n'afficher que crises + alimentation)
+
+#### Incitation à la saisie
+
+Les jours sans aucune donnée enregistrée sont visuellement distincts (fond hachuré ou opacité réduite) avec un **badge « + »** invitant à enregistrer des données. Au clic, un menu rapide propose les saisies pertinentes pour ce jour.
+
+Un **bandeau encourageant** s'affiche en haut de la vue si le taux de complétion du mois en cours est inférieur à 60 % :
+- Message dynamique : _« Vous avez renseigné X jours sur Y ce mois-ci. Plus vos données sont complètes, plus les analyses seront pertinentes ! »_
+- Barre de progression visuelle du taux de complétion
+- Le seuil et le message sont masqués une fois 60 % atteint pour ne pas être intrusif
+
+#### Accessibilité & responsive
+
+- Navigation clavier complète (flèches pour se déplacer entre jours, `Enter` pour ouvrir le détail)
+- Légende des icônes accessible en permanence (panneau rétractable)
+- Sur écrans < 768 px, bascule automatique vers une **vue liste chronologique** avec les mêmes informations
+
+---
+
+### 3.26 Personnalisation des modules de suivi
+
+L'utilisateur peut **sélectionner les modules de suivi qu'il souhaite activer** dans l'application. Les modules désactivés par l'utilisateur sont entièrement masqués de l'interface (navigation, formulaires, dashboard, calendrier, rapport PDF). Cela permet à chaque utilisateur de simplifier son expérience en ne gardant que les éléments pertinents pour son cas.
+
+#### Modules configurables
+
+Chaque module optionnel (déjà défini dans les feature flags 3.16) peut être activé/désactivé par l'utilisateur :
+
+| Module | Section PRD | Activé par défaut |
+| --- | --- | --- |
+| Suivi alimentaire & déclencheurs | 3.2 | ✅ Oui |
+| Historique des traitements | 3.6 | ✅ Oui |
+| Tracking du cycle menstruel | 3.9 | ❌ Non |
+| Suivi des rendez-vous médicaux | 3.10 | ✅ Oui |
+| Suivi des transports | 3.11 | ❌ Non |
+| Suivi des activités sportives | 3.12 | ❌ Non |
+| Saisie vocale assistée | 3.13 | ✅ Oui |
+| Charge mentale & événements de vie | 3.14 | ❌ Non |
+| Tracking quotidien de la douleur | 3.15 | ✅ Oui |
+| Données environnementales (météo) | 4.2 | ✅ Oui |
+
+> Les modules **Journal des crises** (3.1), **Dashboard** (3.3), **Rapport médical** (3.4) et **Profil médical** (3.8) sont toujours actifs et ne peuvent pas être désactivés — ils constituent le socle fonctionnel de l'application.
+
+#### Interface de configuration
+
+Accessible depuis **Préférences → Modules de suivi** :
+
+- Liste de tous les modules avec toggle on/off, description courte, et icône
+- Aperçu en temps réel : la navigation se met à jour immédiatement au toggle
+- Message de confirmation lors de la désactivation : _« Vos données existantes sont conservées. Vous pouvez réactiver ce module à tout moment. »_
+- Les modules désactivés par le plan (feature flags admin) sont affichés grisés avec le badge _« Disponible avec le plan Pro »_ — ils ne peuvent pas être activés par l'utilisateur
+
+#### Comportement dans l'application
+
+- **Navigation** : les entrées de menu des modules désactivés sont masquées (pas grisées — complètement absentes)
+- **Formulaires** : les champs liés à un module désactivé ne sont pas affichés dans les formulaires de saisie (ex : pas de section « Transport » dans le formulaire de crise si le module transport est désactivé)
+- **Dashboard** : les graphiques et KPI liés à un module désactivé ne sont pas affichés
+- **Vue calendrier** (3.25) : les indicateurs des modules désactivés ne sont pas affichés
+- **Rapport PDF** (3.4) : les sections liées à un module désactivé sont exclues du rapport
+- **Détection de patterns** (3.7) : les corrélations avec des modules désactivés ne sont pas calculées
+- **Stockage** : les préférences de modules sont stockées dans `config/modules.md` dans le vault et synchronisées via le même mécanisme que les autres données de configuration
+- **Données conservées** : désactiver un module ne supprime jamais les données existantes — elles restent dans le vault et redeviennent visibles si le module est réactivé
+
+---
+
 ## 7. Parcours utilisateur
 
 ### Scénario 1 : premier lancement — onboarding
