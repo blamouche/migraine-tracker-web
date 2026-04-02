@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Navigate, Outlet } from 'react-router'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useAuthStore } from '@/stores/authStore'
-import { useProfileStore } from '@/stores/profileStore'
 import { checkVaultAccess } from '@/lib/vault/handle'
 
 export function OnboardingGuard() {
@@ -10,10 +9,9 @@ export function OnboardingGuard() {
   const isLoading = useAuthStore((s) => s.isLoading)
   const user = useAuthStore((s) => s.user)
   const anonymousId = useAuthStore((s) => s.anonymousId)
-  const activeProfileId = useProfileStore((s) => s.activeProfileId)
   const [vaultStatus, setVaultStatus] = useState<'checking' | 'ok' | 'missing'>('checking')
 
-  const profileId = activeProfileId ?? user?.id ?? anonymousId ?? 'default'
+  const profileId = user?.id ?? anonymousId ?? 'default'
 
   useEffect(() => {
     if (step !== 'complete' || !user) {

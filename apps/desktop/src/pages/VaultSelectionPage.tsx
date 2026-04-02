@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useOnboardingStore } from '@/stores/onboardingStore'
-import { useProfileStore } from '@/stores/profileStore'
+import { useAuthStore } from '@/stores/authStore'
 import { pickVaultFolder, ensureVaultStructure, saveVaultHandle } from '@/lib/vault/handle'
 
 export function VaultSelectionPage() {
@@ -9,9 +9,10 @@ export function VaultSelectionPage() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const markVaultReady = useOnboardingStore((s) => s.markVaultReady)
-  const activeProfileId = useProfileStore((s) => s.activeProfileId)
+  const user = useAuthStore((s) => s.user)
+  const anonymousId = useAuthStore((s) => s.anonymousId)
 
-  const profileId = activeProfileId ?? 'default'
+  const profileId = user?.id ?? anonymousId ?? 'default'
 
   const handlePickFolder = async () => {
     setError(null)

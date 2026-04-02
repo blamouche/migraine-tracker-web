@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuthStore } from '@/stores/authStore'
-import { useProfileStore } from '@/stores/profileStore'
 import { pickVaultFolder, ensureVaultStructure, saveVaultHandle } from '@/lib/vault/handle'
 
 export function VaultReconnectPage() {
@@ -10,9 +9,8 @@ export function VaultReconnectPage() {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const anonymousId = useAuthStore((s) => s.anonymousId)
-  const activeProfileId = useProfileStore((s) => s.activeProfileId)
 
-  const profileId = activeProfileId ?? user?.id ?? anonymousId ?? 'default'
+  const profileId = user?.id ?? anonymousId ?? 'default'
 
   const handlePickFolder = async () => {
     setError(null)
