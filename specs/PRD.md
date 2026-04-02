@@ -34,6 +34,11 @@
    - 3.17 [Authentification & administration](#317-authentification--administration)
    - 3.18 [Analyses et recommandations IA (plan Pro)](#318-analyses-et-recommandations-ia-plan-pro)
    - 3.19 [Saisie mobile — mode Crise à distance](#319-saisie-mobile--mode-crise-à-distance)
+   - 3.20 [Navigation & shell applicatif](#320-navigation--shell-applicatif)
+   - 3.21 [Transitions, animations & micro-interactions](#321-transitions-animations--micro-interactions)
+   - 3.22 [Feedback utilisateur & états visuels](#322-feedback-utilisateur--états-visuels)
+   - 3.23 [Améliorations du Dashboard](#323-améliorations-du-dashboard)
+   - 3.24 [Accessibilité avancée & raccourcis clavier](#324-accessibilité-avancée--raccourcis-clavier)
 4. [Architecture technique](#4-architecture-technique)
 5. [Modèle de données](#5-modèle-de-données)
 6. [Exigences non fonctionnelles](#6-exigences-non-fonctionnelles)
@@ -2280,6 +2285,169 @@ L'application utilise un **verrou de session** via l'API BroadcastChannel (nativ
 
 ---
 
+### 3.20 Navigation & shell applicatif
+
+L'application v1.0 a été développée sans shell de navigation persistant : chaque page gère sa propre barre de navigation en haut de page, avec des liens contextuels. Ce modèle atteint ses limites dès que le nombre de modules augmente — l'utilisateur perd le contexte de navigation et doit revenir à l'accueil pour naviguer vers une autre section.
+
+#### Layout principal — sidebar + contenu
+
+L'application adopte un layout en deux colonnes :
+
+| Zone | Comportement |
+| --- | --- |
+| **Sidebar** (240px, fixe à gauche) | Navigation principale regroupée par catégorie. Toujours visible sur desktop. Rétractable en mode icônes (64px) via un bouton toggle. Fermée par défaut sur tablette, ouverte en overlay au clic sur le hamburger. |
+| **Zone de contenu** (fluide, max 1200px centré) | Affiche la page active avec son header contextuel (titre, breadcrumb, actions). |
+
+#### Structure de la sidebar
+
+La sidebar regroupe les modules en catégories logiques avec des séparateurs visuels :
+
+| Catégorie | Liens |
+| --- | --- |
+| **Accès rapide** | Accueil, Nouvelle crise (bouton CTA proéminent) |
+| **Suivi** | Crises, Douleur quotidienne, Alimentation, Charge mentale, Cycle, Sport, Transports |
+| **Santé** | Traitements, Consultations, Profil médical |
+| **Analyse** | Dashboard, Patterns, Module IA `[PRO]` |
+| **Système** | Profils, Environnement, Sync mobile, Préférences |
+
+Le lien actif est visuellement distingué (fond `--color-bg-interactive`, bordure gauche `--color-brand` 3px). Un badge numérique apparaît à côté des sections contenant des entrées incomplètes.
+
+#### Breadcrumbs
+
+Chaque page affiche un fil d'Ariane sous le titre de page, reflétant la hiérarchie de navigation : `Accueil > Crises > Crise du 15 mars — Édition`. Le dernier élément n'est pas cliquable.
+
+#### Responsive — comportement tablette et petit écran
+
+| Breakpoint | Comportement sidebar |
+| --- | --- |
+| ≥ 1024px | Sidebar visible en permanence (240px) |
+| 768px – 1023px | Sidebar masquée, ouverte en overlay via hamburger dans le header. Overlay semi-transparent sur le contenu. |
+| < 768px | Sidebar en drawer plein écran depuis la gauche. Bottom bar fixe avec 4 raccourcis : Accueil, Nouvelle crise, Dashboard, Menu. |
+
+---
+
+### 3.21 Transitions, animations & micro-interactions
+
+L'UI v1.0 est fonctionnelle mais statique. L'ajout d'animations subtiles améliore la perception de fluidité et le feedback utilisateur sans impacter les performances. Toutes les animations respectent `prefers-reduced-motion` et sont désactivées en mode Crise.
+
+#### Transitions de page
+
+Navigation entre pages via une transition `fade + slide` légère (150ms `ease-out`). Le contenu sortant fade-out vers la gauche, le contenu entrant fade-in depuis la droite. Implémentation via `React Router` + `Framer Motion` (ou `@react-spring/web` déjà présent).
+
+#### Micro-interactions
+
+| Interaction | Animation |
+| --- | --- |
+| Hover sur carte/bouton | `scale(1.01)` + ombre portée légère, 120ms ease |
+| Clic sur bouton primaire | `scale(0.97)` → `scale(1)`, 100ms |
+| Ouverture d'un panneau expansible | Hauteur animée `max-height`, 200ms ease-out |
+| Ajout d'un chip (sélection) | `scale(0) → scale(1)` avec léger rebond, 200ms |
+| Toast de confirmation | Slide-in depuis le bas-droit, auto-dismiss avec barre de progression |
+| Suppression d'une entrée | Fade-out + collapse de la ligne, 200ms |
+| Changement d'onglet (dashboard) | Cross-fade du contenu, 150ms |
+
+#### États de chargement
+
+| Contexte | Composant |
+| --- | --- |
+| Chargement initial de page | Skeleton screens reprenant la structure du contenu attendu (cartes, listes, graphiques) |
+| Chargement de graphique Nivo | Skeleton rectangulaire pulsant avec les dimensions exactes du graphique |
+| Sauvegarde en cours | Spinner discret dans le bouton + texte « Enregistrement… » |
+| Opération longue (export PDF) | Barre de progression horizontale sous le header |
+
+---
+
+### 3.22 Feedback utilisateur & états visuels
+
+#### Feedback de sauvegarde
+
+| Événement | Feedback |
+| --- | --- |
+| Sauvegarde automatique (brouillon) | Texte discret sous le titre : « Brouillon sauvegardé il y a 30s » — apparaît/disparaît en fade |
+| Enregistrement validé | Toast success (vert) + icône ✓ animée. Redirect après 1.5s. |
+| Erreur de sauvegarde | Toast error (rouge) persistant + bouton « Réessayer ». Pas de redirect. |
+
+#### Empty states enrichis
+
+Chaque module sans données affiche un empty state composé de :
+
+1. Une illustration SVG mono-couleur brand (légère, non infantilisante)
+2. Un titre explicatif (ex : « Pas encore de crise enregistrée »)
+3. Un sous-texte bienveillant (ex : « Quand vous en aurez une, vous pourrez l'enregistrer en moins de 20 secondes. »)
+4. Un CTA primaire (ex : « Enregistrer une crise ») — uniquement si l'action est pertinente
+
+#### Indicateurs visuels sur les formulaires
+
+| État du champ | Indicateur |
+| --- | --- |
+| Requis non rempli | Label rouge + icône ⚠ + bordure `--color-danger` |
+| Valide | Icône ✓ verte à droite du champ (discrète) |
+| Auto-save actif | Indicateur pulsant vert « ● Sauvegarde auto » en haut du formulaire |
+| Modifications non sauvegardées | Point orange à côté du titre + confirmation modale si tentative de quitter |
+
+---
+
+### 3.23 Améliorations du Dashboard
+
+Le dashboard v1.0 présente 4 onglets de graphiques mais souffre de plusieurs limites UX : les onglets placeholder (« coming soon »), l'absence de persistance de l'onglet actif, et un manque de contextualisation des données.
+
+#### KPI cards améliorées
+
+Les indicateurs clés (crises/mois, intensité moyenne, jours sans crise, traitement le plus efficace) sont présentés dans des cartes au-dessus des graphiques avec :
+
+- Une valeur principale en `--text-3xl` bold
+- Une tendance (flèche ↑↓ + pourcentage) comparée à la période précédente, colorée vert/rouge
+- Un sparkline miniature (30 derniers jours) sous la valeur
+- Un tooltip au survol détaillant le calcul
+
+#### Interactions graphiques
+
+| Amélioration | Description |
+| --- | --- |
+| Drill-down | Clic sur un jour du heatmap → détail de la journée (crises, douleur, facteurs) dans un panneau latéral |
+| Zoom temporel | Sélection d'une plage directement sur le graphique (brush) en plus du sélecteur de dates |
+| Export graphique | Bouton d'export PNG/SVG par graphique (via html2canvas déjà disponible) |
+| Tooltips enrichis | Affichage multi-données au survol d'un point (douleur + traitements + météo du jour) |
+
+#### Persistance & état
+
+- L'onglet actif est persisté en `sessionStorage` (conservé au rechargement, pas entre sessions)
+- Les filtres de date sont persistés dans l'URL (query params) pour permettre le partage/bookmark
+- Les graphiques utilisent un cache mémoire pour éviter le recalcul à chaque changement d'onglet
+
+---
+
+### 3.24 Accessibilité avancée & raccourcis clavier
+
+#### Raccourcis clavier globaux
+
+| Raccourci | Action |
+| --- | --- |
+| `Ctrl/Cmd + N` | Nouvelle crise (mode Crise) |
+| `Ctrl/Cmd + D` | Aller au Dashboard |
+| `Ctrl/Cmd + P` | Sélecteur de profil |
+| `Ctrl/Cmd + K` | Barre de recherche / commande rapide (Command Palette) |
+| `Ctrl/Cmd + ,` | Préférences |
+| `Escape` | Fermer le panneau/modale actif |
+| `?` | Afficher la liste des raccourcis |
+
+#### Command Palette
+
+Inspirée de VS Code / Spotlight, accessible via `Ctrl/Cmd + K` :
+
+- Champ de recherche avec autocomplétion
+- Recherche dans : pages de l'app, crises récentes, traitements, actions rapides
+- Navigation directe vers n'importe quel écran ou entrée
+- Historique des 5 dernières commandes
+
+#### Focus management
+
+- Le focus est automatiquement placé sur le premier champ interactif à l'ouverture de chaque page
+- Les modales piègent le focus (focus trap) et le restituent à l'élément déclencheur à la fermeture
+- Skip-to-content link visible au premier `Tab` sur chaque page
+
+---
+
 ## 7. Parcours utilisateur
 
 ### Scénario 1 : premier lancement — onboarding
@@ -2379,6 +2547,11 @@ Ce parcours couvre le cas d'un parent ou proche qui suit la migraine d'une autre
 | Météo automatique Open-Meteo                                                                               | 4.1     | ✓      |
 | Phase lunaire (suncalc — calcul local)                                                                     | 4.1     | ✓      |
 | Thème clair / sombre / automatique                                                                         | 6.3     | ✓      |
+| Navigation & shell applicatif (sidebar, breadcrumbs, responsive)                                           | 3.20    | ✓      |
+| Transitions, animations & micro-interactions                                                               | 3.21    | ✓      |
+| Feedback utilisateur & états visuels (skeleton, empty states, toasts)                                      | 3.22    | ✓      |
+| Améliorations du Dashboard (KPI, drill-down, persistance)                                                  | 3.23    | ✓      |
+| Accessibilité avancée & raccourcis clavier (Command Palette)                                               | 3.24    | ✓      |
 
 ---
 
