@@ -19,6 +19,8 @@ import { TreatmentFormPage } from '@/pages/TreatmentFormPage'
 import { TreatmentHistoryPage } from '@/pages/TreatmentHistoryPage'
 import { PatternsPage } from '@/pages/PatternsPage'
 import { MedicalProfileFullPage } from '@/pages/MedicalProfileFullPage'
+import { IAModulePage } from '@/pages/IAModulePage'
+import { MobileSyncPage } from '@/pages/MobileSyncPage'
 import { ChargeMentaleFormPage } from '@/pages/ChargeMentaleFormPage'
 import { ChargeMentaleHistoryPage } from '@/pages/ChargeMentaleHistoryPage'
 import { EvenementVieFormPage } from '@/pages/EvenementVieFormPage'
@@ -218,6 +220,16 @@ export const router = createBrowserRouter([
       {
         path: '/environnement',
         element: <EnvironnementSettingsPage />,
+      },
+      // E19 — Module IA
+      {
+        path: '/ia',
+        element: <IAModulePage />,
+      },
+      // E20 — Saisie mobile
+      {
+        path: '/mobile-sync',
+        element: <MobileSyncPage />,
       },
     ],
   },
