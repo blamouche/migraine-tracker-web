@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useTransportStore } from '@/stores/transportStore'
+import { TransportCalendar } from '@/components/transport/TransportCalendar'
 import type { TransportEntry, TransportMoyen } from '@/types/transport'
 import { TRANSPORT_MOYEN_LABELS } from '@/types/transport'
 
@@ -15,6 +16,7 @@ export function TransportHistoryPage() {
   const [moyenFilter, setMoyenFilter] = useState<MoyenFilter>('all')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   useEffect(() => {
     if (entries.length === 0) loadTransports()
@@ -23,6 +25,7 @@ export function TransportHistoryPage() {
   const filtered = useMemo(() => {
     const result = entries.filter((e) => {
       if (moyenFilter !== 'all' && e.moyen !== moyenFilter) return false
+      if (selectedDate && e.date !== selectedDate) return false
       return true
     })
 
@@ -33,7 +36,7 @@ export function TransportHistoryPage() {
     )
 
     return result
-  }, [entries, sortOrder, moyenFilter])
+  }, [entries, sortOrder, moyenFilter, selectedDate])
 
   const handleDelete = async (entry: TransportEntry) => {
     await deleteTransport(entry)
@@ -54,6 +57,15 @@ export function TransportHistoryPage() {
               Retour
             </button>
           </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-4">
+          <TransportCalendar
+            entries={entries}
+            onDayClick={(date) => setSelectedDate(selectedDate === date ? null : date)}
+            selectedDate={selectedDate}
+          />
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3 rounded-(--radius-lg) bg-(--color-bg-elevated) p-4">

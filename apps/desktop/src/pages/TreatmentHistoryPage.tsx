@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useTreatmentStore } from '@/stores/treatmentStore'
+import { TreatmentCalendar } from '@/components/treatment/TreatmentCalendar'
 import type { TreatmentEntry, TherapeuticClass, TreatmentType } from '@/types/treatment'
 import {
   THERAPEUTIC_CLASS_LABELS,
@@ -25,6 +26,7 @@ export function TreatmentHistoryPage() {
   const [classFilter, setClassFilter] = useState<ClassFilter>('all')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   useEffect(() => {
     if (treatments.length === 0) loadTreatments()
@@ -34,6 +36,10 @@ export function TreatmentHistoryPage() {
     const result = treatments.filter((t) => {
       if (typeFilter !== 'all' && t.type !== typeFilter) return false
       if (classFilter !== 'all' && t.classe !== classFilter) return false
+      if (selectedDate) {
+        const end = t.dateFin ?? new Date().toISOString().slice(0, 10)
+        if (selectedDate < t.dateDebut || selectedDate > end) return false
+      }
       return true
     })
 
@@ -47,7 +53,7 @@ export function TreatmentHistoryPage() {
     })
 
     return result
-  }, [treatments, sortOrder, typeFilter, classFilter])
+  }, [treatments, sortOrder, typeFilter, classFilter, selectedDate])
 
   const handleDelete = async (treatment: TreatmentEntry) => {
     await deleteTreatment(treatment)
@@ -77,6 +83,15 @@ export function TreatmentHistoryPage() {
               Retour
             </button>
           </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-4">
+          <TreatmentCalendar
+            treatments={treatments}
+            onDayClick={(date) => setSelectedDate(selectedDate === date ? null : date)}
+            selectedDate={selectedDate}
+          />
         </div>
 
         {/* Filters */}

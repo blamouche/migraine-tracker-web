@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useConsultationStore } from '@/stores/consultationStore'
+import { ConsultationCalendar } from '@/components/consultation/ConsultationCalendar'
 import type { ConsultationEntry, ConsultationType } from '@/types/consultation'
 import { CONSULTATION_TYPE_LABELS } from '@/types/consultation'
 
@@ -15,6 +16,7 @@ export function ConsultationHistoryPage() {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   useEffect(() => {
     if (entries.length === 0) loadConsultations()
@@ -23,6 +25,7 @@ export function ConsultationHistoryPage() {
   const filtered = useMemo(() => {
     const result = entries.filter((e) => {
       if (typeFilter !== 'all' && e.type !== typeFilter) return false
+      if (selectedDate && e.date !== selectedDate) return false
       return true
     })
 
@@ -33,7 +36,7 @@ export function ConsultationHistoryPage() {
     )
 
     return result
-  }, [entries, sortOrder, typeFilter])
+  }, [entries, sortOrder, typeFilter, selectedDate])
 
   const handleDelete = async (entry: ConsultationEntry) => {
     await deleteConsultation(entry)
@@ -54,6 +57,15 @@ export function ConsultationHistoryPage() {
               Retour
             </button>
           </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-4">
+          <ConsultationCalendar
+            entries={entries}
+            onDayClick={(date) => setSelectedDate(selectedDate === date ? null : date)}
+            selectedDate={selectedDate}
+          />
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3 rounded-(--radius-lg) bg-(--color-bg-elevated) p-4">

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useSportStore } from '@/stores/sportStore'
+import { SportCalendar } from '@/components/sport/SportCalendar'
 import type { SportEntry, SportType } from '@/types/sport'
 import { SPORT_TYPE_LABELS, SPORT_INTENSITE_LABELS, HYDRATATION_LABELS } from '@/types/sport'
 
@@ -15,6 +16,7 @@ export function SportHistoryPage() {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   useEffect(() => {
     if (entries.length === 0) loadSports()
@@ -23,6 +25,7 @@ export function SportHistoryPage() {
   const filtered = useMemo(() => {
     const result = entries.filter((e) => {
       if (typeFilter !== 'all' && e.type !== typeFilter) return false
+      if (selectedDate && e.date !== selectedDate) return false
       return true
     })
 
@@ -33,7 +36,7 @@ export function SportHistoryPage() {
     )
 
     return result
-  }, [entries, sortOrder, typeFilter])
+  }, [entries, sortOrder, typeFilter, selectedDate])
 
   const handleDelete = async (entry: SportEntry) => {
     await deleteSport(entry)
@@ -54,6 +57,15 @@ export function SportHistoryPage() {
               Retour
             </button>
           </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-4">
+          <SportCalendar
+            entries={entries}
+            onDayClick={(date) => setSelectedDate(selectedDate === date ? null : date)}
+            selectedDate={selectedDate}
+          />
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3 rounded-(--radius-lg) bg-(--color-bg-elevated) p-4">

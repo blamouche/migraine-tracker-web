@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useCycleStore } from '@/stores/cycleStore'
+import { CycleCalendar } from '@/components/cycle/CycleCalendar'
 import type { CycleEntry } from '@/types/cycle'
 import {
   CYCLE_PHASE_LABELS,
@@ -17,20 +18,28 @@ export function CycleHistoryPage() {
   const [sortOrder, setSortOrder] = useState<SortOrder>('date-desc')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   useEffect(() => {
     if (entries.length === 0) loadCycles()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const sorted = useMemo(() => {
-    const result = [...entries]
+    const filtered = selectedDate
+      ? entries.filter((e) => {
+          const start = e.dateDebut
+          const end = new Date(new Date(e.dateDebut + 'T00:00:00').getTime() + (e.dureeJours - 1) * 86400000).toISOString().slice(0, 10)
+          return selectedDate >= start && selectedDate <= end
+        })
+      : entries
+    const result = [...filtered]
     result.sort((a, b) =>
       sortOrder === 'date-desc'
         ? b.dateDebut.localeCompare(a.dateDebut)
         : a.dateDebut.localeCompare(b.dateDebut),
     )
     return result
-  }, [entries, sortOrder])
+  }, [entries, sortOrder, selectedDate])
 
   const handleDelete = async (entry: CycleEntry) => {
     await deleteCycle(entry)
@@ -51,6 +60,15 @@ export function CycleHistoryPage() {
               Retour
             </button>
           </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-4">
+          <CycleCalendar
+            entries={entries}
+            onDayClick={(date) => setSelectedDate(selectedDate === date ? null : date)}
+            selectedDate={selectedDate}
+          />
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3 rounded-(--radius-lg) bg-(--color-bg-elevated) p-4">

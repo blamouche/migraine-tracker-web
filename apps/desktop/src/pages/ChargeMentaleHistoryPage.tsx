@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useChargeMentaleStore } from '@/stores/chargeMentaleStore'
+import { ChargeMentaleCalendar } from '@/components/chargeMentale/ChargeMentaleCalendar'
 import type { ChargeMentaleEntry } from '@/types/chargeMentale'
 import { CHARGE_DOMAINE_LABELS, HUMEUR_LABELS } from '@/types/chargeMentale'
 
@@ -9,10 +10,14 @@ export function ChargeMentaleHistoryPage() {
   const { entries, isLoading, loadCharges, deleteCharge } = useChargeMentaleStore()
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   useEffect(() => { if (entries.length === 0) loadCharges() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const sorted = useMemo(() => [...entries].sort((a, b) => b.date.localeCompare(a.date)), [entries])
+  const sorted = useMemo(() => {
+    const filtered = selectedDate ? entries.filter((e) => e.date === selectedDate) : entries
+    return [...filtered].sort((a, b) => b.date.localeCompare(a.date))
+  }, [entries, selectedDate])
 
   const handleDelete = async (entry: ChargeMentaleEntry) => { await deleteCharge(entry); setDeleteConfirm(null); setExpandedId(null) }
 
@@ -25,6 +30,15 @@ export function ChargeMentaleHistoryPage() {
             <button type="button" onClick={() => navigate('/charge-mentale/nouveau')} className="rounded-(--radius-md) bg-(--color-brand) px-4 py-2 text-sm font-medium text-(--color-text-inverse) hover:bg-(--color-brand-hover)">+ Nouveau</button>
             <button type="button" onClick={() => navigate('/')} className="text-sm text-(--color-text-muted) hover:text-(--color-text-primary)">Retour</button>
           </div>
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-4">
+          <ChargeMentaleCalendar
+            entries={entries}
+            onDayClick={(date) => setSelectedDate(selectedDate === date ? null : date)}
+            selectedDate={selectedDate}
+          />
         </div>
 
         <p className="mt-4 text-xs text-(--color-text-muted)">{sorted.length} entrée{sorted.length !== 1 ? 's' : ''}</p>
