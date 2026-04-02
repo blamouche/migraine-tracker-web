@@ -11,6 +11,7 @@ import { useSportStore } from '@/stores/sportStore'
 import { useChargeMentaleStore } from '@/stores/chargeMentaleStore'
 import { useDailyPainStore } from '@/stores/dailyPainStore'
 import { useEnvironnementStore } from '@/stores/environnementStore'
+import { useModuleStore } from '@/stores/moduleStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
 import { AlertBanner } from '@/components/alerts/AlertBanner'
 import { RiskIndicator } from '@/components/patterns/RiskIndicator'
@@ -35,10 +36,12 @@ export function HomePage() {
   const { entries: charges, loadCharges } = useChargeMentaleStore()
   const { entries: pains, loadPains } = useDailyPainStore()
   const { loadEnvironnements, backfillWeather } = useEnvironnementStore()
+  const { loadConfig: loadModuleConfig, config: moduleConfig } = useModuleStore()
 
   useEffect(() => {
     async function init() {
       await Promise.all([
+        loadModuleConfig(),
         crises.length === 0 ? loadCrises() : Promise.resolve(),
         foodEntries.length === 0 ? loadFoodEntries() : Promise.resolve(),
         treatments.length === 0 ? loadTreatments() : Promise.resolve(),
@@ -145,7 +148,7 @@ export function HomePage() {
           )}
 
           {/* Food journal section (E03) */}
-          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+          {moduleConfig.alimentaire && <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-(--color-text-primary)">
                 Journal alimentaire
@@ -213,10 +216,10 @@ export function HomePage() {
                 </button>
               </>
             )}
-          </div>
+          </div>}
 
           {/* Treatments section (E07) */}
-          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+          {moduleConfig.traitements && <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-(--color-text-primary)">
                 Traitements
@@ -274,9 +277,9 @@ export function HomePage() {
                 </button>
               </>
             )}
-          </div>
+          </div>}
           {/* Daily pain section (E16) */}
-          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+          {moduleConfig.dailyPain && <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-(--color-text-primary)">Douleur quotidienne</h2>
               {hasPains && (
@@ -307,10 +310,10 @@ export function HomePage() {
                 <button type="button" onClick={() => navigate('/douleur/nouveau')} className="mt-3 w-full rounded-(--radius-md) border border-dashed border-(--color-border) py-2 text-sm text-(--color-text-muted) hover:border-(--color-brand) hover:text-(--color-brand)">+ Douleur du jour</button>
               </>
             )}
-          </div>
+          </div>}
 
           {/* Charge mentale section (E15) */}
-          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+          {moduleConfig.chargeMentale && <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-(--color-text-primary)">Charge mentale</h2>
               {hasCharges && (
@@ -344,10 +347,10 @@ export function HomePage() {
                 </div>
               </>
             )}
-          </div>
+          </div>}
 
           {/* Cycle menstruel section (E10) */}
-          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+          {moduleConfig.cycle && <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-(--color-text-primary)">
                 Cycle menstruel
@@ -394,10 +397,10 @@ export function HomePage() {
                 </button>
               </>
             )}
-          </div>
+          </div>}
 
           {/* Consultations section (E11) */}
-          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+          {moduleConfig.consultations && <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-(--color-text-primary)">
                 Consultations médicales
@@ -444,10 +447,10 @@ export function HomePage() {
                 </button>
               </>
             )}
-          </div>
+          </div>}
 
           {/* Transports section (E12) */}
-          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+          {moduleConfig.transports && <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-(--color-text-primary)">
                 Transports
@@ -494,10 +497,10 @@ export function HomePage() {
                 </button>
               </>
             )}
-          </div>
+          </div>}
 
           {/* Sport section (E13) */}
-          <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
+          {moduleConfig.sport && <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-(--color-text-primary)">
                 Activités sportives
@@ -544,7 +547,7 @@ export function HomePage() {
                 </button>
               </>
             )}
-          </div>
+          </div>}
           {/* Déconnexion */}
           {user && (
             <div className="pt-4 text-center">

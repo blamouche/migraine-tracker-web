@@ -25,6 +25,7 @@ export function OnboardingGuard() {
     const redirectMap: Record<string, string> = {
       login: '/onboarding/consent',
       consent: '/onboarding/consent',
+      'profile-setup': '/onboarding/profile',
       'vault-selection': '/onboarding/vault',
       'medical-profile': '/onboarding/medical-profile',
     }

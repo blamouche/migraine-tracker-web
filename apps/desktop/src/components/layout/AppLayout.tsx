@@ -8,6 +8,7 @@ import { ToastContainer } from '@/components/ui/Toast'
 import { CommandPalette } from '@/components/ui/CommandPalette'
 import { ShortcutsPanel } from '@/components/ui/ShortcutsPanel'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
+import { useModuleGuard } from './ModuleGuard'
 
 const ROUTE_TITLES: Record<string, string> = {
   '/': 'Accueil',
@@ -40,6 +41,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/rapport': 'Rapport médical',
   '/export': 'Export des données',
   '/alertes': 'Préférences d\'alertes',
+  '/modules': 'Modules de suivi',
 }
 
 // Crisis mode bypasses the layout (full screen)
@@ -51,6 +53,9 @@ export function AppLayout() {
 
   // Register global keyboard shortcuts (E26)
   useKeyboardShortcuts()
+
+  // E29 — Redirect if route belongs to disabled module
+  useModuleGuard()
 
   if (BYPASS_LAYOUT.includes(location.pathname)) {
     return <Outlet />

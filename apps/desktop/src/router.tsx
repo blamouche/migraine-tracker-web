@@ -28,6 +28,7 @@ import { EvenementVieFormPage } from '@/pages/EvenementVieFormPage'
 import { DailyPainFormPage } from '@/pages/DailyPainFormPage'
 import { DailyPainHistoryPage } from '@/pages/DailyPainHistoryPage'
 import { ProfileManagerPage } from '@/pages/ProfileManagerPage'
+import { ProfileSetupPage } from '@/pages/ProfileSetupPage'
 import { EnvironnementSettingsPage } from '@/pages/EnvironnementSettingsPage'
 import { CycleFormPage } from '@/pages/CycleFormPage'
 import { CycleHistoryPage } from '@/pages/CycleHistoryPage'
@@ -37,6 +38,8 @@ import { TransportFormPage } from '@/pages/TransportFormPage'
 import { TransportHistoryPage } from '@/pages/TransportHistoryPage'
 import { SportFormPage } from '@/pages/SportFormPage'
 import { SportHistoryPage } from '@/pages/SportHistoryPage'
+import { ModulePreferencesPage } from '@/pages/ModulePreferencesPage'
+import { CalendarPage } from '@/pages/CalendarPage'
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +53,10 @@ export const router = createBrowserRouter([
   {
     path: '/onboarding/consent',
     element: <ConsentPage />,
+  },
+  {
+    path: '/onboarding/profile',
+    element: <ProfileSetupPage />,
   },
   {
     path: '/onboarding/vault',
@@ -97,6 +104,11 @@ export const router = createBrowserRouter([
           {
             path: '/dashboard',
             element: <DashboardPage />,
+          },
+          // E28 — Vue calendrier consolidée
+          {
+            path: '/calendrier',
+            element: <CalendarPage />,
           },
           {
             path: '/rapport',
@@ -235,6 +247,11 @@ export const router = createBrowserRouter([
           {
             path: '/mobile-sync',
             element: <MobileSyncPage />,
+          },
+          // E29 — Module personalization
+          {
+            path: '/modules',
+            element: <ModulePreferencesPage />,
           },
         ],
       },
