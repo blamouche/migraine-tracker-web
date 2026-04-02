@@ -1,28 +1,48 @@
 import { useMemo } from 'react'
 import { ResponsiveCalendar } from '@nivo/calendar'
 import { useCrisisStore } from '@/stores/crisisStore'
+import { useDailyPainStore } from '@/stores/dailyPainStore'
 import { useDashboardStore } from '@/stores/dashboardStore'
 import { nivoTheme } from '@/lib/nivoTheme'
 import type { CalendarDay } from '@/types/dashboard'
 
 function buildCalendarData(
   crises: { date: string; intensity: number }[],
+  pains: { date: string; niveau: number }[],
   from: Date,
   to: Date,
 ): CalendarDay[] {
   const dayMap = new Map<string, CalendarDay>()
 
+  // Daily pain entries first (base layer)
+  for (const p of pains) {
+    const d = new Date(p.date + 'T00:00:00')
+    if (d < from || d > to) continue
+
+    const existing = dayMap.get(p.date)
+    if (existing) {
+      if (p.niveau > existing.value) {
+        existing.value = p.niveau
+      }
+    } else {
+      dayMap.set(p.date, {
+        day: p.date,
+        value: p.niveau,
+        hasCrisis: false,
+      })
+    }
+  }
+
+  // Crisis entries on top (override with max intensity)
   for (const c of crises) {
     const d = new Date(c.date + 'T00:00:00')
     if (d < from || d > to) continue
 
     const existing = dayMap.get(c.date)
     if (existing) {
-      // Multiple crises same day — use max intensity
-      if (c.intensity > (existing.crisisIntensity ?? 0)) {
-        existing.crisisIntensity = c.intensity
-        existing.value = c.intensity
-      }
+      existing.hasCrisis = true
+      existing.crisisIntensity = Math.max(c.intensity, existing.crisisIntensity ?? 0)
+      existing.value = Math.max(existing.value, c.intensity)
     } else {
       dayMap.set(c.date, {
         day: c.date,
@@ -38,10 +58,11 @@ function buildCalendarData(
 
 export function CalendarHeatmap() {
   const crises = useCrisisStore((s) => s.crises)
+  const pains = useDailyPainStore((s) => s.entries)
   const getDateRange = useDashboardStore((s) => s.getDateRange)
   const { from, to } = getDateRange('calendar')
 
-  const data = useMemo(() => buildCalendarData(crises, from, to), [crises, from, to])
+  const data = useMemo(() => buildCalendarData(crises, pains, from, to), [crises, pains, from, to])
 
   const fromStr = from.toISOString().slice(0, 10)
   const toStr = to.toISOString().slice(0, 10)
@@ -88,11 +109,13 @@ export function CalendarHeatmap() {
             >
               <strong>{new Date(day + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</strong>
               <br />
-              Intensité : {value ?? 'N/A'}
+              Douleur : {value ?? 'N/A'}/10
               {entry?.hasCrisis && (
                 <>
                   <br />
-                  <span style={{ color: 'var(--color-crisis-marker)' }}>Jour de crise</span>
+                  <span style={{ color: 'var(--color-crisis-marker)' }}>
+                    Crise (intensité {entry.crisisIntensity})
+                  </span>
                 </>
               )}
             </div>
@@ -102,7 +125,7 @@ export function CalendarHeatmap() {
       <div className="mt-2 flex items-center gap-4 text-xs text-(--color-text-muted)">
         <div className="flex items-center gap-1">
           <div className="h-3 w-12 rounded-sm" style={{ background: 'linear-gradient(to right, var(--color-pain-1), var(--color-pain-9))' }} />
-          <span>0 — 10</span>
+          <span>Douleur 0 — 10</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="h-3 w-3 rounded-sm border-2" style={{ borderColor: 'var(--color-crisis-marker)', background: 'var(--color-bg-subtle)' }} />
