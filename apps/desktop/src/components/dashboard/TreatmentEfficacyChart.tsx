@@ -29,7 +29,7 @@ function buildTreatmentData(
 export function TreatmentEfficacyChart() {
   const crises = useCrisisStore((s) => s.crises)
   const getDateRange = useDashboardStore((s) => s.getDateRange)
-  const { from, to } = getDateRange('treatments')
+  const { from, to } = getDateRange()
 
   const data = useMemo(() => buildTreatmentData(crises, from, to), [crises, from, to])
 

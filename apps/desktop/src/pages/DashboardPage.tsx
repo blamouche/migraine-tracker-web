@@ -7,6 +7,7 @@ import { useFoodStore } from '@/stores/foodStore'
 import { useTreatmentStore } from '@/stores/treatmentStore'
 import { useDailyPainStore } from '@/stores/dailyPainStore'
 import { useDashboardStore } from '@/stores/dashboardStore'
+import { useEnvironnementStore } from '@/stores/environnementStore'
 import { IncompleteEntries } from '@/components/crisis/IncompleteEntries'
 import { AlertBanner } from '@/components/alerts/AlertBanner'
 import { DateRangeSelector } from '@/components/dashboard/DateRangeSelector'
@@ -16,6 +17,12 @@ import { CrisisFrequencyChart } from '@/components/dashboard/CrisisFrequencyChar
 import { IntensityEvolutionChart } from '@/components/dashboard/IntensityEvolutionChart'
 import { TreatmentEfficacyChart } from '@/components/dashboard/TreatmentEfficacyChart'
 import { TreatmentTimelineChart } from '@/components/dashboard/TreatmentTimelineChart'
+import { TriggerFrequencyChart } from '@/components/dashboard/TriggerFrequencyChart'
+import { TriggerCorrelationChart } from '@/components/dashboard/TriggerCorrelationChart'
+import { TriggerTimelineChart } from '@/components/dashboard/TriggerTimelineChart'
+import { WeatherOverviewChart } from '@/components/dashboard/WeatherOverviewChart'
+import { PressureCrisisChart } from '@/components/dashboard/PressureCrisisChart'
+import { LunarPhaseChart } from '@/components/dashboard/LunarPhaseChart'
 import type { DashboardTab } from '@/types/dashboard'
 
 const TABS: { id: DashboardTab; label: string }[] = [
@@ -31,13 +38,21 @@ export function DashboardPage() {
   const { entries: foodEntries, loadEntries: loadFoodEntries } = useFoodStore()
   const { treatments, loadTreatments } = useTreatmentStore()
   const { entries: pains, loadPains } = useDailyPainStore()
+  const { entries: envEntries, loadEnvironnements, backfillWeather } = useEnvironnementStore()
   const { activeTab, setActiveTab } = useDashboardStore()
 
   useEffect(() => {
-    if (crises.length === 0) loadCrises()
-    if (foodEntries.length === 0) loadFoodEntries()
-    if (treatments.length === 0) loadTreatments()
-    if (pains.length === 0) loadPains()
+    async function init() {
+      await Promise.all([
+        crises.length === 0 ? loadCrises() : Promise.resolve(),
+        foodEntries.length === 0 ? loadFoodEntries() : Promise.resolve(),
+        treatments.length === 0 ? loadTreatments() : Promise.resolve(),
+        pains.length === 0 ? loadPains() : Promise.resolve(),
+        loadEnvironnements(),
+      ])
+      backfillWeather()
+    }
+    init()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const incompleteCrises = crises.filter((c) => c.status === 'incomplet')
@@ -61,12 +76,17 @@ export function DashboardPage() {
           </div>
         )}
 
-        {/* KPI section with its own date range */}
+        {/* Global date range selector */}
         <section className="mt-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-(--color-text-primary)">Indicateurs clés</h2>
-            <DateRangeSelector chartId="kpi" />
+            <h2 className="text-sm font-semibold text-(--color-text-primary)">Période</h2>
+            <DateRangeSelector />
           </div>
+        </section>
+
+        {/* KPI section */}
+        <section className="mt-6">
+          <h2 className="text-sm font-semibold text-(--color-text-primary)">Indicateurs clés</h2>
           <div className="mt-3">
             <KpiIndicators />
           </div>
@@ -105,15 +125,15 @@ export function DashboardPage() {
 function CrisesTab() {
   return (
     <>
-      <ChartSection title="Calendrier douleur & crises" chartId="calendar">
+      <ChartSection title="Calendrier douleur & crises">
         <CalendarHeatmap />
       </ChartSection>
 
-      <ChartSection title="Fréquence des crises" chartId="frequency">
+      <ChartSection title="Fréquence des crises">
         <CrisisFrequencyChart />
       </ChartSection>
 
-      <ChartSection title="Évolution de l'intensité" chartId="intensity">
+      <ChartSection title="Évolution de l'intensité">
         <IntensityEvolutionChart />
       </ChartSection>
     </>
@@ -122,32 +142,48 @@ function CrisesTab() {
 
 function DeclencheursTab() {
   return (
-    <div className="flex h-40 items-center justify-center rounded-(--radius-lg) bg-(--color-bg-elevated)">
-      <p className="text-sm text-(--color-text-muted)">
-        Les graphiques de corrélation déclencheurs seront disponibles prochainement (US-04-07)
-      </p>
-    </div>
+    <>
+      <ChartSection title="Fréquence des déclencheurs">
+        <TriggerFrequencyChart />
+      </ChartSection>
+
+      <ChartSection title="Intensité moyenne par déclencheur">
+        <TriggerCorrelationChart />
+      </ChartSection>
+
+      <ChartSection title="Évolution des déclencheurs dans le temps">
+        <TriggerTimelineChart />
+      </ChartSection>
+    </>
   )
 }
 
 function MeteoTab() {
   return (
-    <div className="flex h-40 items-center justify-center rounded-(--radius-lg) bg-(--color-bg-elevated)">
-      <p className="text-sm text-(--color-text-muted)">
-        Les graphiques météo seront disponibles prochainement (US-04-05, US-04-08)
-      </p>
-    </div>
+    <>
+      <ChartSection title="Évolution météo & crises">
+        <WeatherOverviewChart />
+      </ChartSection>
+
+      <ChartSection title="Météo moyenne : jours de crise vs jours normaux">
+        <PressureCrisisChart />
+      </ChartSection>
+
+      <ChartSection title="Crises par phase lunaire">
+        <LunarPhaseChart />
+      </ChartSection>
+    </>
   )
 }
 
 function TraitementsTab() {
   return (
     <>
-      <ChartSection title="Timeline des traitements" chartId="treatments">
+      <ChartSection title="Timeline des traitements">
         <TreatmentTimelineChart />
       </ChartSection>
 
-      <ChartSection title="Utilisation des traitements de crise" chartId="treatments-efficacy">
+      <ChartSection title="Utilisation des traitements de crise">
         <TreatmentEfficacyChart />
       </ChartSection>
     </>
@@ -156,19 +192,14 @@ function TraitementsTab() {
 
 function ChartSection({
   title,
-  chartId,
   children,
 }: {
   title: string
-  chartId: string
   children: React.ReactNode
 }) {
   return (
     <section>
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-(--color-text-primary)">{title}</h3>
-        <DateRangeSelector chartId={chartId} />
-      </div>
+      <h3 className="text-sm font-semibold text-(--color-text-primary)">{title}</h3>
       <div className="mt-3">{children}</div>
     </section>
   )

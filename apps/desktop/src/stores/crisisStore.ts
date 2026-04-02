@@ -47,7 +47,14 @@ export const useCrisisStore = create<CrisisState>()(
             // Merge: vault is source of truth, but keep local-only crises
             const vaultIds = new Set(vaultCrises.map((c) => c.id))
             const localOnly = get().crises.filter((c) => !vaultIds.has(c.id))
-            set({ crises: [...vaultCrises, ...localOnly], isLoading: false })
+            // Deduplicate by id
+            const seen = new Set<string>()
+            const merged = [...vaultCrises, ...localOnly].filter((c) => {
+              if (seen.has(c.id)) return false
+              seen.add(c.id)
+              return true
+            })
+            set({ crises: merged, isLoading: false })
           } else {
             // Vault empty or unavailable — keep existing local crises
             set({ isLoading: false })

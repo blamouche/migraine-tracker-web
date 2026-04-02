@@ -66,7 +66,7 @@ export function TreatmentTimelineChart() {
   const treatments = useTreatmentStore((s) => s.treatments)
   const crises = useCrisisStore((s) => s.crises)
   const getDateRange = useDashboardStore((s) => s.getDateRange)
-  const { from, to } = getDateRange('treatments')
+  const { from, to } = getDateRange()
 
   const months = useMemo(() => buildMonthRange(from, to, crises), [from, to, crises])
   const maxCrisis = useMemo(() => Math.max(1, ...months.map((m) => m.crisisCount)), [months])

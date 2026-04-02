@@ -73,7 +73,7 @@ function formatDuration(minutes: number): string {
 export function KpiIndicators() {
   const crises = useCrisisStore((s) => s.crises)
   const getDateRange = useDashboardStore((s) => s.getDateRange)
-  const { from, to } = getDateRange('kpi')
+  const { from, to } = getDateRange()
 
   const kpis = useMemo(() => computeKpis(crises, from, to), [crises, from, to])
 
