@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useCrisisStore } from '@/stores/crisisStore'
+import { CrisisCalendar } from '@/components/crisis/CrisisCalendar'
 import type { CrisisEntry } from '@/types/crisis'
 import { INTENSITY_LABELS } from '@/types/crisis'
 
@@ -65,6 +66,23 @@ export function CrisisHistoryPage() {
           >
             Retour
           </button>
+        </div>
+
+        {/* Calendar */}
+        <div className="mt-4">
+          <CrisisCalendar
+            crises={crises}
+            onDayClick={(date) => {
+              // Toggle: if already filtering on this day, clear the filter
+              if (periodFrom === date && periodTo === date) {
+                setPeriodFrom('')
+                setPeriodTo('')
+              } else {
+                setPeriodFrom(date)
+                setPeriodTo(date)
+              }
+            }}
+          />
         </div>
 
         {/* Filters */}
