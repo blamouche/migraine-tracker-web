@@ -1471,10 +1471,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Mode dialogue séquentiel : une question par champ
-- [ ] Basé sur Web Speech API (Chrome natif)
-- [ ] Fonctionne en mode Crise et en mode Complet
-- [ ] Confirmation avant enregistrement : résumé complet lu avant validation
+- [x] Mode dialogue séquentiel : une question par champ
+- [x] Basé sur Web Speech API (Chrome natif)
+- [x] Fonctionne en mode Crise et en mode Complet
+- [x] Confirmation avant enregistrement : résumé complet lu avant validation
 
 ---
 
@@ -1486,9 +1486,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Option « Mode silencieux » dans les préférences vocales
-- [ ] La dictée fonctionne mais les réponses de l'assistant s'affichent en texte seulement
-- [ ] Configurable par défaut ou par session
+- [x] Option « Mode silencieux » dans les préférences vocales
+- [x] La dictée fonctionne mais les réponses de l'assistant s'affichent en texte seulement
+- [x] Configurable par défaut ou par session
 
 ---
 
@@ -1531,11 +1531,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Saisie principale : niveau de charge 1-10 avec référentiel fonctionnel
-- [ ] Champs complémentaires : domaine dominant, humeur, contexte du jour, notes libres
-- [ ] Tous les champs de sélection extensibles
+- [x] Saisie principale : niveau de charge 1-10 avec référentiel fonctionnel
+- [x] Champs complémentaires : domaine dominant, humeur, contexte du jour, notes libres
+- [x] Tous les champs de sélection extensibles
 - [ ] Saisie disponible en mode vocal
-- [ ] Stocké dans `charge-mentale/`
+- [x] Stocké dans `charge-mentale/`
 
 ---
 
@@ -1547,9 +1547,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Champs : dates début/fin, catégorie, nature (positif/négatif/neutre), intensité perçue, description
-- [ ] Catégories extensibles : professionnel, relationnel, deuil, déménagement, santé, financier + Autre
-- [ ] Stocké dans `charge-mentale/evenements/`
+- [x] Champs : dates début/fin, catégorie, nature (positif/négatif/neutre), intensité perçue, description
+- [x] Catégories extensibles : professionnel, relationnel, deuil, déménagement, santé, financier + Autre
+- [x] Stocké dans `charge-mentale/evenements/`
 
 ---
 
@@ -1588,8 +1588,8 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vue liste des saisies quotidiennes
-- [ ] Modification et suppression (mécanisme corbeille)
+- [x] Vue liste des saisies quotidiennes
+- [x] Modification et suppression (mécanisme corbeille)
 
 ---
 
@@ -1605,10 +1605,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Saisie principale : date (pré-remplie) + curseur de douleur 0-10
-- [ ] Option « Même niveau qu'hier » pour accélérer la saisie répétitive
-- [ ] Ancre personnelle rappelée sous le curseur (même repère que le journal des crises)
-- [ ] Stocké dans `daily-pain/YYYY-MM-DD.md`
+- [x] Saisie principale : date (pré-remplie) + curseur de douleur 0-10
+- [x] Option « Même niveau qu'hier » pour accélérer la saisie répétitive
+- [x] Ancre personnelle rappelée sous le curseur (même repère que le journal des crises)
+- [x] Stocké dans `daily-pain/YYYY-MM-DD.md`
 
 ---
 
@@ -1620,8 +1620,8 @@
 
 **Critères d'acceptation :**
 
-- [ ] Booléen « Lié à une crise » + référence vers le fichier crise du jour
-- [ ] Si niveau ≥ 7 et aucune crise créée ce jour : suggestion de créer une crise
+- [x] Booléen « Lié à une crise » + référence vers le fichier crise du jour
+- [x] Si niveau ≥ 7 et aucune crise créée ce jour : suggestion de créer une crise
 
 ---
 
@@ -1647,8 +1647,8 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vue liste des entrées avec niveau et type de douleur
-- [ ] Modification et suppression (mécanisme corbeille)
+- [x] Vue liste des entrées avec niveau et type de douleur
+- [x] Modification et suppression (mécanisme corbeille)
 
 ---
 
@@ -1664,10 +1664,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Champs : nom du profil, couleur d'identification, sélection du dossier vault
-- [ ] Chaque profil a son propre vault Obsidian (dossier séparé)
-- [ ] Isolation complète des données entre profils
-- [ ] Profil créé en FREE par défaut
+- [x] Champs : nom du profil, couleur d'identification, sélection du dossier vault
+- [x] Chaque profil a son propre vault Obsidian (dossier séparé)
+- [x] Isolation complète des données entre profils
+- [x] Profil créé en FREE par défaut
 
 ---
 
@@ -1681,8 +1681,8 @@
 
 - [ ] Raccourci clavier `Cmd/Ctrl + P` pour ouvrir le sélecteur de profil
 - [ ] Rechargement complet du vault lors du changement
-- [ ] Le profil actif est visible en permanence dans le header (nom + couleur)
-- [ ] Confirmation de basculement : « Vous allez passer sur le profil X. »
+- [x] Le profil actif est visible en permanence dans le header (nom + couleur)
+- [x] Confirmation de basculement : « Vous allez passer sur le profil X. »
 
 ---
 
@@ -1708,10 +1708,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] La suppression retire la référence au profil (IndexedDB + Supabase)
-- [ ] Le vault local n'est pas touché
+- [x] La suppression retire la référence au profil (IndexedDB + Supabase)
+- [x] Le vault local n'est pas touché
 - [ ] Si un abonnement Pro est actif sur ce profil : annulation Stripe déclenchée via webhook
-- [ ] Confirmation en deux étapes
+- [x] Confirmation en deux étapes
 
 ---
 
@@ -1739,7 +1739,7 @@
 **Critères d'acceptation :**
 
 - [ ] Feature flags récupérés depuis Supabase `plan_config` au démarrage
-- [ ] Mis en cache IndexedDB pour usage offline
+- [x] Mis en cache IndexedDB pour usage offline
 - [ ] Modules désactivés visibles mais grisés avec badge Pro
 - [ ] Dashboard limité à 3 mois si `analytics_range_months = 3`
 
@@ -1785,10 +1785,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Option 1 : adresse saisie via autocomplétion Photon
-- [ ] Option 2 : géolocalisation OS (permission navigateur)
-- [ ] Option 3 : lieux favoris enregistrés (domicile, travail…)
-- [ ] Si aucune option : alerte au premier lancement
+- [x] Option 1 : adresse saisie via autocomplétion Photon
+- [x] Option 2 : géolocalisation OS (permission navigateur)
+- [x] Option 3 : lieux favoris enregistrés (domicile, travail…)
+- [x] Si aucune option : alerte au premier lancement
 
 ---
 
@@ -1800,10 +1800,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Récupération via Open-Meteo à chaque ouverture (gratuite, sans clé API)
-- [ ] Stocké dans `environnement/YYYY-MM-DD_env.md`
+- [x] Récupération via Open-Meteo à chaque ouverture (gratuite, sans clé API)
+- [x] Stocké dans `environnement/YYYY-MM-DD_env.md`
 - [ ] Hors connexion : utilisation des dernières données disponibles
-- [ ] Variation de pression sur 24h calculée et stockée
+- [x] Variation de pression sur 24h calculée et stockée
 
 ---
 
@@ -1842,9 +1842,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Calcul via suncalc (calcul local, sans appel réseau)
-- [ ] Données stockées dans `environnement/YYYY-MM-DD_env.md` : phase, illumination, prochaine pleine/nouvelle lune
-- [ ] Affiché dans le dashboard avec label explicite : donnée exploratoire, non validée scientifiquement
+- [x] Calcul via suncalc (calcul local, sans appel réseau)
+- [x] Données stockées dans `environnement/YYYY-MM-DD_env.md` : phase, illumination, prochaine pleine/nouvelle lune
+- [x] Affiché dans le dashboard avec label explicite : donnée exploratoire, non validée scientifiquement
 
 ---
 
