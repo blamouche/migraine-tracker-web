@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/authStore'
 export function OnboardingGuard() {
   const step = useOnboardingStore((s) => s.step)
   const isLoading = useAuthStore((s) => s.isLoading)
+  const user = useAuthStore((s) => s.user)
 
   if (isLoading) {
     return (
@@ -14,14 +15,20 @@ export function OnboardingGuard() {
     )
   }
 
+  // Not authenticated → redirect to login
+  if (!user) {
+    return <Navigate to="/login" replace />
+  }
+
+  // Authenticated but onboarding incomplete → redirect to correct step
   if (step !== 'complete') {
     const redirectMap: Record<string, string> = {
-      login: '/login',
+      login: '/onboarding/consent',
       consent: '/onboarding/consent',
       'vault-selection': '/onboarding/vault',
       'medical-profile': '/onboarding/medical-profile',
     }
-    return <Navigate to={redirectMap[step] ?? '/login'} replace />
+    return <Navigate to={redirectMap[step] ?? '/onboarding/consent'} replace />
   }
 
   return <Outlet />

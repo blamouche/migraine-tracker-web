@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router'
 import { useNavigationStore } from '@/stores/navigationStore'
 import { useProfileStore } from '@/stores/profileStore'
 import { useCrisisStore } from '@/stores/crisisStore'
+import { useAuthStore } from '@/stores/authStore'
 import type { UserProfile } from '@/types/profile'
 
 interface NavItem {
@@ -73,6 +74,7 @@ export function Sidebar() {
   const activeProfile = useMemo(() => profiles.find((p) => p.id === activeProfileId) ?? null, [profiles, activeProfileId])
   const crises = useCrisisStore((s) => s.crises)
   const incompleteCount = useMemo(() => crises.filter((c) => c.status === 'incomplet').length, [crises])
+  const { user, signOut } = useAuthStore()
 
   const handleNav = (path: string) => {
     navigate(path)
@@ -145,22 +147,37 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Profile selector */}
-      {!sidebarCollapsed && activeProfile && (
-        <button
-          type="button"
-          onClick={() => handleNav('/profils')}
-          className="flex items-center gap-3 border-t border-(--color-border) px-4 py-3 text-left text-sm transition-colors hover:bg-(--color-bg-subtle)"
-        >
-          <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-            style={{ backgroundColor: activeProfile.couleur || 'var(--color-brand)' }}
+      {/* User / profile / logout */}
+      <div className="border-t border-(--color-border)">
+        {!sidebarCollapsed && activeProfile && (
+          <button
+            type="button"
+            onClick={() => handleNav('/profils')}
+            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-(--color-bg-subtle)"
           >
-            {activeProfile.nom.charAt(0).toUpperCase()}
-          </span>
-          <span className="truncate text-(--color-text-primary)">{activeProfile.nom}</span>
-        </button>
-      )}
+            <span
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+              style={{ backgroundColor: activeProfile.couleur || 'var(--color-brand)' }}
+            >
+              {activeProfile.nom.charAt(0).toUpperCase()}
+            </span>
+            <span className="truncate text-(--color-text-primary)">{activeProfile.nom}</span>
+          </button>
+        )}
+        {user && (
+          <button
+            type="button"
+            onClick={() => signOut()}
+            title={sidebarCollapsed ? 'Déconnexion' : undefined}
+            className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-(--color-text-muted) transition-colors hover:bg-(--color-bg-subtle) hover:text-(--color-danger)"
+          >
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+              <LogOutIcon />
+            </span>
+            {!sidebarCollapsed && <span>Déconnexion</span>}
+          </button>
+        )}
+      </div>
 
       {/* Toggle collapse */}
       <button
@@ -346,6 +363,16 @@ function SmartphoneIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect width="14" height="20" x="5" y="2" rx="2" ry="2" /><line x1="12" x2="12.01" y1="18" y2="18" />
+    </svg>
+  )
+}
+
+function LogOutIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" x2="9" y1="12" y2="12" />
     </svg>
   )
 }
