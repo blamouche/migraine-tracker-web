@@ -3,9 +3,18 @@ import { useNavigate } from 'react-router'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useMedicalProfileStore } from '@/stores/medicalProfileStore'
 import { useConsultationStore } from '@/stores/consultationStore'
-import { generateMedicalReport } from '@/lib/export/pdf'
+import { generateMedicalReport, DEFAULT_REPORT_SECTIONS, type ReportSections } from '@/lib/export/pdf'
 
 type PeriodPreset = '1m' | '3m' | '6m' | 'custom'
+
+const SECTION_LABELS: Record<keyof ReportSections, string> = {
+  profile: 'Profil patient',
+  summary: 'Résumé de la période',
+  triggers: 'Top 5 déclencheurs',
+  treatments: 'Traitements utilisés',
+  consultations: 'Consultations médicales',
+  crisisDetails: 'Détail des crises',
+}
 
 const PRESETS: { value: PeriodPreset; label: string }[] = [
   { value: '1m', label: '1 mois' },
@@ -48,6 +57,7 @@ export function ReportPage() {
   const [customFrom, setCustomFrom] = useState('')
   const [customTo, setCustomTo] = useState('')
   const [generating, setGenerating] = useState(false)
+  const [sections, setSections] = useState<ReportSections>({ ...DEFAULT_REPORT_SECTIONS })
 
   useEffect(() => {
     loadProfile()
@@ -60,10 +70,16 @@ export function ReportPage() {
 
   const crisesInRange = crises.filter((c) => c.date >= range.from && c.date <= range.to)
 
+  function toggleSection(key: keyof ReportSections) {
+    setSections((prev) => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  const hasAnySection = Object.values(sections).some(Boolean)
+
   function handleGenerate() {
     setGenerating(true)
     try {
-      generateMedicalReport({ from: range.from, to: range.to, crises, medicalProfile: profile, consultations })
+      generateMedicalReport({ from: range.from, to: range.to, crises, medicalProfile: profile, consultations, sections })
     } finally {
       setGenerating(false)
     }
@@ -134,6 +150,32 @@ export function ReportPage() {
           )}
         </section>
 
+        {/* Section toggles */}
+        <section className="mt-8">
+          <h2 className="text-sm font-semibold text-(--color-text-primary)">Contenu du rapport</h2>
+          <p className="mt-1 text-xs text-(--color-text-muted)">
+            Sélectionnez les sections à inclure dans le rapport.
+          </p>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {(Object.keys(SECTION_LABELS) as (keyof ReportSections)[]).map((key) => (
+              <label
+                key={key}
+                className="flex items-center gap-2 rounded-(--radius-md) border border-(--color-border) px-3 py-2 text-sm cursor-pointer select-none transition-colors hover:bg-(--color-bg-subtle)"
+              >
+                <input
+                  type="checkbox"
+                  checked={sections[key]}
+                  onChange={() => toggleSection(key)}
+                  className="accent-(--color-brand)"
+                />
+                <span className={sections[key] ? 'text-(--color-text-primary)' : 'text-(--color-text-muted)'}>
+                  {SECTION_LABELS[key]}
+                </span>
+              </label>
+            ))}
+          </div>
+        </section>
+
         {/* Preview info */}
         <section className="mt-8 rounded-(--radius-lg) bg-(--color-bg-elevated) p-6">
           <h2 className="text-sm font-semibold">Aperçu du contenu</h2>
@@ -153,8 +195,9 @@ export function ReportPage() {
           </dl>
 
           <div className="mt-4 text-xs text-(--color-text-muted)">
-            Le rapport inclura : résumé de période, fréquence et intensité, durée des crises,
-            traitements utilisés, top 5 déclencheurs, score HIT-6, et le détail de chaque crise.
+            {hasAnySection
+              ? `Le rapport inclura : ${(Object.keys(SECTION_LABELS) as (keyof ReportSections)[]).filter((k) => sections[k]).map((k) => SECTION_LABELS[k].toLowerCase()).join(', ')}.`
+              : 'Aucune section sélectionnée. Cochez au moins une section pour générer le rapport.'}
           </div>
         </section>
 
@@ -162,7 +205,7 @@ export function ReportPage() {
         <button
           type="button"
           onClick={handleGenerate}
-          disabled={generating || crisesInRange.length === 0}
+          disabled={generating || crisesInRange.length === 0 || !hasAnySection}
           className="mt-8 w-full rounded-(--radius-md) bg-(--color-brand) px-6 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover) disabled:opacity-50"
         >
           {generating ? 'Génération en cours...' : 'Générer le rapport PDF'}
