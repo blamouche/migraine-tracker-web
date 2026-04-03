@@ -19,8 +19,21 @@ export async function restoreVaultHandle(
   const handle = await idbGet<FileSystemDirectoryHandle>(handleKey(userId))
   if (!handle) return null
 
-  const permission = await handle.requestPermission({ mode: 'readwrite' })
-  if (permission !== 'granted') return null
+  // queryPermission doesn't require user activation (works in background)
+  const handleWithQuery = handle as FileSystemDirectoryHandle & {
+    queryPermission: (desc: { mode: string }) => Promise<PermissionState>
+  }
+  const current = await handleWithQuery.queryPermission({ mode: 'readwrite' })
+  if (current === 'granted') return handle
+
+  // Only request (which needs user gesture) if not already granted
+  try {
+    const permission = await handle.requestPermission({ mode: 'readwrite' })
+    if (permission !== 'granted') return null
+  } catch {
+    // requestPermission throws without user activation — permission not yet granted
+    return null
+  }
 
   return handle
 }

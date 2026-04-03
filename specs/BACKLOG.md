@@ -2021,7 +2021,7 @@
 - [x] Interface mobile disponible sur `m.migraine-ai.app`
 - [x] 3 champs : heure (défaut : maintenant), intensité (curseur), traitement (chips)
 - [x] Fond sombre permanent, zones tactiles ≥ 48px, aucun scroll
-- [ ] Données sérialisées en YAML, chiffrées (AES-256-GCM) et envoyées à Supabase
+- [x] Données sérialisées en YAML, chiffrées (AES-256-GCM) et envoyées à Supabase
 - [x] Confirmation : « Crise enregistrée. Elle sera intégrée à votre vault à la prochaine ouverture. »
 
 ---
@@ -2048,12 +2048,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vérification de `mobile_transit` au démarrage desktop
-- [ ] Déchiffrement local avec la clé de `config/mobile-sync.md`
-- [ ] Écriture dans `crises/`, `daily-pain/`, `charge-mentale/` avec `source: mobile`
+- [x] Vérification de `mobile_transit` au démarrage desktop
+- [x] Déchiffrement local avec la clé de `config/mobile-sync.md`
+- [x] Écriture dans `crises/`, `daily-pain/`, `charge-mentale/` avec `source: mobile`
 - [ ] Crises mobiles apparaissent en zone d'attention avec badge « Saisie mobile »
-- [ ] Entrées synchronisées supprimées de Supabase immédiatement
-- [ ] Toast de confirmation : « X entrées saisies depuis votre téléphone ont été ajoutées. »
+- [x] Entrées synchronisées supprimées de Supabase immédiatement
+- [x] Toast de confirmation : « X entrées saisies depuis votre téléphone ont été ajoutées. »
 
 ---
 
@@ -2065,9 +2065,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Saisie stockée en IndexedDB sur le mobile si hors connexion
-- [ ] Envoi automatique à Supabase dès connexion rétablie
-- [ ] Aucun message d'erreur bloquant — l'utilisateur voit sa saisie confirmée
+- [x] Saisie stockée en IndexedDB sur le mobile si hors connexion
+- [x] Envoi automatique à Supabase dès connexion rétablie
+- [x] Aucun message d'erreur bloquant — l'utilisateur voit sa saisie confirmée
 
 ---
 
@@ -2094,9 +2094,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Notification à 80 jours sans synchronisation
+- [x] Notification à 80 jours sans synchronisation
 - [ ] Message : « Vous avez des saisies mobiles non synchronisées depuis 80 jours. Ouvrez Migraine AI sur votre ordinateur. »
-- [ ] Purge automatique à 90 jours (cron Supabase)
+- [x] Purge automatique à 90 jours (cron Supabase)
 
 ---
 
