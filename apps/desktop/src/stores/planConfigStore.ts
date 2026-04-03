@@ -173,11 +173,14 @@ export const usePlanConfigStore = create<PlanConfigState>()((set, get) => ({
       chargeMentale: 'moduleChargeMentaleEnabled',
       dailyPain: 'moduleDailyPainEnabled',
       voiceInput: 'vocalInputEnabled',
+      ia: 'iaEnabled',
     }
     const flagKey = mapping[moduleKey]
     if (flagKey && typeof flags[flagKey] === 'boolean') {
       return flags[flagKey] as boolean
     }
-    return true // unknown modules default to enabled
+    // Modules without a plan_config flag (alimentaire, traitements,
+    // consultations, environnement) are always enabled
+    return true
   },
 }))
