@@ -88,7 +88,7 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     id: 'environnement',
     label: 'Données météo',
     description: 'Collecter automatiquement les données météorologiques et lunaires.',
-    icon: '⚙️',
+    icon: '🌤️',
     defaultEnabled: true,
   },
   {

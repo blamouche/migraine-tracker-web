@@ -31,7 +31,7 @@ const PAGE_COMMANDS: { label: string; path: string; icon: string }[] = [
   { label: 'Export', path: '/export', icon: '\ud83d\udce5' },
   { label: 'Rapport', path: '/rapport', icon: '\ud83d\udcc4' },
   { label: 'Alertes', path: '/alertes', icon: '\ud83d\udd14' },
-  { label: 'Environnement', path: '/environnement', icon: '\u2699\ufe0f' },
+  { label: 'Environnement', path: '/environnement', icon: '🌤️' },
   { label: 'Modules de suivi', path: '/modules', icon: '\ud83d\udd27' },
 ]
 

@@ -40,6 +40,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
       if (session) {
         set({ session, user: session.user, isAnonymous: false, isLoading: false })
+        supabase.rpc('track_user_activity').then()
       } else {
         set({ isAnonymous: false, isLoading: false })
       }
@@ -51,6 +52,9 @@ export const useAuthStore = create<AuthState>((set) => ({
           isAnonymous: false,
           ...(event === 'PASSWORD_RECOVERY' ? { isPasswordRecovery: true } : {}),
         })
+        if (event === 'SIGNED_IN' && session) {
+          supabase.rpc('track_user_activity').then()
+        }
       })
     } catch {
       set({ isAnonymous: false, isLoading: false })
