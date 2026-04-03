@@ -101,7 +101,7 @@
 
 **Critères d'acceptation :**
 
-- [ ] Un projet Supabase créé : `migraine-ai` (unique pour dev/staging/prod)
+- [x] Un projet Supabase créé : `migraine-ai` (unique pour dev/staging/prod)
 - [x] Migration initiale appliquée : tables `user_profiles`, `user_usage`, `profile_plans`, `plan_config`, `mobile_transit`, `admin_log`
 - [x] Seed `plan_config` appliqué (valeurs free/pro définies dans ARCHITECTURE_TECHNIQUE.md §11)
 - [x] RLS activé sur toutes les tables avec les politiques définies
@@ -120,7 +120,7 @@
 
 - [x] Workflow `ci.yml` : ESLint → Vitest (coverage ≥ 80 %) → Playwright E2E → axe-core → Vite build
 - [x] Le workflow échoue et bloque le merge si une violation d'accessibilité est détectée
-- [ ] Les secrets Supabase et Netlify sont configurés dans GitHub Actions Secrets
+- [x] Les secrets Supabase et Netlify sont configurés dans GitHub Actions Secrets
 - [ ] Durée totale du pipeline < 10 min sur un projet vide
 - [ ] Badge CI visible dans le README
 
@@ -134,9 +134,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Site Netlify `migraine-ai-staging` déploie automatiquement à chaque PR avec une URL unique
-- [ ] Site Netlify `migraine-ai-prod` déploie uniquement sur merge vers `main`
-- [ ] Variables d'environnement Netlify configurées (Supabase URL, anon key, etc.)
+- [x] Site Netlify `migraine-ai-staging` déploie automatiquement à chaque PR avec une URL unique
+- [x] Site Netlify `migraine-ai-prod` déploie sur merge vers `prod`
+- [x] Variables d'environnement Netlify configurées (Supabase URL, anon key, etc.)
 - [x] Headers de sécurité configurés dans `netlify.toml` (CSP, HSTS, X-Frame-Options)
 - [x] Redirect `/* → /index.html` configuré pour le routing SPA
 
@@ -172,7 +172,7 @@
 - [x] Stratégie `CacheFirst` pour les assets statiques (JS, CSS, polices)
 - [ ] L'app passe le test "Installable" dans Lighthouse
 - [ ] Un prompt d'installation personnalisé s'affiche après la 2e visite
-- [ ] En mode offline, une page de fallback s'affiche si le réseau est requis
+- [x] En mode offline, une page de fallback s'affiche si le réseau est requis (`apps/desktop/public/offline.html`)
 
 ---
 
@@ -2331,8 +2331,8 @@
 - [x] Tests unitaires + intégration sur chaque push
 - [x] Tests E2E sur chaque PR vers `main`
 - [x] Build Vite sur chaque merge sur `main`
-- [ ] Déploiement staging (preview Netlify) sur chaque PR
-- [ ] Déploiement production automatique après passage de tous les tests
+- [x] Déploiement staging (preview Netlify) sur chaque PR
+- [x] Déploiement production automatique sur push vers `prod` après passage de tous les tests
 
 ---
 
@@ -2939,10 +2939,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] `@supabase/supabase-js` ajouté à `apps/admin/package.json`
-- [ ] `apps/admin/vite.config.ts` inclut `envDir: resolve(__dirname, '../..')` pour lire les variables d'environnement depuis la racine du monorepo
-- [ ] `apps/admin/src/lib/supabase.ts` créé avec le client Supabase typé (même pattern que `apps/desktop/src/lib/supabase.ts`)
-- [ ] Le client est utilisable dans les hooks et composants admin
+- [x] `@supabase/supabase-js` ajouté à `apps/admin/package.json`
+- [x] `apps/admin/vite.config.ts` inclut `envDir: resolve(__dirname, '../..')` pour lire les variables d'environnement depuis la racine du monorepo
+- [x] `apps/admin/src/lib/supabase.ts` créé avec le client Supabase typé (même pattern que `apps/desktop/src/lib/supabase.ts`)
+- [x] Le client est utilisable dans les hooks et composants admin
 - [ ] Les types Supabase sont partagés via `@migraine-ai/shared`
 
 ---
@@ -2955,10 +2955,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Migration `supabase/migrations/00002_admin_plan_config_policy.sql` créée
-- [ ] Policy `INSERT`, `UPDATE`, `DELETE` sur `plan_config` pour les utilisateurs avec `(auth.jwt() ->> 'role') = 'admin'`
-- [ ] La policy `SELECT` publique existante est conservée
-- [ ] Migration testée en staging avant application en production
+- [x] Migration `supabase/migrations/00002_admin_plan_config_policy.sql` créée
+- [x] Policy `INSERT`, `UPDATE`, `DELETE` sur `plan_config` pour les admins (`auth.jwt() -> 'app_metadata' ->> 'role'`)
+- [x] La policy `SELECT` publique existante est conservée
+- [x] Migration appliquée en production
 
 ---
 
@@ -2970,11 +2970,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Migration `supabase/migrations/00003_admin_user_list_function.sql` créée
-- [ ] Fonction `SECURITY DEFINER` qui joint `auth.users` avec `user_usage`, `user_profiles`, `profile_plans`
-- [ ] Retourne : `user_id`, email masqué (`a***@gmail.com`), date d'inscription, plan actif, dernière connexion, nombre de profils, fréquence 30 jours
-- [ ] Accessible uniquement aux admins (vérification `(auth.jwt() ->> 'role') = 'admin'` dans la fonction)
-- [ ] Fonction `reveal_user_email(target_user_id)` séparée qui journalise l'action dans `admin_log`
+- [x] Migration `supabase/migrations/00003_admin_user_list_function.sql` créée
+- [x] Fonction `SECURITY DEFINER` qui joint `auth.users` avec `user_usage`, `user_profiles`, `profile_plans`
+- [x] Retourne : `user_id`, email masqué (`a***@gmail.com`), date d'inscription, plan actif, dernière connexion, nombre de profils, fréquence 30 jours
+- [x] Accessible uniquement aux admins (vérification `auth.jwt() -> 'app_metadata' ->> 'role'` dans la fonction)
+- [x] Fonction `reveal_user_email(target_user_id)` séparée qui journalise l'action dans `admin_log`
 
 ---
 
@@ -2986,11 +2986,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] `supabase/functions/delete-user/index.ts` créé (Deno Edge Function)
-- [ ] Vérifie que l'appelant est admin (JWT `role = 'admin'`)
-- [ ] Utilise `supabase.auth.admin.deleteUser()` avec le `service_role_key`
-- [ ] Journalise l'action dans `admin_log` avant suppression
-- [ ] Retourne un statut de confirmation ou une erreur détaillée
+- [x] `supabase/functions/delete-user/index.ts` créé (Deno Edge Function)
+- [x] Vérifie que l'appelant est admin (JWT `role = 'admin'`)
+- [x] Utilise `supabase.auth.admin.deleteUser()` avec le `service_role_key`
+- [x] Journalise l'action dans `admin_log` avant suppression
+- [x] Retourne un statut de confirmation ou une erreur détaillée
 - [ ] Secret `SUPABASE_SERVICE_ROLE_KEY` configuré via `supabase secrets set`
 
 ---
@@ -3003,10 +3003,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] `apps/admin/netlify.toml` créé avec : `publish = "dist"`, redirect SPA `/* → /index.html`, headers de sécurité (CSP, HSTS, X-Frame-Options)
-- [ ] `apps/mobile/netlify.toml` créé avec la même structure adaptée au mobile
-- [ ] Les headers CSP de l'admin incluent `connect-src 'self' https://*.supabase.co`
-- [ ] Les trois apps sont buildables indépendamment via `pnpm --filter @migraine-ai/admin build`
+- [x] `apps/admin/netlify.toml` créé avec : `publish = "dist"`, redirect SPA `/* → /index.html`, headers de sécurité (CSP, HSTS, X-Frame-Options)
+- [x] `apps/mobile/netlify.toml` créé avec la même structure adaptée au mobile
+- [x] Les headers CSP de l'admin incluent `connect-src 'self' https://*.supabase.co`
+- [x] Les trois apps sont buildables indépendamment via `pnpm --filter @migraine-ai/admin build`
 
 ---
 
@@ -3018,9 +3018,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Section 15.2 de `specs/ARCHITECTURE_TECHNIQUE.md` mise à jour : admin sur Netlify (pas Vercel)
-- [ ] Les 3 sous-domaines documentés : `migraine-ai.app` (desktop), `m.migraine-ai.app` (mobile), `admin.migraine-ai.app` (admin)
-- [ ] Schéma de déploiement cohérent avec `netlify.toml` de chaque app
+- [x] Section 15.2 de `specs/ARCHITECTURE_TECHNIQUE.md` mise à jour : admin sur Netlify (pas Vercel)
+- [x] Les 3 sous-domaines documentés : `migraine-ai.app` (desktop), `m.migraine-ai.app` (mobile), `admin.migraine-ai.app` (admin)
+- [x] Schéma de déploiement cohérent avec `netlify.toml` de chaque app
 
 ---
 

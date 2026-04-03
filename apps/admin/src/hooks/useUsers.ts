@@ -36,8 +36,7 @@ export function useUsers(): UseUsersReturn {
     setError(null)
     const { data, error: rpcError } = await supabase.rpc('get_admin_user_list')
     if (rpcError) {
-      console.error('RPC error:', rpcError)
-      setError(`${rpcError.message} (${rpcError.code}: ${rpcError.details})`)
+      setError(rpcError.message)
       setIsLoading(false)
       return
     }

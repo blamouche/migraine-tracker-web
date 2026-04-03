@@ -27,8 +27,6 @@ export function useAdminAuth(): AdminAuthState {
       return
     }
     const role = session.user.app_metadata?.role
-    console.log('JWT app_metadata:', session.user.app_metadata)
-    console.log('JWT role:', role)
     setUser(session.user)
     if (role === 'admin') {
       setIsAdmin(true)
