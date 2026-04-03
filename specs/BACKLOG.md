@@ -2095,7 +2095,7 @@
 **Critères d'acceptation :**
 
 - [x] Notification à 80 jours sans synchronisation
-- [ ] Message : « Vous avez des saisies mobiles non synchronisées depuis 80 jours. Ouvrez Migraine AI sur votre ordinateur. »
+- [x] Message : « Vous avez des saisies mobiles non synchronisées depuis 80 jours. Ouvrez Migraine AI sur votre ordinateur. »
 - [x] Purge automatique à 90 jours (cron Supabase)
 
 ---
