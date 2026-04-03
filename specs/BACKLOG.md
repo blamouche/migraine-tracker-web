@@ -62,8 +62,9 @@
 | E38 | Changement du dossier vault depuis les paramètres    | —     | 3       |
 | E39 | Reconnexion rapide — skip onboarding utilisateur connu | ✅     | 4       |
 | E40 | Saisie mobile étendue — tous types d'enregistrements    | —      | 6       |
+| E41 | Import des fichiers vault sans identifiant                | —      | 4       |
 
-**Total : 235 User Stories**
+**Total : 236 User Stories**
 
 ---
 
@@ -3828,4 +3829,70 @@
 
 ---
 
-_Fin du backlog v1.4 — 232 User Stories réparties en 40 Epics_
+## EPIC E41 — Import des fichiers vault sans identifiant
+
+> En tant que patient, je veux pouvoir importer dans l'application les fichiers markdown présents dans mon vault qui n'ont pas de champ `id` dans leur frontmatter, afin de récupérer des données saisies manuellement ou issues d'une source externe sans perdre d'informations. Le validateur vault (E22) détecte déjà ces fichiers ; cette epic ajoute un parcours utilisateur pour les corriger et les intégrer.
+
+### US-41-01 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** voir dans la page Paramètres le nombre de fichiers vault sans identifiant détectés,
+**afin de** savoir si des données nécessitent une action de ma part.
+
+**Critères d'acceptation :**
+
+- [ ] Section « Fichiers à importer » visible dans la page Paramètres, sous la section vault existante
+- [ ] Affichage du nombre de fichiers `.md` sans champ `id` dans le frontmatter (hors dossier `config/` et `templates/`)
+- [ ] Si aucun fichier à importer, la section affiche « Aucun fichier à importer » et le bouton d'import est masqué
+- [ ] Le scan réutilise la logique du `vaultValidator` (E22) pour détecter les fichiers sans `id`
+
+---
+
+### US-41-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** consulter la liste des fichiers sans identifiant avant de les importer,
+**afin de** vérifier leur contenu et décider lesquels importer.
+
+**Critères d'acceptation :**
+
+- [ ] Bouton « Voir les fichiers » ouvre un dialog/panneau listant les fichiers détectés
+- [ ] Chaque fichier affiche : chemin relatif dans le vault, date du fichier, aperçu du contenu (premières lignes du body markdown)
+- [ ] Possibilité de sélectionner/désélectionner individuellement les fichiers à importer
+- [ ] Sélection globale « Tout sélectionner / Tout désélectionner »
+
+---
+
+### US-41-03 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** importer les fichiers sélectionnés en leur attribuant automatiquement un identifiant unique,
+**afin qu'** ils soient reconnus par l'application et apparaissent dans les modules correspondants.
+
+**Critères d'acceptation :**
+
+- [ ] Bouton « Importer la sélection » déclenche le traitement des fichiers sélectionnés
+- [ ] Chaque fichier reçoit un `id` unique (UUID v4) injecté dans le frontmatter YAML existant
+- [ ] Le fichier est réécrit sur disque avec le frontmatter corrigé, le body markdown est préservé à l'identique
+- [ ] Le fichier est classé dans le bon module selon son dossier parent (`crises/`, `daily-pain/`, `charge-mentale/`, etc.)
+- [ ] Les stores concernés sont rechargés après l'import pour refléter les nouvelles données
+- [ ] Message de confirmation indiquant le nombre de fichiers importés avec succès
+
+---
+
+### US-41-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** être averti si un fichier ne peut pas être importé (frontmatter corrompu, format inconnu),
+**afin de** pouvoir le corriger manuellement ou le signaler.
+
+**Critères d'acceptation :**
+
+- [ ] Les fichiers avec un frontmatter YAML non fermé ou invalide sont signalés comme « non importables »
+- [ ] Les fichiers situés dans un dossier non reconnu par l'application sont signalés avec le message « Dossier non reconnu »
+- [ ] Un récapitulatif post-import distingue : fichiers importés, fichiers en erreur (avec raison)
+- [ ] Les fichiers en erreur restent inchangés sur disque
+
+---
+
+_Fin du backlog v1.5 — 236 User Stories réparties en 41 Epics_

@@ -49,6 +49,76 @@ supabase/
   seed.sql    → Données initiales
 ```
 
+## Vault (stockage local)
+
+Les donnees de sante sont stockees localement sur la machine de l'utilisateur via la **File System Access API** du navigateur. Le vault est un dossier choisi par l'utilisateur dans lequel l'application cree et gere une arborescence de fichiers Markdown.
+
+### Generation de l'ID
+
+Chaque entree (crise, douleur quotidienne, repas, etc.) recoit un identifiant unique genere via :
+
+```typescript
+crypto.randomUUID()
+```
+
+Cela produit un UUID v4 conforme RFC 4122 (ex: `550e8400-e29b-41d4-a716-446655440000`). L'ID est genere cote client au moment de la creation de l'entree dans le store Zustand correspondant.
+
+### Structure du dossier vault
+
+A l'initialisation (`ensureVaultStructure()` dans `apps/desktop/src/lib/vault/handle.ts`), l'application cree un dossier racine `Migraine AI/` contenant 13 sous-dossiers :
+
+```
+Dossier choisi par l'utilisateur/
+└── Migraine AI/
+    ├── crises/                  → Fiches de crises migraineuses
+    ├── daily-pain/              → Suivi quotidien de la douleur
+    ├── charge-mentale/          → Entrees de charge mentale / stress
+    ├── journal-alimentaire/     → Journal alimentaire
+    ├── config/                  → Configuration (modules.md, ia-log.md)
+    ├── corbeille/               → Suppression douce (purge auto > 30 jours)
+    ├── cycle/                   → Suivi du cycle menstruel
+    ├── consultations/           → Comptes-rendus de consultations
+    ├── transports/              → Trajets (declencheurs potentiels)
+    ├── sport/                   → Activites sportives
+    ├── environnement/           → Donnees environnementales
+    ├── ia/                      → Analyses IA, patterns, resumes
+    └── templates/               → Modeles (repas, etc.)
+```
+
+### Format des fichiers
+
+Tous les fichiers sont au format **Markdown avec frontmatter YAML** :
+
+```yaml
+---
+id: 550e8400-e29b-41d4-a716-446655440000
+date: 2026-04-03
+heure_debut: "14:30"
+intensite: 7
+cree_le: 2026-04-03T14:30:00.000Z
+modifie_le: 2026-04-03T16:45:00.000Z
+---
+
+## Notes
+Contexte additionnel...
+```
+
+### Convention de nommage des fichiers
+
+| Categorie | Pattern | Exemple |
+| --- | --- | --- |
+| Crise | `{date}_crise.md` | `2026-04-03_crise.md` |
+| Douleur quotidienne | `{date}.md` | `2026-04-03.md` |
+| Repas | `{date}_repas_{id8}.md` | `2026-04-03_repas_550e8400.md` |
+| Transport | `{date}_transport_{id}.md` | `2026-04-03_transport_550e8400.md` |
+| Consultation | `{date}_consultation_{id}.md` | `2026-04-03_consultation_550e8400.md` |
+| Cycle | `{dateDebut}_cycle_{id}.md` | `2026-04-03_cycle_550e8400.md` |
+| Sport | `{date}_sport_{id}.md` | `2026-04-03_sport_550e8400.md` |
+
+### Persistance du handle
+
+Le handle du dossier vault est stocke dans **IndexedDB** (base `migraine-ai`, store `keyval`, cle `vault-handle:{userId}`). A chaque redemarrage, l'application verifie la permission d'acces via `queryPermission()` / `requestPermission()`. Si la permission est perdue, l'utilisateur est redirige vers la page de reconnexion vault.
+
 ## Stack
 
 React 19 · Vite 6 · TypeScript 5 · Tailwind CSS v4 · Zustand · Vitest · Playwright · Supabase · Turborepo
