@@ -24,6 +24,14 @@ export interface PlanFlags {
   moduleTransportEnabled: boolean
   moduleChargeMentaleEnabled: boolean
   moduleDailyPainEnabled: boolean
+  moduleAlimentaireEnabled: boolean
+  moduleTraitementsEnabled: boolean
+  moduleConsultationsEnabled: boolean
+  moduleEnvironnementEnabled: boolean
+  moduleProfilMedicalEnabled: boolean
+  modulePatternsEnabled: boolean
+  moduleAlertesEnabled: boolean
+  moduleMobileSyncEnabled: boolean
   pdfReportEnabled: boolean
   vocalInputEnabled: boolean
   exportCsvEnabled: boolean
@@ -39,6 +47,14 @@ const DEFAULT_FREE_FLAGS: PlanFlags = {
   moduleTransportEnabled: true,
   moduleChargeMentaleEnabled: true,
   moduleDailyPainEnabled: true,
+  moduleAlimentaireEnabled: true,
+  moduleTraitementsEnabled: true,
+  moduleConsultationsEnabled: true,
+  moduleEnvironnementEnabled: true,
+  moduleProfilMedicalEnabled: true,
+  modulePatternsEnabled: true,
+  moduleAlertesEnabled: true,
+  moduleMobileSyncEnabled: true,
   pdfReportEnabled: true,
   vocalInputEnabled: true,
   exportCsvEnabled: true,
@@ -54,6 +70,14 @@ const DEFAULT_PRO_FLAGS: PlanFlags = {
   moduleTransportEnabled: true,
   moduleChargeMentaleEnabled: true,
   moduleDailyPainEnabled: true,
+  moduleAlimentaireEnabled: true,
+  moduleTraitementsEnabled: true,
+  moduleConsultationsEnabled: true,
+  moduleEnvironnementEnabled: true,
+  moduleProfilMedicalEnabled: true,
+  modulePatternsEnabled: true,
+  moduleAlertesEnabled: true,
+  moduleMobileSyncEnabled: true,
   pdfReportEnabled: true,
   vocalInputEnabled: true,
   exportCsvEnabled: true,
@@ -94,6 +118,30 @@ function parseRows(rows: PlanConfigRow[]): { free: PlanFlags; pro: PlanFlags } {
         break
       case 'module_daily_pain_enabled':
         target.moduleDailyPainEnabled = val === 'true'
+        break
+      case 'module_alimentaire_enabled':
+        target.moduleAlimentaireEnabled = val === 'true'
+        break
+      case 'module_traitements_enabled':
+        target.moduleTraitementsEnabled = val === 'true'
+        break
+      case 'module_consultations_enabled':
+        target.moduleConsultationsEnabled = val === 'true'
+        break
+      case 'module_environnement_enabled':
+        target.moduleEnvironnementEnabled = val === 'true'
+        break
+      case 'module_profil_medical_enabled':
+        target.moduleProfilMedicalEnabled = val === 'true'
+        break
+      case 'module_patterns_enabled':
+        target.modulePatternsEnabled = val === 'true'
+        break
+      case 'module_alertes_enabled':
+        target.moduleAlertesEnabled = val === 'true'
+        break
+      case 'module_mobile_sync_enabled':
+        target.moduleMobileSyncEnabled = val === 'true'
         break
       case 'pdf_report_enabled':
         target.pdfReportEnabled = val === 'true'
@@ -167,11 +215,15 @@ export const usePlanConfigStore = create<PlanConfigState>()((set, get) => ({
   isModuleEnabledForPlan: (plan, moduleKey) => {
     const flags = get().getFlags(plan)
     const mapping: Record<string, keyof PlanFlags> = {
+      alimentaire: 'moduleAlimentaireEnabled',
+      traitements: 'moduleTraitementsEnabled',
       cycle: 'moduleCycleEnabled',
-      sport: 'moduleSportEnabled',
+      consultations: 'moduleConsultationsEnabled',
       transports: 'moduleTransportEnabled',
+      sport: 'moduleSportEnabled',
       chargeMentale: 'moduleChargeMentaleEnabled',
       dailyPain: 'moduleDailyPainEnabled',
+      environnement: 'moduleEnvironnementEnabled',
       voiceInput: 'vocalInputEnabled',
       ia: 'iaEnabled',
     }
@@ -179,8 +231,6 @@ export const usePlanConfigStore = create<PlanConfigState>()((set, get) => ({
     if (flagKey && typeof flags[flagKey] === 'boolean') {
       return flags[flagKey] as boolean
     }
-    // Modules without a plan_config flag (alimentaire, traitements,
-    // consultations, environnement) are always enabled
     return true
   },
 }))

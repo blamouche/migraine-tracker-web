@@ -94,6 +94,54 @@ export const FEATURE_METADATA: FeatureMeta[] = [
     description: 'Export complet des données au format ZIP.',
     category: 'module',
   },
+  {
+    key: 'module_alimentaire_enabled',
+    label: 'Suivi alimentaire',
+    description: 'Enregistrer les repas et identifier les déclencheurs alimentaires.',
+    category: 'module',
+  },
+  {
+    key: 'module_traitements_enabled',
+    label: 'Historique des traitements',
+    description: 'Suivi des traitements de crise et de fond.',
+    category: 'module',
+  },
+  {
+    key: 'module_consultations_enabled',
+    label: 'Rendez-vous médicaux',
+    description: 'Gestion des consultations et préparation des visites.',
+    category: 'module',
+  },
+  {
+    key: 'module_environnement_enabled',
+    label: 'Données environnement',
+    description: 'Collecte automatique des données météorologiques et lunaires.',
+    category: 'module',
+  },
+  {
+    key: 'module_profil_medical_enabled',
+    label: 'Profil médical',
+    description: 'Informations médicales personnelles et antécédents.',
+    category: 'module',
+  },
+  {
+    key: 'module_patterns_enabled',
+    label: 'Détection de patterns',
+    description: 'Analyse des corrélations et patterns de déclenchement.',
+    category: 'module',
+  },
+  {
+    key: 'module_alertes_enabled',
+    label: 'Alertes',
+    description: 'Préférences de notifications et rappels.',
+    category: 'module',
+  },
+  {
+    key: 'module_mobile_sync_enabled',
+    label: 'Synchronisation mobile',
+    description: 'Synchronisation des données avec l\'app mobile.',
+    category: 'module',
+  },
 ]
 
 const metaByKey = new Map(FEATURE_METADATA.map((m) => [m.key, m]))

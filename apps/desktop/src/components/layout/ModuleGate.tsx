@@ -12,12 +12,20 @@ import type { PlanFlags } from '@/stores/planConfigStore'
 
 /** Maps route path prefixes to the PlanFlags boolean key that controls them */
 const ROUTE_TO_PLAN_FLAG: Record<string, keyof PlanFlags> = {
+  '/alimentaire': 'moduleAlimentaireEnabled',
+  '/traitements': 'moduleTraitementsEnabled',
   '/cycle': 'moduleCycleEnabled',
-  '/sport': 'moduleSportEnabled',
+  '/consultations': 'moduleConsultationsEnabled',
   '/transports': 'moduleTransportEnabled',
+  '/sport': 'moduleSportEnabled',
   '/charge-mentale': 'moduleChargeMentaleEnabled',
   '/evenement': 'moduleChargeMentaleEnabled',
   '/douleur': 'moduleDailyPainEnabled',
+  '/environnement': 'moduleEnvironnementEnabled',
+  '/profil-medical': 'moduleProfilMedicalEnabled',
+  '/patterns': 'modulePatternsEnabled',
+  '/alertes': 'moduleAlertesEnabled',
+  '/mobile-sync': 'moduleMobileSyncEnabled',
   '/ia': 'iaEnabled',
   '/rapport': 'pdfReportEnabled',
   '/export': 'exportCsvEnabled',
