@@ -12,13 +12,25 @@ const emailSchema = z.object({
   email: z.string().email('Adresse email invalide'),
 })
 
-const passwordSchema = z.object({
+const passwordLoginSchema = z.object({
   email: z.string().email('Adresse email invalide'),
   password: z.string().min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
 })
 
+const passwordSignupSchema = z
+  .object({
+    email: z.string().email('Adresse email invalide'),
+    password: z.string().min(8, 'Le mot de passe doit contenir au moins 8 caractères'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Les mots de passe ne correspondent pas',
+    path: ['confirmPassword'],
+  })
+
 type EmailForm = z.infer<typeof emailSchema>
-type PasswordForm = z.infer<typeof passwordSchema>
+type PasswordLoginForm = z.infer<typeof passwordLoginSchema>
+type PasswordSignupForm = z.infer<typeof passwordSignupSchema>
 
 export function LoginPage() {
   const [tab, setTab] = useState<AuthTab>('magic-link')
@@ -51,8 +63,12 @@ export function LoginPage() {
     resolver: zodResolver(emailSchema),
   })
 
-  const passwordForm = useForm<PasswordForm>({
-    resolver: zodResolver(passwordSchema),
+  const passwordLoginForm = useForm<PasswordLoginForm>({
+    resolver: zodResolver(passwordLoginSchema),
+  })
+
+  const passwordSignupForm = useForm<PasswordSignupForm>({
+    resolver: zodResolver(passwordSignupSchema),
   })
 
   const handleSocialLogin = async (provider: 'google' | 'apple' | 'facebook') => {
@@ -68,22 +84,23 @@ export function LoginPage() {
     }
   }
 
-  const handlePassword = async (data: PasswordForm) => {
+  const handleLogin = async (data: PasswordLoginForm) => {
     clearError()
-    if (passwordMode === 'signup') {
-      await signUp(data.email, data.password)
-      if (!useAuthStore.getState().error) {
-        setSignupSuccess(true)
-      }
-    } else {
-      await signIn(data.email, data.password)
+    await signIn(data.email, data.password)
+  }
+
+  const handleSignup = async (data: PasswordSignupForm) => {
+    clearError()
+    await signUp(data.email, data.password)
+    if (!useAuthStore.getState().error) {
+      setSignupSuccess(true)
     }
   }
 
   const handleResetPassword = async () => {
-    const email = passwordForm.getValues('email')
+    const email = passwordLoginForm.getValues('email')
     if (!email) {
-      passwordForm.setError('email', { message: 'Saisissez votre email pour réinitialiser' })
+      passwordLoginForm.setError('email', { message: 'Saisissez votre email pour réinitialiser' })
       return
     }
     clearError()
@@ -224,8 +241,7 @@ export function LoginPage() {
               <div className="rounded-(--radius-md) bg-(--color-success-light) px-4 py-3 text-sm text-(--color-success)">
                 <p className="font-medium">Compte créé !</p>
                 <p className="mt-1">
-                  Un email de confirmation a été envoyé. Cliquez sur le lien pour activer votre
-                  compte.
+                  Un email de confirmation a été envoyé. Vérifiez votre boîte de réception.
                 </p>
               </div>
             ) : resetSent ? (
@@ -242,9 +258,9 @@ export function LoginPage() {
                   Retour
                 </button>
               </div>
-            ) : (
+            ) : passwordMode === 'login' ? (
               <form
-                onSubmit={passwordForm.handleSubmit(handlePassword)}
+                onSubmit={passwordLoginForm.handleSubmit(handleLogin)}
                 className="flex flex-col gap-4"
               >
                 <div>
@@ -259,12 +275,12 @@ export function LoginPage() {
                     type="email"
                     autoComplete="email"
                     placeholder="vous@exemple.com"
-                    {...passwordForm.register('email')}
+                    {...passwordLoginForm.register('email')}
                     className="w-full rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-base) px-4 py-3 text-sm text-(--color-text-primary) outline-none transition-colors focus:border-(--color-brand) placeholder:text-(--color-text-muted)"
                   />
-                  {passwordForm.formState.errors.email && (
+                  {passwordLoginForm.formState.errors.email && (
                     <p className="mt-1 text-sm text-(--color-danger)">
-                      {passwordForm.formState.errors.email.message}
+                      {passwordLoginForm.formState.errors.email.message}
                     </p>
                   )}
                 </div>
@@ -278,62 +294,129 @@ export function LoginPage() {
                   <input
                     id="pw-password"
                     type="password"
-                    autoComplete={passwordMode === 'signup' ? 'new-password' : 'current-password'}
+                    autoComplete="current-password"
                     placeholder="8 caractères minimum"
-                    {...passwordForm.register('password')}
+                    {...passwordLoginForm.register('password')}
                     className="w-full rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-base) px-4 py-3 text-sm text-(--color-text-primary) outline-none transition-colors focus:border-(--color-brand) placeholder:text-(--color-text-muted)"
                   />
-                  {passwordForm.formState.errors.password && (
+                  {passwordLoginForm.formState.errors.password && (
                     <p className="mt-1 text-sm text-(--color-danger)">
-                      {passwordForm.formState.errors.password.message}
+                      {passwordLoginForm.formState.errors.password.message}
                     </p>
                   )}
                 </div>
                 <button
                   type="submit"
-                  disabled={passwordForm.formState.isSubmitting}
+                  disabled={passwordLoginForm.formState.isSubmitting}
                   className="w-full rounded-(--radius-md) bg-(--color-brand) px-4 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover) disabled:opacity-50"
                 >
-                  {passwordForm.formState.isSubmitting
-                    ? 'Chargement...'
-                    : passwordMode === 'signup'
-                      ? 'Créer mon compte'
-                      : 'Se connecter'}
+                  {passwordLoginForm.formState.isSubmitting ? 'Chargement...' : 'Se connecter'}
                 </button>
                 <div className="flex items-center justify-between text-sm">
-                  {passwordMode === 'login' ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={handleResetPassword}
-                        className="text-(--color-text-secondary) underline hover:text-(--color-text-primary)"
-                      >
-                        Mot de passe oublié ?
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPasswordMode('signup')
-                          clearError()
-                        }}
-                        className="font-medium text-(--color-brand) hover:text-(--color-brand-hover)"
-                      >
-                        Créer un compte
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPasswordMode('login')
-                        clearError()
-                      }}
-                      className="font-medium text-(--color-brand) hover:text-(--color-brand-hover)"
-                    >
-                      Déjà un compte ? Se connecter
-                    </button>
+                  <button
+                    type="button"
+                    onClick={handleResetPassword}
+                    className="text-(--color-text-secondary) underline hover:text-(--color-text-primary)"
+                  >
+                    Mot de passe oublié ?
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPasswordMode('signup')
+                      clearError()
+                    }}
+                    className="font-medium text-(--color-brand) hover:text-(--color-brand-hover)"
+                  >
+                    Créer un compte
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <form
+                onSubmit={passwordSignupForm.handleSubmit(handleSignup)}
+                className="flex flex-col gap-4"
+              >
+                <div>
+                  <label
+                    htmlFor="su-email"
+                    className="mb-1 block text-sm font-medium text-(--color-text-primary)"
+                  >
+                    Email
+                  </label>
+                  <input
+                    id="su-email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="vous@exemple.com"
+                    {...passwordSignupForm.register('email')}
+                    className="w-full rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-base) px-4 py-3 text-sm text-(--color-text-primary) outline-none transition-colors focus:border-(--color-brand) placeholder:text-(--color-text-muted)"
+                  />
+                  {passwordSignupForm.formState.errors.email && (
+                    <p className="mt-1 text-sm text-(--color-danger)">
+                      {passwordSignupForm.formState.errors.email.message}
+                    </p>
                   )}
                 </div>
+                <div>
+                  <label
+                    htmlFor="su-password"
+                    className="mb-1 block text-sm font-medium text-(--color-text-primary)"
+                  >
+                    Mot de passe
+                  </label>
+                  <input
+                    id="su-password"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="8 caractères minimum"
+                    {...passwordSignupForm.register('password')}
+                    className="w-full rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-base) px-4 py-3 text-sm text-(--color-text-primary) outline-none transition-colors focus:border-(--color-brand) placeholder:text-(--color-text-muted)"
+                  />
+                  {passwordSignupForm.formState.errors.password && (
+                    <p className="mt-1 text-sm text-(--color-danger)">
+                      {passwordSignupForm.formState.errors.password.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label
+                    htmlFor="su-confirm"
+                    className="mb-1 block text-sm font-medium text-(--color-text-primary)"
+                  >
+                    Confirmer le mot de passe
+                  </label>
+                  <input
+                    id="su-confirm"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="Confirmez votre mot de passe"
+                    {...passwordSignupForm.register('confirmPassword')}
+                    className="w-full rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-base) px-4 py-3 text-sm text-(--color-text-primary) outline-none transition-colors focus:border-(--color-brand) placeholder:text-(--color-text-muted)"
+                  />
+                  {passwordSignupForm.formState.errors.confirmPassword && (
+                    <p className="mt-1 text-sm text-(--color-danger)">
+                      {passwordSignupForm.formState.errors.confirmPassword.message}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  disabled={passwordSignupForm.formState.isSubmitting}
+                  className="w-full rounded-(--radius-md) bg-(--color-brand) px-4 py-3 text-sm font-medium text-(--color-text-inverse) transition-colors hover:bg-(--color-brand-hover) disabled:opacity-50"
+                >
+                  {passwordSignupForm.formState.isSubmitting ? 'Chargement...' : 'Créer mon compte'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPasswordMode('login')
+                    clearError()
+                  }}
+                  className="text-sm font-medium text-(--color-brand) hover:text-(--color-brand-hover)"
+                >
+                  Déjà un compte ? Se connecter
+                </button>
               </form>
             )}
           </>

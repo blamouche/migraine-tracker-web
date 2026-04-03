@@ -56,7 +56,7 @@
 | E32 | Statistiques d'utilisation (admin)               | —       | 4       |
 | E33 | Export utilisateurs & emails (admin)              | —       | 3       |
 | E34 | Configuration dynamique des plans & modules (admin) | —     | 5       |
-| E35 | Activation Magic Link & email/password             | —     | 4       |
+| E35 | Activation Magic Link & email/password             | ✅     | 4       |
 
 **Total : 210 User Stories**
 
@@ -3188,6 +3188,24 @@
 
 ---
 
+### US-32-05 · 🟡 Moyenne · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir un graphique dédié à la répartition des utilisateurs entre les différents niveaux d'abonnement,
+**afin de** comprendre la distribution des plans et identifier des opportunités de conversion.
+
+**Critères d'acceptation :**
+
+- [ ] Graphique en camembert (pie chart) ou donut affichant la répartition actuelle des utilisateurs par niveau d'abonnement (free, pro, et tout futur plan)
+- [ ] Chaque segment affiche le pourcentage et le nombre absolu d'utilisateurs
+- [ ] Tooltip au survol avec le détail (nom du plan, nombre, pourcentage)
+- [ ] Légende visible avec les couleurs associées à chaque plan
+- [ ] KPI complémentaires affichés à côté du graphique : taux de conversion free → pro, évolution du ratio sur les 30 derniers jours
+- [ ] Les données proviennent d'une fonction Postgres `get_subscription_distribution()` (SECURITY DEFINER)
+- [ ] Le graphique se met à jour en temps réel lors du rechargement de la page
+
+---
+
 ---
 
 ## EPIC E33 — Export utilisateurs & emails (admin)
@@ -3343,13 +3361,13 @@
 
 **Critères d'acceptation :**
 
-- [ ] Le bouton « Continuer avec un Magic Link » est fonctionnel sur la page de login
-- [ ] L'utilisateur saisit son email et reçoit un lien de connexion par email
-- [ ] Le clic sur le lien redirige vers l'app et connecte automatiquement l'utilisateur
+- [x] Le bouton « Continuer avec un Magic Link » est fonctionnel sur la page de login
+- [x] L'utilisateur saisit son email et reçoit un lien de connexion par email
+- [x] Le clic sur le lien redirige vers l'app et connecte automatiquement l'utilisateur
 - [ ] Le provider Supabase Auth Email est activé et configuré (templates email en français)
-- [ ] Les Redirect URLs Supabase incluent les domaines de l'app (localhost + Netlify)
-- [ ] Message de confirmation affiché : « Un lien de connexion a été envoyé à votre adresse email »
-- [ ] Gestion de l'erreur si l'email est invalide ou si le service est indisponible
+- [x] Les Redirect URLs Supabase incluent les domaines de l'app (localhost + Netlify)
+- [x] Message de confirmation affiché : « Un lien de connexion a été envoyé à votre adresse email »
+- [x] Gestion de l'erreur si l'email est invalide ou si le service est indisponible
 
 ---
 
@@ -3361,12 +3379,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Formulaire d'inscription fonctionnel : email + mot de passe + confirmation du mot de passe
-- [ ] Validation Zod : email valide, mot de passe ≥ 8 caractères, confirmation identique
-- [ ] Appel à `supabase.auth.signUp()` avec redirection après confirmation
+- [x] Formulaire d'inscription fonctionnel : email + mot de passe + confirmation du mot de passe
+- [x] Validation Zod : email valide, mot de passe ≥ 8 caractères, confirmation identique
+- [x] Appel à `supabase.auth.signUp()` avec redirection après confirmation
 - [ ] Email de confirmation envoyé par Supabase (template en français)
-- [ ] Message affiché : « Un email de confirmation a été envoyé. Vérifiez votre boîte de réception. »
-- [ ] L'utilisateur ne peut pas accéder à l'app sans avoir confirmé son email
+- [x] Message affiché : « Un email de confirmation a été envoyé. Vérifiez votre boîte de réception. »
+- [x] L'utilisateur ne peut pas accéder à l'app sans avoir confirmé son email
 
 ---
 
@@ -3378,11 +3396,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Formulaire de connexion fonctionnel : email + mot de passe
-- [ ] Appel à `supabase.auth.signInWithPassword()`
-- [ ] Messages d'erreur en français : « Email ou mot de passe incorrect », « Veuillez confirmer votre email »
-- [ ] Lien « Mot de passe oublié ? » visible sous le formulaire
-- [ ] Après connexion réussie, redirection vers la HomePage (ou onboarding si première connexion)
+- [x] Formulaire de connexion fonctionnel : email + mot de passe
+- [x] Appel à `supabase.auth.signInWithPassword()`
+- [x] Messages d'erreur en français : « Email ou mot de passe incorrect », « Veuillez confirmer votre email »
+- [x] Lien « Mot de passe oublié ? » visible sous le formulaire
+- [x] Après connexion réussie, redirection vers la HomePage (ou onboarding si première connexion)
 
 ---
 
@@ -3394,12 +3412,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Page « Mot de passe oublié » accessible depuis le formulaire de connexion
-- [ ] L'utilisateur saisit son email et reçoit un lien de réinitialisation
-- [ ] Appel à `supabase.auth.resetPasswordForEmail()` avec `redirectTo` vers une page de reset
-- [ ] Page de reset : saisie du nouveau mot de passe + confirmation
-- [ ] Appel à `supabase.auth.updateUser({ password })` pour appliquer le changement
-- [ ] Message de succès et redirection vers la page de login
+- [x] Page « Mot de passe oublié » accessible depuis le formulaire de connexion
+- [x] L'utilisateur saisit son email et reçoit un lien de réinitialisation
+- [x] Appel à `supabase.auth.resetPasswordForEmail()` avec `redirectTo` vers une page de reset
+- [x] Page de reset : saisie du nouveau mot de passe + confirmation
+- [x] Appel à `supabase.auth.updateUser({ password })` pour appliquer le changement
+- [x] Message de succès et redirection vers la page de login
 
 ---
 
