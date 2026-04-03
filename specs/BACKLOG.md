@@ -55,7 +55,7 @@
 | E31 | Gestion avancée des utilisateurs (admin)        | —       | 5       |
 | E32 | Statistiques d'utilisation (admin)               | —       | 4       |
 | E33 | Export utilisateurs & emails (admin)              | —       | 3       |
-| E34 | Configuration dynamique des plans & modules (admin) | —     | 5       |
+| E34 | Configuration dynamique des plans & modules (admin) | ✅     | 5       |
 | E35 | Activation Magic Link & email/password             | ✅     | 4       |
 | E36 | Suppression du mode multi-profils                   | ✅     | 8       |
 | E37 | Picto météo pour le module environnement             | —     | 1       |
@@ -3280,11 +3280,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Chaque plan (free/pro) affiche tous les feature flags existants dans `plan_config`, organisés en deux sections : « Paramètres » (valeurs numériques) et « Modules » (activé/désactivé)
-- [ ] Section Paramètres : `analytics_range_months`, `max_profiles` — champs numériques éditables
-- [ ] Section Modules : `ia_enabled`, `module_cycle_enabled`, `module_sport_enabled`, `module_transport_enabled`, `module_charge_mentale_enabled`, `module_daily_pain_enabled`, `pdf_report_enabled`, `vocal_input_enabled`, `export_csv_enabled`, `export_zip_enabled` — toggles on/off
-- [ ] Chaque module affiche son nom lisible (pas la clé technique) et une description courte
-- [ ] Si un nouveau feature flag est ajouté en base, il apparaît automatiquement dans l'interface
+- [x] Chaque plan (free/pro) affiche tous les feature flags existants dans `plan_config`, organisés en deux sections : « Paramètres » (valeurs numériques) et « Modules » (activé/désactivé)
+- [x] Section Paramètres : `analytics_range_months`, `max_profiles` — champs numériques éditables
+- [x] Section Modules : `ia_enabled`, `module_cycle_enabled`, `module_sport_enabled`, `module_transport_enabled`, `module_charge_mentale_enabled`, `module_daily_pain_enabled`, `pdf_report_enabled`, `vocal_input_enabled`, `export_csv_enabled`, `export_zip_enabled` — toggles on/off
+- [x] Chaque module affiche son nom lisible (pas la clé technique) et une description courte
+- [x] Si un nouveau feature flag est ajouté en base, il apparaît automatiquement dans l'interface
 
 ---
 
@@ -3296,11 +3296,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Toggle on/off pour chaque module avec retour visuel immédiat
-- [ ] La modification est persistée dans `plan_config` via upsert
-- [ ] Chaque modification est journalisée dans `admin_log` (ancienne valeur → nouvelle valeur)
-- [ ] Un toast de confirmation s'affiche après sauvegarde réussie
-- [ ] En cas d'erreur réseau, le toggle revient à son état précédent avec un message d'erreur
+- [x] Toggle on/off pour chaque module avec retour visuel immédiat
+- [x] La modification est persistée dans `plan_config` via upsert
+- [x] Chaque modification est journalisée dans `admin_log` (ancienne valeur → nouvelle valeur)
+- [x] Un toast de confirmation s'affiche après sauvegarde réussie
+- [x] En cas d'erreur réseau, le toggle revient à son état précédent avec un message d'erreur
 
 ---
 
@@ -3312,10 +3312,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Le store de modules (`moduleStore` ou `planStore`) interroge `plan_config` à intervalle régulier (toutes les 5 minutes) ou à chaque changement de page
-- [ ] Si un module passe de `true` à `false`, l'état est mis à jour dans le store sans recharger la page
-- [ ] Aucune déconnexion/reconnexion nécessaire pour voir les changements
-- [ ] Le premier chargement au démarrage de l'app reste inchangé (lecture depuis le cache puis sync)
+- [x] Le store de modules (`moduleStore` ou `planStore`) interroge `plan_config` à intervalle régulier (toutes les 5 minutes) ou à chaque changement de page
+- [x] Si un module passe de `true` à `false`, l'état est mis à jour dans le store sans recharger la page
+- [x] Aucune déconnexion/reconnexion nécessaire pour voir les changements
+- [x] Le premier chargement au démarrage de l'app reste inchangé (lecture depuis le cache puis sync)
 
 ---
 
@@ -3327,11 +3327,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Un module désactivé apparaît dans la navigation/sidebar avec un style atténué (opacité réduite, icône cadenas)
-- [ ] Le clic sur un module désactivé affiche un message : « Cette fonctionnalité n'est pas disponible avec votre plan actuel. » avec un lien vers l'upgrade (ou simple info si pas de plan supérieur)
-- [ ] Les formulaires d'un module désactivé ne sont pas accessibles (redirection vers le message ci-dessus)
-- [ ] Les données existantes d'un module désactivé restent consultables en lecture seule (l'historique ne disparaît pas)
-- [ ] Le composant `ModuleGate` (ou équivalent) encapsule chaque module et gère l'état activé/désactivé
+- [x] Un module désactivé apparaît dans la navigation/sidebar avec un style atténué (opacité réduite, icône cadenas)
+- [x] Le clic sur un module désactivé affiche un message : « Cette fonctionnalité n'est pas disponible avec votre plan actuel. » avec un lien vers l'upgrade (ou simple info si pas de plan supérieur)
+- [x] Les formulaires d'un module désactivé ne sont pas accessibles (redirection vers le message ci-dessus)
+- [x] Les données existantes d'un module désactivé restent consultables en lecture seule (l'historique ne disparaît pas)
+- [x] Le composant `ModuleGate` (ou équivalent) encapsule chaque module et gère l'état activé/désactivé
 
 ---
 
@@ -3343,9 +3343,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Affichage des deux plans en colonnes côte à côte (déjà le cas, à enrichir)
-- [ ] Les différences entre free et pro sont mises en évidence visuellement (surlignage ou badge « Différent »)
-- [ ] Un bouton « Copier la config de Pro vers Free » (ou inversement) avec confirmation
+- [x] Affichage des deux plans en colonnes côte à côte (déjà le cas, à enrichir)
+- [x] Les différences entre free et pro sont mises en évidence visuellement (surlignage ou badge « Différent »)
+- [x] Un bouton « Copier la config de Pro vers Free » (ou inversement) avec confirmation
 - [ ] Un résumé des modifications non encore vues par les utilisateurs (basé sur `updated_at` vs dernière consultation)
 
 ---
