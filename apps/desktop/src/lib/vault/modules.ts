@@ -1,7 +1,7 @@
 /**
  * E29 — Vault persistence for module preferences (config/modules.md)
  */
-import type { ModuleConfig, ModuleId } from '@/types/modules'
+import type { ModuleConfig } from '@/types/modules'
 import { DEFAULT_MODULE_CONFIG, MODULE_DEFINITIONS } from '@/types/modules'
 import { restoreVaultHandle, ensureVaultStructure } from './handle'
 import { useAuthStore } from '@/stores/authStore'

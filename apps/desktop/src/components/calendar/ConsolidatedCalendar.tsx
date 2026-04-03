@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useDailyPainStore } from '@/stores/dailyPainStore'
 import { useFoodStore } from '@/stores/foodStore'
@@ -179,6 +179,7 @@ export function ConsolidatedCalendar() {
       years.push(y)
     }
     return years
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -283,7 +284,7 @@ export function ConsolidatedCalendar() {
       {showLegend && <CalendarLegend enabledModules={enabledModules} />}
 
       {/* Desktop: Calendar grid (US-28-01) — hidden on mobile */}
-      <div className="hidden md:block" onKeyDown={handleKeyDown}>
+      <div className="hidden md:block" role="grid" tabIndex={0} onKeyDown={handleKeyDown}>
         {/* Day names header */}
         <div className="grid grid-cols-7 gap-1">
           {DAY_NAMES.map((name) => (

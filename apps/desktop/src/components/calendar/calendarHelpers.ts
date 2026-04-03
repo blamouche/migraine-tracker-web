@@ -400,7 +400,7 @@ export function getQuickAddOptions(enabledModules: Set<CalendarModule>): QuickAd
 
 // ─── Edit routes for day detail ───
 
-export function getEditRouteForModule(module: CalendarModule, date: string): string | null {
+export function getEditRouteForModule(module: CalendarModule): string | null {
   switch (module) {
     case 'crisis': return '/crisis/history'
     case 'pain': return '/douleur/historique'

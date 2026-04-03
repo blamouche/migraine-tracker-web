@@ -1,4 +1,4 @@
-import type { ConsolidatedDayData, CalendarModule } from './calendarHelpers'
+import type { ConsolidatedDayData } from './calendarHelpers'
 import { getModuleMeta, getIndicatorLabel, getDaysInMonth } from './calendarHelpers'
 
 interface CalendarMobileListProps {

@@ -18,7 +18,6 @@ function getDefaultProfileName(user: ReturnType<typeof useAuthStore.getState>['u
 export function ProfileSetupPage() {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
-  const anonymousId = useAuthStore((s) => s.anonymousId)
   const markProfileCreated = useOnboardingStore((s) => s.markProfileCreated)
   const createProfile = useProfileStore((s) => s.createProfile)
 
@@ -87,6 +86,7 @@ export function ProfileSetupPage() {
               value={nom}
               onChange={(e) => setNom(e.target.value)}
               placeholder="Ex : Moi, Sarah, Mon suivi…"
+              // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus
               className="mt-1.5 w-full rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-base) px-3 py-2.5 text-sm text-(--color-text-primary) placeholder:text-(--color-text-muted) focus:border-(--color-brand) focus:outline-none focus:ring-1 focus:ring-(--color-brand)"
             />
