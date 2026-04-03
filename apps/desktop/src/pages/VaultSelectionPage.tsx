@@ -12,7 +12,7 @@ export function VaultSelectionPage() {
   const user = useAuthStore((s) => s.user)
   const anonymousId = useAuthStore((s) => s.anonymousId)
 
-  const profileId = user?.id ?? anonymousId ?? 'default'
+  const userId = user?.id ?? anonymousId ?? 'default'
 
   const handlePickFolder = async () => {
     setError(null)
@@ -20,7 +20,7 @@ export function VaultSelectionPage() {
     try {
       const handle = await pickVaultFolder()
       await ensureVaultStructure(handle)
-      await saveVaultHandle(profileId, handle)
+      await saveVaultHandle(userId, handle)
       markVaultReady()
       navigate('/onboarding/medical-profile', { replace: true })
     } catch (err) {

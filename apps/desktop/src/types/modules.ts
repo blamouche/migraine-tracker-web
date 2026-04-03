@@ -122,4 +122,4 @@ export const MODULE_ROUTE_MAP: Record<ModuleId, string[]> = {
 }
 
 /** Modules that are always active and cannot be disabled */
-export const CORE_ROUTES = ['/', '/dashboard', '/calendrier', '/crisis', '/patterns', '/profil-medical', '/rapport', '/export', '/alertes', '/profils', '/ia', '/mobile-sync', '/modules']
+export const CORE_ROUTES = ['/', '/dashboard', '/calendrier', '/crisis', '/patterns', '/profil-medical', '/rapport', '/export', '/alertes', '/ia', '/mobile-sync', '/modules']

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useModuleStore } from '@/stores/moduleStore'
-import { useProfileStore } from '@/stores/profileStore'
+import { usePlanStore } from '@/stores/planStore'
 import { MODULE_DEFINITIONS } from '@/types/modules'
 import type { ModuleId } from '@/types/modules'
 
@@ -69,7 +69,7 @@ const MODULE_ICONS: Record<ModuleId, React.ReactNode> = {
 export function ModulePreferencesPage() {
   const navigate = useNavigate()
   const { config, setModuleEnabled } = useModuleStore()
-  const featureFlags = useProfileStore((s) => s.featureFlags)
+  const featureFlags = usePlanStore((s) => s.featureFlags)
   const [confirmingDisable, setConfirmingDisable] = useState<ModuleId | null>(null)
 
   const handleToggle = async (moduleId: ModuleId, currentEnabled: boolean) => {

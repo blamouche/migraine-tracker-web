@@ -5,9 +5,9 @@ import { useAuthStore } from '@/stores/authStore'
 
 export async function exportVaultZip(): Promise<void> {
   const { user, anonymousId } = useAuthStore.getState()
-  const profileId = user?.id ?? anonymousId ?? 'default'
+  const userId = user?.id ?? anonymousId ?? 'default'
 
-  const parentHandle = await restoreVaultHandle(profileId)
+  const parentHandle = await restoreVaultHandle(userId)
   if (!parentHandle) {
     throw new Error("Aucun vault sélectionné. Veuillez d'abord sélectionner un vault dans les préférences.")
   }

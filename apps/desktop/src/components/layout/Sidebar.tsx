@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router'
 import { useNavigationStore } from '@/stores/navigationStore'
-import { useProfileStore } from '@/stores/profileStore'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useModuleStore } from '@/stores/moduleStore'
@@ -61,7 +60,6 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: 'Modules', path: '/modules', icon: <SlidersIcon /> },
       { label: 'Alertes', path: '/alertes', icon: <BellIcon /> },
-      { label: 'Profils', path: '/profils', icon: <UsersIcon /> },
       { label: 'Environnement', path: '/environnement', icon: <SettingsIcon /> },
       { label: 'Sync mobile', path: '/mobile-sync', icon: <SmartphoneIcon /> },
     ],
@@ -72,9 +70,6 @@ export function Sidebar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { sidebarCollapsed, toggleCollapsed, setSidebarOpen } = useNavigationStore()
-  const profiles = useProfileStore((s) => s.profiles)
-  const activeProfileId = useProfileStore((s) => s.activeProfileId)
-  const activeProfile = useMemo(() => profiles.find((p) => p.id === activeProfileId) ?? null, [profiles, activeProfileId])
   const crises = useCrisisStore((s) => s.crises)
   const incompleteCount = useMemo(() => crises.filter((c) => c.status === 'incomplet').length, [crises])
   const { user, signOut } = useAuthStore()
@@ -160,22 +155,12 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* User / profile / logout */}
+      {/* User / logout */}
       <div className="border-t border-(--color-border)">
-        {!sidebarCollapsed && activeProfile && (
-          <button
-            type="button"
-            onClick={() => handleNav('/profils')}
-            className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-(--color-bg-subtle)"
-          >
-            <span
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-              style={{ backgroundColor: activeProfile.couleur || 'var(--color-brand)' }}
-            >
-              {activeProfile.nom.charAt(0).toUpperCase()}
-            </span>
-            <span className="truncate text-(--color-text-primary)">{activeProfile.nom}</span>
-          </button>
+        {user && !sidebarCollapsed && (
+          <div className="px-4 py-3 text-sm text-(--color-text-secondary) truncate">
+            {user.user_metadata?.given_name ?? user.email}
+          </div>
         )}
         {user && (
           <button
@@ -351,14 +336,6 @@ function BellIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-    </svg>
-  )
-}
-
-function UsersIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   )
 }

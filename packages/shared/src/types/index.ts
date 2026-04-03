@@ -6,15 +6,6 @@ export type EntryType = 'crise' | 'daily_pain' | 'charge_mentale'
 
 export type Theme = 'light' | 'dark' | 'crisis'
 
-export interface UserProfile {
-  id: string
-  userId: string
-  profileLocalId: string
-  label: string
-  color: string
-  createdAt: string
-}
-
 export interface PlanConfig {
   plan: Plan
   featureKey: string

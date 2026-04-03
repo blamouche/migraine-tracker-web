@@ -121,7 +121,6 @@ function UsersTab() {
               <th className="pb-2">Plan</th>
               <th className="pb-2">Dernière activité</th>
               <th className="pb-2">Sessions 30j</th>
-              <th className="pb-2">Profils</th>
               <th className="pb-2">Statut</th>
               <th className="pb-2">Actions</th>
             </tr>
@@ -153,7 +152,6 @@ function UsersTab() {
                   {u.last_active_at ? new Date(u.last_active_at).toLocaleDateString('fr-FR') : '—'}
                 </td>
                 <td className="py-3">{u.session_count}</td>
-                <td className="py-3">{u.profile_count}</td>
                 <td className="py-3">
                   <span className={`text-xs ${u.is_active ? 'text-(--color-success)' : 'text-(--color-danger)'}`}>
                     {u.is_active ? 'Actif' : 'Désactivé'}

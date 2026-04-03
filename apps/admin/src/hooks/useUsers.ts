@@ -8,7 +8,6 @@ interface AdminUser {
   created_at: string
   last_active_at: string | null
   session_count: number
-  profile_count: number
   is_active: boolean
   auth_provider: string | null
   plan: string

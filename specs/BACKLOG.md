@@ -57,8 +57,11 @@
 | E33 | Export utilisateurs & emails (admin)              | —       | 3       |
 | E34 | Configuration dynamique des plans & modules (admin) | —     | 5       |
 | E35 | Activation Magic Link & email/password             | ✅     | 4       |
+| E36 | Suppression du mode multi-profils                   | ✅     | 8       |
+| E37 | Picto météo pour le module environnement             | —     | 1       |
+| E38 | Changement du dossier vault depuis les paramètres    | —     | 3       |
 
-**Total : 210 User Stories**
+**Total : 222 User Stories**
 
 ---
 
@@ -3421,4 +3424,201 @@
 
 ---
 
-_Fin du backlog v1.1 — 210 User Stories réparties en 35 Epics_
+## EPIC E36 — Suppression du mode multi-profils
+
+> En tant qu'équipe produit, nous voulons supprimer le mode multi-profils de l'application (desktop, admin, base de données), afin de simplifier l'architecture : un compte = un profil. Pour suivre un proche, l'utilisateur doit créer un compte séparé.
+
+**Impact :** Cette Epic rend obsolètes E17 (Multi-profil & abonnements) et E27 (Création du profil par défaut à l'onboarding). Les stories concernées sont remplacées par les stories ci-dessous.
+
+### US-36-01 · 🔴 Critique · TECH
+
+**En tant que** développeur,
+**je veux** supprimer la table `user_profiles` et simplifier `profile_plans` en rattachant le plan directement au `user_id`,
+**afin de** refléter le modèle un compte = un profil dans la base de données.
+
+**Critères d'acceptation :**
+
+- [x] Nouvelle migration Supabase qui supprime la table `user_profiles`
+- [x] La table `profile_plans` est renommée ou remplacée par `user_plans` avec `user_id` comme clé (sans `profile_local_id`)
+- [x] Les politiques RLS sont mises à jour en conséquence
+- [x] La colonne `profile_count` est supprimée de `user_usage`
+- [x] Le champ `max_profiles` est supprimé de `plan_config` et du seed
+
+---
+
+### US-36-02 · 🔴 Critique · TECH
+
+**En tant que** développeur,
+**je veux** supprimer le `profileStore` et toute la logique multi-profils du frontend,
+**afin de** simplifier la gestion d'état côté client.
+
+**Critères d'acceptation :**
+
+- [x] Le fichier `profileStore.ts` est supprimé
+- [x] Les feature flags sont rattachés directement au compte utilisateur (via `authStore` ou un nouveau `planStore`)
+- [x] Toutes les références à `activeProfileId`, `switchProfile`, `profiles[]` sont supprimées du code
+- [x] Le localStorage `migraine-ai-profiles` n'est plus utilisé
+
+---
+
+### US-36-03 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** que mon vault soit directement associé à mon compte (sans notion de profil intermédiaire),
+**afin de** simplifier l'accès à mes données.
+
+**Critères d'acceptation :**
+
+- [x] Les fonctions vault (`saveVaultHandle`, `restoreVaultHandle`, `checkVaultAccess`) utilisent `user.id` directement au lieu de `profileId`
+- [x] Tous les modules vault (crises, dailyPain, alimentaire, sport, transport, cycle, chargeMentale, consultation) sont mis à jour
+- [x] Le `medicalProfileStore` fonctionne sans référence au profil
+- [x] Migration transparente pour les utilisateurs existants : le vault du profil actif devient le vault du compte
+
+---
+
+### US-36-04 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** que l'onboarding ne me demande plus de nommer un profil,
+**afin que** l'inscription soit plus rapide et intuitive.
+
+**Critères d'acceptation :**
+
+- [x] L'étape `ProfileSetupPage` est supprimée ou remplacée par une étape simplifiée (nom d'affichage du compte)
+- [x] Le flow onboarding passe directement du consentement à la sélection du vault
+- [x] Le `onboardingStore` ne contient plus l'étape `profile-setup`
+- [x] Le nom affiché dans le header est le nom du compte (metadata Supabase) et non plus le nom d'un profil
+
+---
+
+### US-36-05 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** que la page de gestion des profils (`ProfileManagerPage`) soit supprimée,
+**afin qu'** il n'y ait plus de sélecteur multi-profils dans l'application.
+
+**Critères d'acceptation :**
+
+- [x] La page `ProfileManagerPage.tsx` est supprimée
+- [x] La route correspondante est retirée du routeur
+- [x] Le lien vers le gestionnaire de profils est retiré du Sidebar
+- [x] Le raccourci clavier `Cmd/Ctrl + P` pour le sélecteur de profil est supprimé
+- [x] Le badge de couleur de profil dans le header est supprimé
+
+---
+
+### US-36-06 · 🟠 Haute · TECH
+
+**En tant que** développeur,
+**je veux** supprimer les types et constantes liés au multi-profils,
+**afin de** nettoyer le code et éviter toute confusion.
+
+**Critères d'acceptation :**
+
+- [x] Le type `UserProfile` (dans `apps/desktop/src/types/profile.ts`) est supprimé ou simplifié en type `UserAccount`
+- [x] Les constantes `PROFILE_COLORS`, `UserProfileFormData` sont supprimées
+- [x] Le type `UserProfile` dans `packages/shared/src/types/index.ts` est supprimé
+- [x] Toutes les interfaces et types qui référencent `profileLocalId` sont nettoyés
+
+---
+
+### US-36-07 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** que l'interface d'administration ne référence plus les multi-profils,
+**afin que** le tableau de bord reflète le modèle un compte = un profil.
+
+**Critères d'acceptation :**
+
+- [x] La colonne « Profiles » est supprimée du tableau des utilisateurs dans l'admin
+- [x] La fonction RPC `get_admin_user_list()` ne retourne plus `profile_count`
+- [x] Le plan est affiché au niveau du compte, pas du profil
+- [x] Les onglets ou sections liés aux profils sont retirés si existants
+
+---
+
+### US-36-08 · 🟡 Moyenne · FREE
+
+**En tant que** patient ayant utilisé le mode multi-profils avant la mise à jour,
+**je veux** que mes données soient migrées proprement vers le nouveau modèle,
+**afin de** ne perdre aucune donnée lors de la transition.
+
+**Critères d'acceptation :**
+
+- [x] Un script de migration identifie le profil actif (ou le premier profil) de chaque utilisateur et le conserve comme profil unique
+- [x] Le vault associé à ce profil devient le vault du compte
+- [x] Les profils secondaires ne sont pas supprimés du stockage local (vault conservé), mais ne sont plus accessibles depuis l'app
+- [x] Un message informatif est affiché aux utilisateurs concernés lors de la première connexion post-migration
+
+---
+
+## EPIC E37 — Picto météo pour le module environnement
+
+> En tant qu'utilisateur, je veux que le pictogramme du module « Données environnementales » évoque la météo, afin que l'icône soit immédiatement compréhensible.
+
+### US-37-01 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** que l'icône du module environnement représente la météo (ex : soleil avec nuage, thermomètre, etc.),
+**afin de** comprendre immédiatement à quoi correspond ce module dans la navigation.
+
+**Critères d'acceptation :**
+
+- [ ] L'icône actuelle du module environnement est remplacée par une icône évoquant la météo (ex : `Cloud`, `CloudSun`, `Thermometer` ou équivalent Lucide)
+- [ ] L'icône est mise à jour partout où le module apparaît : sidebar, dashboard, onboarding
+- [ ] L'icône reste cohérente avec le Design System existant (taille, couleur, style)
+- [ ] Le label « Données environnementales » reste inchangé
+
+---
+
+## EPIC E38 — Changement du dossier vault depuis les paramètres
+
+> En tant qu'utilisateur, je veux pouvoir modifier le dossier source de mon vault depuis les paramètres de l'application, afin de déplacer mes données ou de pointer vers un autre emplacement sans devoir refaire l'onboarding.
+
+### US-38-01 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** accéder à un réglage « Dossier vault » dans mes paramètres,
+**afin de** voir quel dossier est actuellement utilisé pour stocker mes données.
+
+**Critères d'acceptation :**
+
+- [ ] Une section « Stockage / Vault » est visible dans la page Paramètres
+- [ ] Le chemin du dossier vault actuellement configuré est affiché
+- [ ] Un bouton « Modifier » permet d'ouvrir le sélecteur de dossier natif (File System Access API)
+
+---
+
+### US-38-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** sélectionner un nouveau dossier vault via le sélecteur de fichiers,
+**afin de** pointer l'application vers un autre emplacement de données.
+
+**Critères d'acceptation :**
+
+- [ ] Le clic sur « Modifier » ouvre le sélecteur de dossier natif du navigateur
+- [ ] Le nouveau dossier est validé (structure vault existante détectée, ou nouveau dossier vide accepté)
+- [ ] Le handle du vault est mis à jour dans IndexedDB
+- [ ] L'application recharge les données depuis le nouveau vault
+- [ ] Un message de confirmation s'affiche : « Vault mis à jour avec succès »
+- [ ] En cas d'erreur (dossier inaccessible, permissions insuffisantes) : message d'erreur explicite
+
+---
+
+### US-38-03 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** être averti si le nouveau dossier vault est vide ou ne contient pas de données existantes,
+**afin de** ne pas perdre mes données par erreur.
+
+**Critères d'acceptation :**
+
+- [ ] Si le dossier sélectionné est vide : message « Ce dossier est vide. L'application créera la structure de données. Continuer ? »
+- [ ] Si le dossier contient une structure vault valide : message « Données existantes détectées. L'application utilisera ces données. »
+- [ ] Si le dossier contient des fichiers non reconnus : avertissement « Ce dossier contient des fichiers non reconnus. Voulez-vous tout de même l'utiliser ? »
+- [ ] L'ancien dossier vault n'est pas supprimé ni modifié
+
+---
+
+_Fin du backlog v1.2 — 222 User Stories réparties en 38 Epics_

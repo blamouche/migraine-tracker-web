@@ -10,7 +10,7 @@ export function VaultReconnectPage() {
   const user = useAuthStore((s) => s.user)
   const anonymousId = useAuthStore((s) => s.anonymousId)
 
-  const profileId = user?.id ?? anonymousId ?? 'default'
+  const userId = user?.id ?? anonymousId ?? 'default'
 
   const handlePickFolder = async () => {
     setError(null)
@@ -18,7 +18,7 @@ export function VaultReconnectPage() {
     try {
       const handle = await pickVaultFolder()
       await ensureVaultStructure(handle)
-      await saveVaultHandle(profileId, handle)
+      await saveVaultHandle(userId, handle)
       navigate('/', { replace: true })
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') {
