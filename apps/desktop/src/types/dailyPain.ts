@@ -5,6 +5,7 @@ export interface DailyPainEntry {
   lieeACrise: boolean
   criseId: string | null
   notes: string | null
+  source?: 'web' | 'mobile' | undefined
   createdAt: string // ISO
   updatedAt: string // ISO
 }

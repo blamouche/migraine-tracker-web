@@ -13,6 +13,7 @@ export interface CrisisEntry {
   status: 'incomplet' | 'complet'
   completionForcee: boolean
   estimatedDuration: number | null // minutes
+  source?: 'web' | 'mobile' | undefined
   createdAt: string // ISO
   updatedAt: string // ISO
 }

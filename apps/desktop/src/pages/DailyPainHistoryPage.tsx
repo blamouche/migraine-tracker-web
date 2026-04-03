@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useDailyPainStore } from '@/stores/dailyPainStore'
 import { PainCalendar } from '@/components/pain/PainCalendar'
+import { MobileBadge } from '@/components/ui/MobileBadge'
 import type { DailyPainEntry } from '@/types/dailyPain'
 import { PAIN_NIVEAU_LABELS } from '@/types/dailyPain'
 
@@ -72,7 +73,10 @@ export function DailyPainHistoryPage() {
                         <p className="text-xs text-(--color-text-muted)">{PAIN_NIVEAU_LABELS[entry.niveau]}{entry.lieeACrise ? ' · Liée à une crise' : ''}</p>
                       </div>
                     </div>
-                    <span className="text-(--color-text-muted)">{expandedId === entry.id ? '▲' : '▼'}</span>
+                    <div className="flex items-center gap-2">
+                      {entry.source === 'mobile' && <MobileBadge />}
+                      <span className="text-(--color-text-muted)">{expandedId === entry.id ? '▲' : '▼'}</span>
+                    </div>
                   </div>
                 </button>
                 {expandedId === entry.id && (

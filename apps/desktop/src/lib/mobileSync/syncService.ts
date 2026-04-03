@@ -60,6 +60,7 @@ function buildCrisisEntry(data: Record<string, string>, createdAt: string): Cris
     triggers: [],
     location: null,
     notes: 'Saisie mobile',
+    source: 'mobile',
     hit6Score: null,
     status: 'complet',
     completionForcee: false,
@@ -78,6 +79,7 @@ function buildPainEntry(data: Record<string, string>, createdAt: string): DailyP
     lieeACrise: false,
     criseId: null,
     notes: 'Saisie mobile',
+    source: 'mobile',
     createdAt: now,
     updatedAt: now,
   }
@@ -93,6 +95,7 @@ function buildChargeEntry(data: Record<string, string>, createdAt: string): Char
     humeur: 'neutre',
     contexte: [],
     notes: 'Saisie mobile',
+    source: 'mobile',
     createdAt: now,
     updatedAt: now,
   }
