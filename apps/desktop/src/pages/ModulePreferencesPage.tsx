@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useModuleStore } from '@/stores/moduleStore'
 import { usePlanStore } from '@/stores/planStore'
+import { usePlanConfigStore } from '@/stores/planConfigStore'
 import { MODULE_DEFINITIONS } from '@/types/modules'
 import type { ModuleId } from '@/types/modules'
 
@@ -69,7 +70,8 @@ const MODULE_ICONS: Record<ModuleId, React.ReactNode> = {
 export function ModulePreferencesPage() {
   const navigate = useNavigate()
   const { config, setModuleEnabled } = useModuleStore()
-  const featureFlags = usePlanStore((s) => s.featureFlags)
+  const plan = usePlanStore((s) => s.plan)
+  const isModuleEnabledForPlan = usePlanConfigStore((s) => s.isModuleEnabledForPlan)
   const [confirmingDisable, setConfirmingDisable] = useState<ModuleId | null>(null)
 
   const handleToggle = async (moduleId: ModuleId, currentEnabled: boolean) => {
@@ -110,13 +112,13 @@ export function ModulePreferencesPage() {
         <section className="mt-8 space-y-3">
           {MODULE_DEFINITIONS.map((mod) => {
             const enabled = config[mod.id]
-            const proLocked = mod.proOnly && !featureFlags.iaModule // iaModule is pro-only indicator
+            const adminDisabled = !isModuleEnabledForPlan(plan, mod.id)
 
             return (
               <div
                 key={mod.id}
                 className={`flex items-center justify-between rounded-(--radius-lg) bg-(--color-bg-elevated) p-4 ${
-                  proLocked ? 'opacity-60' : ''
+                  adminDisabled ? 'opacity-60' : ''
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -126,29 +128,40 @@ export function ModulePreferencesPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium">{mod.label}</p>
-                      {proLocked && (
-                        <span className="rounded-full bg-(--color-warning)/20 px-2 py-0.5 text-[10px] font-semibold text-(--color-warning)">
-                          Plan Pro
+                      {adminDisabled && (
+                        <span className="flex items-center gap-1 rounded-full bg-(--color-warning)/20 px-2 py-0.5 text-[10px] font-semibold text-(--color-warning)">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                          </svg>
+                          Non disponible
                         </span>
                       )}
                     </div>
-                    <p className="mt-0.5 text-xs text-(--color-text-muted)">{mod.description}</p>
+                    <p className="mt-0.5 text-xs text-(--color-text-muted)">
+                      {adminDisabled
+                        ? 'Ce module n\'est pas disponible avec votre plan actuel.'
+                        : mod.description}
+                    </p>
                   </div>
                 </div>
                 <button
                   type="button"
-                  onClick={() => !proLocked && handleToggle(mod.id, enabled)}
-                  disabled={proLocked}
+                  onClick={() => !adminDisabled && handleToggle(mod.id, enabled)}
+                  disabled={adminDisabled}
                   className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-                    enabled ? 'bg-(--color-brand)' : 'bg-(--color-border-strong)'
-                  } ${proLocked ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                    adminDisabled
+                      ? 'bg-(--color-border-strong) cursor-not-allowed'
+                      : enabled
+                        ? 'bg-(--color-brand) cursor-pointer'
+                        : 'bg-(--color-border-strong) cursor-pointer'
+                  }`}
                   role="switch"
-                  aria-checked={enabled}
+                  aria-checked={!adminDisabled && enabled}
                   aria-label={`${enabled ? 'Désactiver' : 'Activer'} ${mod.label}`}
                 >
                   <span
                     className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
-                      enabled ? 'translate-x-5' : ''
+                      !adminDisabled && enabled ? 'translate-x-5' : ''
                     }`}
                   />
                 </button>

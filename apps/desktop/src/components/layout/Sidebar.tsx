@@ -4,6 +4,9 @@ import { useNavigationStore } from '@/stores/navigationStore'
 import { useCrisisStore } from '@/stores/crisisStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useModuleStore } from '@/stores/moduleStore'
+import { usePlanStore } from '@/stores/planStore'
+import { isPathDisabled } from './ModuleGate'
+import { usePlanConfigStore } from '@/stores/planConfigStore'
 
 
 interface NavItem {
@@ -75,14 +78,22 @@ export function Sidebar() {
   const { user, signOut } = useAuthStore()
   const moduleConfig = useModuleStore((s) => s.config)
   const isRouteEnabled = useModuleStore((s) => s.isRouteEnabled)
+  const currentPlan = usePlanStore((s) => s.plan)
+  const planFlags = usePlanConfigStore((s) => s.getFlags(currentPlan))
+  const planLoaded = usePlanConfigStore((s) => s.loaded)
 
   const filteredGroups = useMemo(() => {
     return NAV_GROUPS.map((group) => ({
       ...group,
-      items: group.items.filter((item) => isRouteEnabled(item.path)),
+      items: group.items
+        .filter((item) => isRouteEnabled(item.path))
+        .map((item) => ({
+          ...item,
+          planDisabled: planLoaded && isPathDisabled(item.path, planFlags),
+        })),
     })).filter((group) => group.items.length > 0)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [moduleConfig])
+  }, [moduleConfig, planFlags, planLoaded])
 
   const handleNav = (path: string) => {
     navigate(path)
@@ -129,6 +140,7 @@ export function Sidebar() {
             {group.items.map((item) => {
               const active = isActive(item.path)
               const hasIncomplete = item.path === '/crisis/history' && incompleteCount > 0
+              const locked = item.planDisabled
               return (
                 <button
                   key={item.path}
@@ -136,14 +148,21 @@ export function Sidebar() {
                   onClick={() => handleNav(item.path)}
                   title={sidebarCollapsed ? item.label : undefined}
                   className={`group relative mb-0.5 flex w-full items-center gap-3 rounded-(--radius-md) px-2 py-2 text-sm transition-colors ${
-                    active
-                      ? 'border-l-[3px] border-(--color-brand) bg-(--color-bg-interactive) font-medium text-(--color-text-primary)'
-                      : 'border-l-[3px] border-transparent text-(--color-text-secondary) hover:bg-(--color-bg-subtle) hover:text-(--color-text-primary)'
+                    locked
+                      ? 'border-l-[3px] border-transparent opacity-50 cursor-default'
+                      : active
+                        ? 'border-l-[3px] border-(--color-brand) bg-(--color-bg-interactive) font-medium text-(--color-text-primary)'
+                        : 'border-l-[3px] border-transparent text-(--color-text-secondary) hover:bg-(--color-bg-subtle) hover:text-(--color-text-primary)'
                   }`}
                 >
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center">{item.icon}</span>
                   {!sidebarCollapsed && <span>{item.label}</span>}
-                  {hasIncomplete && (
+                  {locked && !sidebarCollapsed && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-auto shrink-0 text-(--color-text-muted)">
+                      <rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                  )}
+                  {hasIncomplete && !locked && (
                     <span className="absolute right-2 top-1/2 -translate-y-1/2 flex h-5 min-w-5 items-center justify-center rounded-full bg-(--color-danger) px-1 text-[10px] font-bold text-white">
                       {incompleteCount}
                     </span>

@@ -62,17 +62,20 @@ export function usePlanConfig(): UsePlanConfigReturn {
 
     const { error: upsertError } = await supabase
       .from('plan_config')
-      .upsert({
-        plan,
-        feature_key: featureKey,
-        feature_value: featureValue,
-        updated_at: new Date().toISOString(),
-        updated_by: adminId,
-      })
+      .upsert(
+        {
+          plan,
+          feature_key: featureKey,
+          feature_value: featureValue,
+          updated_at: new Date().toISOString(),
+          updated_by: adminId,
+        },
+        { onConflict: 'plan,feature_key' },
+      )
 
     if (upsertError) {
       setError(upsertError.message)
-      return
+      throw new Error(upsertError.message)
     }
 
     // Log the change
