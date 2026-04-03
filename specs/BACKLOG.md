@@ -52,8 +52,13 @@
 | E28 | Vue calendrier consolidée                       | 3.25    | 6       |
 | E29 | Personnalisation des modules de suivi           | 3.26    | 5       |
 | E30 | Prérequis déploiement & activation admin        | —       | 6       |
+| E31 | Gestion avancée des utilisateurs (admin)        | —       | 5       |
+| E32 | Statistiques d'utilisation (admin)               | —       | 4       |
+| E33 | Export utilisateurs & emails (admin)              | —       | 3       |
+| E34 | Configuration dynamique des plans & modules (admin) | —     | 5       |
+| E35 | Activation Magic Link & email/password             | —     | 4       |
 
-**Total : 189 User Stories**
+**Total : 210 User Stories**
 
 ---
 
@@ -3024,4 +3029,378 @@
 
 ---
 
-_Fin du backlog v1.1 — 189 User Stories réparties en 30 Epics_
+---
+
+## EPIC E31 — Gestion avancée des utilisateurs (admin)
+
+> En tant qu'administrateur, je veux pouvoir visualiser les informations clés de chaque utilisateur et effectuer des actions de gestion (changement de plan, désactivation, suppression) directement depuis l'interface admin, afin de piloter la plateforme efficacement.
+
+### US-31-01 · 🔴 Critique · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir pour chaque utilisateur sa date d'inscription, son plan (gratuit/payant), sa dernière connexion et son statut (actif/désactivé),
+**afin de** monitorer rapidement l'état de chaque compte.
+
+**Critères d'acceptation :**
+
+- [ ] La liste utilisateurs affiche les colonnes : email masqué, date d'inscription, plan (`free`/`pro`), dernière connexion, statut (`actif`/`désactivé`)
+- [ ] Le plan est affiché avec un badge visuel distinct (couleur différente pour free et pro)
+- [ ] La dernière connexion affiche une date formatée en français ou « — » si jamais connecté
+- [ ] Le statut est affiché en vert (actif) ou rouge (désactivé)
+- [ ] Les données proviennent de la fonction `get_admin_user_list()` en temps réel
+
+---
+
+### US-31-02 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** accéder à une fiche détaillée d'un utilisateur en cliquant sur sa ligne,
+**afin de** voir l'ensemble de ses informations et effectuer des actions de gestion.
+
+**Critères d'acceptation :**
+
+- [ ] Clic sur une ligne ouvre un panneau latéral (drawer) ou une modale avec les détails de l'utilisateur
+- [ ] Informations affichées : email complet (avec bouton « Révéler » journalisé), date d'inscription, plan actif, dernière connexion, nombre de profils, nombre de sessions 30j, provider d'authentification, consentement marketing
+- [ ] Le panneau contient les boutons d'action : changer de plan, désactiver/réactiver, supprimer
+- [ ] Fermeture du panneau par bouton ou clic à l'extérieur
+
+---
+
+### US-31-03 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** basculer un utilisateur entre le plan gratuit et le plan payant,
+**afin de** gérer manuellement les abonnements (offre promotionnelle, support, correction).
+
+**Critères d'acceptation :**
+
+- [ ] Bouton ou switch « Changer de plan » dans la fiche utilisateur
+- [ ] Confirmation requise avant application (« Passer de free à pro ? »)
+- [ ] Mise à jour de la table `profile_plans` : champ `plan` modifié pour le profil actif de l'utilisateur
+- [ ] Si aucune entrée `profile_plans` n'existe, en créer une avec le plan sélectionné
+- [ ] Action journalisée dans `admin_log` avec l'ancien et le nouveau plan
+- [ ] Le changement est reflété immédiatement dans la liste utilisateurs
+
+---
+
+### US-31-04 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** désactiver ou réactiver un compte utilisateur,
+**afin de** gérer les abus ou restaurer un accès temporairement suspendu.
+
+**Critères d'acceptation :**
+
+- [ ] Bouton « Désactiver » (si actif) ou « Réactiver » (si désactivé) dans la fiche utilisateur
+- [ ] Confirmation requise avant exécution
+- [ ] Mise à jour de `user_usage.is_active` en base
+- [ ] Action journalisée dans `admin_log`
+- [ ] Le statut est mis à jour immédiatement dans la liste et la fiche
+- [ ] L'utilisateur désactivé voit le message « Votre compte a été désactivé. Contactez le support. » à sa prochaine connexion
+
+---
+
+### US-31-05 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** supprimer définitivement un compte utilisateur,
+**afin de** respecter une demande de suppression ou un droit à l'oubli (RGPD).
+
+**Critères d'acceptation :**
+
+- [ ] Bouton « Supprimer le compte » dans la fiche utilisateur, visuellement distinct (rouge, zone danger)
+- [ ] Double confirmation : étape 1 (« Êtes-vous sûr ? ») + étape 2 (saisie de l'email de l'utilisateur pour valider)
+- [ ] Appel à l'Edge Function `delete-user` qui supprime le compte via `supabase.auth.admin.deleteUser()`
+- [ ] Suppression en cascade : `user_usage`, `user_profiles`, `profile_plans`, `mobile_transit`
+- [ ] Action journalisée dans `admin_log` avant suppression (irréversible)
+- [ ] L'utilisateur disparaît de la liste après suppression
+- [ ] Le vault local de l'utilisateur n'est pas touché (données restent sur sa machine)
+
+---
+
+---
+
+## EPIC E32 — Statistiques d'utilisation (admin)
+
+> En tant qu'administrateur, je veux visualiser les statistiques d'utilisation de la plateforme via des graphiques, afin de suivre la croissance et l'engagement des utilisateurs dans le temps.
+
+### US-32-01 · 🔴 Critique · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir un onglet « Statistiques » dans l'interface admin,
+**afin d'** accéder à une vue d'ensemble de l'utilisation de la plateforme.
+
+**Critères d'acceptation :**
+
+- [ ] Nouvel onglet « Stats » ajouté à la navigation admin (à côté de Utilisateurs, Plans, Journal)
+- [ ] KPIs en haut de page : nombre total d'utilisateurs, utilisateurs actifs (30j), nouveaux ce mois-ci, ratio free/pro
+- [ ] Les données sont récupérées via une fonction Postgres `get_admin_stats()` (SECURITY DEFINER)
+- [ ] Affichage d'un loader pendant le chargement
+
+---
+
+### US-32-02 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir un graphique des nouvelles inscriptions mois par mois,
+**afin de** suivre la croissance de la plateforme.
+
+**Critères d'acceptation :**
+
+- [ ] Graphique en barres affichant le nombre de nouvelles inscriptions par mois
+- [ ] Période affichée : 12 derniers mois par défaut
+- [ ] Chaque barre affiche le nombre exact au survol (tooltip)
+- [ ] Les données proviennent de `auth.users.created_at` agrégé par mois via une fonction Postgres
+- [ ] Axe X : mois (format « Jan 2026 »), Axe Y : nombre d'inscriptions
+- [ ] Bibliothèque graphique : Nivo (déjà utilisée dans l'app desktop) ou solution légère (Chart.js, Recharts)
+
+---
+
+### US-32-03 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir un graphique d'utilisation de la plateforme avec une granularité ajustable (jour, semaine, mois),
+**afin de** comprendre les tendances d'engagement des utilisateurs.
+
+**Critères d'acceptation :**
+
+- [ ] Graphique en ligne affichant le nombre d'utilisateurs actifs (sessions) par période
+- [ ] Sélecteur de granularité : jour, semaine, mois
+- [ ] Période affichée : 30 derniers jours (jour), 12 dernières semaines (semaine), 12 derniers mois (mois)
+- [ ] Les données proviennent de `user_usage.last_active_at` agrégé par la granularité choisie via une fonction Postgres
+- [ ] Tooltip au survol avec la valeur exacte et la date
+- [ ] Le graphique se met à jour dynamiquement au changement de granularité
+
+---
+
+### US-32-04 · 🟡 Moyenne · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir la répartition des plans (free vs pro) sur le graphique d'inscriptions et d'utilisation,
+**afin de** suivre l'adoption du plan payant.
+
+**Critères d'acceptation :**
+
+- [ ] Le graphique des inscriptions affiche des barres empilées (free en gris, pro en couleur brand)
+- [ ] Le graphique d'utilisation affiche deux courbes superposées (free et pro)
+- [ ] Légende visible avec les deux catégories
+- [ ] Les fonctions Postgres retournent les données ventilées par plan
+
+---
+
+---
+
+## EPIC E33 — Export utilisateurs & emails (admin)
+
+> En tant qu'administrateur, je veux pouvoir exporter les données utilisateurs et les listes d'emails filtrées depuis l'interface admin, afin d'analyser les données dans un tableur ou de préparer des campagnes de communication ciblées.
+
+### US-33-01 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** exporter la liste complète des utilisateurs en CSV,
+**afin de** l'analyser dans un tableur.
+
+**Critères d'acceptation :**
+
+- [ ] Bouton « Exporter CSV » visible dans l'onglet Utilisateurs
+- [ ] Le CSV contient les colonnes : email masqué, date d'inscription, plan, dernière connexion, nombre de profils, sessions 30j, statut, consentement marketing
+- [ ] Les emails sont masqués par défaut (`a***@gmail.com`) pour protéger la vie privée
+- [ ] Le fichier est généré côté client (Blob + URL.createObjectURL) et téléchargé automatiquement
+- [ ] Nom du fichier : `migraine-ai-utilisateurs_YYYY-MM-DD.csv`
+- [ ] Action journalisée dans `admin_log`
+
+---
+
+### US-33-02 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** exporter une liste d'emails filtrée par plan (gratuit ou payant),
+**afin de** cibler des communications spécifiques à un segment d'utilisateurs.
+
+**Critères d'acceptation :**
+
+- [ ] Bouton « Exporter emails » avec sélecteur de filtre par plan : Tous, Free uniquement, Pro uniquement
+- [ ] L'export contient les emails complets (non masqués) — nécessite l'appel à `reveal_user_email()` pour chaque utilisateur ou une fonction Postgres dédiée `export_admin_emails(plan_filter)`
+- [ ] L'action de révélation groupée est journalisée une seule fois dans `admin_log` (pas une entrée par email)
+- [ ] Format CSV avec colonnes : email, plan, date d'inscription
+- [ ] Nom du fichier : `migraine-ai-emails-{filtre}_YYYY-MM-DD.csv`
+- [ ] Confirmation requise avant export (« Vous allez exporter N emails. Cette action sera journalisée. »)
+
+---
+
+### US-33-03 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** exporter une liste d'emails filtrée par dernière connexion,
+**afin d'** identifier et contacter les utilisateurs actifs ou inactifs.
+
+**Critères d'acceptation :**
+
+- [ ] Filtre par dernière connexion : actifs (< 30 jours), inactifs (30-90 jours), dormants (> 90 jours), jamais connectés
+- [ ] Combinable avec le filtre par plan (ex : « Pro + inactifs 30-90j »)
+- [ ] L'export contient : email complet, plan, dernière connexion, date d'inscription
+- [ ] Fonction Postgres `export_admin_emails(plan_filter, activity_filter)` pour filtrer côté serveur
+- [ ] Confirmation et journalisation comme US-33-02
+- [ ] Nom du fichier : `migraine-ai-emails-{filtre-plan}-{filtre-activite}_YYYY-MM-DD.csv`
+
+---
+
+---
+
+## EPIC E34 — Configuration dynamique des plans & modules (admin)
+
+> En tant qu'administrateur, je veux configurer finement les paramètres et modules disponibles pour chaque plan (free/pro) depuis l'onglet Plans de l'interface admin, avec une prise en compte immédiate côté utilisateur sans déconnexion, afin de piloter l'offre en temps réel. Les modules désactivés restent visibles mais inutilisables.
+
+### US-34-01 · 🔴 Critique · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir dans l'onglet Plans la liste complète de tous les paramètres et modules de l'application pour chaque plan,
+**afin de** configurer l'offre de manière exhaustive.
+
+**Critères d'acceptation :**
+
+- [ ] Chaque plan (free/pro) affiche tous les feature flags existants dans `plan_config`, organisés en deux sections : « Paramètres » (valeurs numériques) et « Modules » (activé/désactivé)
+- [ ] Section Paramètres : `analytics_range_months`, `max_profiles` — champs numériques éditables
+- [ ] Section Modules : `ia_enabled`, `module_cycle_enabled`, `module_sport_enabled`, `module_transport_enabled`, `module_charge_mentale_enabled`, `module_daily_pain_enabled`, `pdf_report_enabled`, `vocal_input_enabled`, `export_csv_enabled`, `export_zip_enabled` — toggles on/off
+- [ ] Chaque module affiche son nom lisible (pas la clé technique) et une description courte
+- [ ] Si un nouveau feature flag est ajouté en base, il apparaît automatiquement dans l'interface
+
+---
+
+### US-34-02 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** activer ou désactiver un module pour un plan donné,
+**afin de** contrôler les fonctionnalités accessibles aux utilisateurs de ce plan.
+
+**Critères d'acceptation :**
+
+- [ ] Toggle on/off pour chaque module avec retour visuel immédiat
+- [ ] La modification est persistée dans `plan_config` via upsert
+- [ ] Chaque modification est journalisée dans `admin_log` (ancienne valeur → nouvelle valeur)
+- [ ] Un toast de confirmation s'affiche après sauvegarde réussie
+- [ ] En cas d'erreur réseau, le toggle revient à son état précédent avec un message d'erreur
+
+---
+
+### US-34-03 · 🔴 Critique · TECH
+
+**En tant que** développeur,
+**je veux** que l'app desktop recharge la configuration `plan_config` périodiquement sans déconnexion,
+**afin que** les changements de plan effectués par l'admin soient reflétés en temps réel côté utilisateur.
+
+**Critères d'acceptation :**
+
+- [ ] Le store de modules (`moduleStore` ou `planStore`) interroge `plan_config` à intervalle régulier (toutes les 5 minutes) ou à chaque changement de page
+- [ ] Si un module passe de `true` à `false`, l'état est mis à jour dans le store sans recharger la page
+- [ ] Aucune déconnexion/reconnexion nécessaire pour voir les changements
+- [ ] Le premier chargement au démarrage de l'app reste inchangé (lecture depuis le cache puis sync)
+
+---
+
+### US-34-04 · 🔴 Critique · TECH
+
+**En tant que** utilisateur,
+**je veux** que les modules désactivés par l'admin soient visibles mais non utilisables dans mon interface,
+**afin de** comprendre que la fonctionnalité existe mais n'est pas disponible pour mon plan.
+
+**Critères d'acceptation :**
+
+- [ ] Un module désactivé apparaît dans la navigation/sidebar avec un style atténué (opacité réduite, icône cadenas)
+- [ ] Le clic sur un module désactivé affiche un message : « Cette fonctionnalité n'est pas disponible avec votre plan actuel. » avec un lien vers l'upgrade (ou simple info si pas de plan supérieur)
+- [ ] Les formulaires d'un module désactivé ne sont pas accessibles (redirection vers le message ci-dessus)
+- [ ] Les données existantes d'un module désactivé restent consultables en lecture seule (l'historique ne disparaît pas)
+- [ ] Le composant `ModuleGate` (ou équivalent) encapsule chaque module et gère l'état activé/désactivé
+
+---
+
+### US-34-05 · 🟡 Moyenne · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** pouvoir comparer visuellement les plans free et pro côte à côte,
+**afin de** vérifier la cohérence de la configuration avant de la publier.
+
+**Critères d'acceptation :**
+
+- [ ] Affichage des deux plans en colonnes côte à côte (déjà le cas, à enrichir)
+- [ ] Les différences entre free et pro sont mises en évidence visuellement (surlignage ou badge « Différent »)
+- [ ] Un bouton « Copier la config de Pro vers Free » (ou inversement) avec confirmation
+- [ ] Un résumé des modifications non encore vues par les utilisateurs (basé sur `updated_at` vs dernière consultation)
+
+---
+
+---
+
+## EPIC E35 — Activation Magic Link & email/password
+
+> En tant qu'utilisateur, je veux pouvoir me connecter avec un Magic Link (lien envoyé par email) ou avec un email et mot de passe classique en plus de Google, afin d'avoir le choix de ma méthode d'authentification.
+
+### US-35-01 · 🔴 Critique · FREE
+
+**En tant qu'** utilisateur,
+**je veux** me connecter avec un Magic Link (email OTP),
+**afin de** ne pas avoir besoin de mémoriser un mot de passe.
+
+**Critères d'acceptation :**
+
+- [ ] Le bouton « Continuer avec un Magic Link » est fonctionnel sur la page de login
+- [ ] L'utilisateur saisit son email et reçoit un lien de connexion par email
+- [ ] Le clic sur le lien redirige vers l'app et connecte automatiquement l'utilisateur
+- [ ] Le provider Supabase Auth Email est activé et configuré (templates email en français)
+- [ ] Les Redirect URLs Supabase incluent les domaines de l'app (localhost + Netlify)
+- [ ] Message de confirmation affiché : « Un lien de connexion a été envoyé à votre adresse email »
+- [ ] Gestion de l'erreur si l'email est invalide ou si le service est indisponible
+
+---
+
+### US-35-02 · 🔴 Critique · FREE
+
+**En tant qu'** utilisateur,
+**je veux** créer un compte avec email et mot de passe,
+**afin de** me connecter de manière traditionnelle.
+
+**Critères d'acceptation :**
+
+- [ ] Formulaire d'inscription fonctionnel : email + mot de passe + confirmation du mot de passe
+- [ ] Validation Zod : email valide, mot de passe ≥ 8 caractères, confirmation identique
+- [ ] Appel à `supabase.auth.signUp()` avec redirection après confirmation
+- [ ] Email de confirmation envoyé par Supabase (template en français)
+- [ ] Message affiché : « Un email de confirmation a été envoyé. Vérifiez votre boîte de réception. »
+- [ ] L'utilisateur ne peut pas accéder à l'app sans avoir confirmé son email
+
+---
+
+### US-35-03 · 🔴 Critique · FREE
+
+**En tant qu'** utilisateur,
+**je veux** me connecter avec mon email et mot de passe existants,
+**afin d'** accéder à mon compte.
+
+**Critères d'acceptation :**
+
+- [ ] Formulaire de connexion fonctionnel : email + mot de passe
+- [ ] Appel à `supabase.auth.signInWithPassword()`
+- [ ] Messages d'erreur en français : « Email ou mot de passe incorrect », « Veuillez confirmer votre email »
+- [ ] Lien « Mot de passe oublié ? » visible sous le formulaire
+- [ ] Après connexion réussie, redirection vers la HomePage (ou onboarding si première connexion)
+
+---
+
+### US-35-04 · 🟠 Haute · FREE
+
+**En tant qu'** utilisateur,
+**je veux** réinitialiser mon mot de passe si je l'ai oublié,
+**afin de** retrouver l'accès à mon compte.
+
+**Critères d'acceptation :**
+
+- [ ] Page « Mot de passe oublié » accessible depuis le formulaire de connexion
+- [ ] L'utilisateur saisit son email et reçoit un lien de réinitialisation
+- [ ] Appel à `supabase.auth.resetPasswordForEmail()` avec `redirectTo` vers une page de reset
+- [ ] Page de reset : saisie du nouveau mot de passe + confirmation
+- [ ] Appel à `supabase.auth.updateUser({ password })` pour appliquer le changement
+- [ ] Message de succès et redirection vers la page de login
+
+---
+
+_Fin du backlog v1.1 — 210 User Stories réparties en 35 Epics_
