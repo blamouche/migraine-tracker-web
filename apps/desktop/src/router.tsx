@@ -40,6 +40,7 @@ import { SportHistoryPage } from '@/pages/SportHistoryPage'
 import { ModulePreferencesPage } from '@/pages/ModulePreferencesPage'
 import { CalendarPage } from '@/pages/CalendarPage'
 import { VaultReconnectPage } from '@/pages/VaultReconnectPage'
+import { SettingsPage } from '@/pages/SettingsPage'
 
 export const router = createBrowserRouter([
   {
@@ -251,6 +252,11 @@ export const router = createBrowserRouter([
           {
             path: '/modules',
             element: <ModulePreferencesPage />,
+          },
+          // E38 — Settings / Vault management
+          {
+            path: '/parametres',
+            element: <SettingsPage />,
           },
         ],
       },
