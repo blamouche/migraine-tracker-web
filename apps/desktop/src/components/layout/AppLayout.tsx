@@ -1,5 +1,8 @@
+import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { useNavigationStore } from '@/stores/navigationStore'
+import { usePlanConfigStore } from '@/stores/planConfigStore'
+import { ModuleGate } from './ModuleGate'
 import { Sidebar } from './Sidebar'
 import { BottomBar } from './BottomBar'
 import { Breadcrumb } from './Breadcrumb'
@@ -50,6 +53,20 @@ const BYPASS_LAYOUT = ['/crisis/quick']
 export function AppLayout() {
   const location = useLocation()
   const { sidebarOpen, setSidebarOpen } = useNavigationStore()
+  const fetchConfig = usePlanConfigStore((s) => s.fetchConfig)
+  const startAutoRefresh = usePlanConfigStore((s) => s.startAutoRefresh)
+
+  // E34 — Fetch plan_config on mount + auto-refresh every 5 min
+  useEffect(() => {
+    fetchConfig()
+    const cleanup = startAutoRefresh()
+    return cleanup
+  }, [fetchConfig, startAutoRefresh])
+
+  // E34 — Re-fetch on page navigation
+  useEffect(() => {
+    fetchConfig()
+  }, [location.pathname, fetchConfig])
 
   // Register global keyboard shortcuts (E26)
   useKeyboardShortcuts()
@@ -133,7 +150,9 @@ export function AppLayout() {
         <main className="flex-1 overflow-y-auto" id="main-content">
           <div className="mx-auto max-w-[1200px] px-6 py-6 lg:px-8 lg:py-8">
             <PageTransition>
-              <Outlet />
+              <ModuleGate pathname={location.pathname}>
+                <Outlet />
+              </ModuleGate>
             </PageTransition>
           </div>
         </main>

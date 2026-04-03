@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useModuleStore } from '@/stores/moduleStore'
 import { usePlanStore } from '@/stores/planStore'
+import { usePlanConfigStore } from '@/stores/planConfigStore'
 import { MODULE_DEFINITIONS } from '@/types/modules'
 import type { ModuleId } from '@/types/modules'
 
@@ -69,7 +70,8 @@ const MODULE_ICONS: Record<ModuleId, React.ReactNode> = {
 export function ModulePreferencesPage() {
   const navigate = useNavigate()
   const { config, setModuleEnabled } = useModuleStore()
-  const featureFlags = usePlanStore((s) => s.featureFlags)
+  const plan = usePlanStore((s) => s.plan)
+  const isModuleEnabledForPlan = usePlanConfigStore((s) => s.isModuleEnabledForPlan)
   const [confirmingDisable, setConfirmingDisable] = useState<ModuleId | null>(null)
 
   const handleToggle = async (moduleId: ModuleId, currentEnabled: boolean) => {
@@ -110,7 +112,7 @@ export function ModulePreferencesPage() {
         <section className="mt-8 space-y-3">
           {MODULE_DEFINITIONS.map((mod) => {
             const enabled = config[mod.id]
-            const proLocked = mod.proOnly && !featureFlags.iaModule // iaModule is pro-only indicator
+            const proLocked = mod.proOnly && !isModuleEnabledForPlan(plan, mod.id)
 
             return (
               <div

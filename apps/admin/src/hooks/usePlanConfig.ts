@@ -72,7 +72,7 @@ export function usePlanConfig(): UsePlanConfigReturn {
 
     if (upsertError) {
       setError(upsertError.message)
-      return
+      throw new Error(upsertError.message)
     }
 
     // Log the change
