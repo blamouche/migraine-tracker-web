@@ -15,13 +15,13 @@ describe('onboardingStore', () => {
     expect(state.medicalProfileDone).toBe(false)
   })
 
-  it('accepts consent and advances to vault-selection', () => {
+  it('accepts consent and advances to profile-setup', () => {
     useOnboardingStore.getState().acceptConsent(true, false)
     const state = useOnboardingStore.getState()
     expect(state.consentCGU).toBe(true)
     expect(state.consentMarketing).toBe(false)
     expect(state.consentMarketingAt).toBeNull()
-    expect(state.step).toBe('vault-selection')
+    expect(state.step).toBe('profile-setup')
   })
 
   it('records marketing consent timestamp when accepted', () => {
