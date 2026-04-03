@@ -14,6 +14,8 @@ interface MobileSyncState {
   enableMobileSync: () => Promise<void>
   disableMobileSync: () => void
   regenerateKey: () => Promise<void>
+  syncNow: () => Promise<{ synced: number; errors: number }>
+  refreshPendingCount: () => Promise<void>
   getQRPayload: () => string | null
   clearError: () => void
 }
@@ -54,6 +56,7 @@ export const useMobileSyncStore = create<MobileSyncState>()(
         set({
           config: { ...DEFAULT_MOBILE_SYNC },
           qrPayload: null,
+          pendingCount: 0,
         })
       },
 
@@ -77,6 +80,34 @@ export const useMobileSyncStore = create<MobileSyncState>()(
           }))
         } catch {
           set({ error: 'Erreur lors de la régénération de la clé' })
+        }
+      },
+
+      syncNow: async () => {
+        try {
+          const { syncMobileEntries } = await import('@/lib/mobileSync/syncService')
+          const result = await syncMobileEntries()
+          if (result.synced > 0) {
+            set((state) => ({
+              config: { ...state.config, lastSyncAt: new Date().toISOString() },
+            }))
+          }
+          // Refresh pending count after sync
+          await get().refreshPendingCount()
+          return result
+        } catch {
+          set({ error: 'Erreur lors de la synchronisation' })
+          return { synced: 0, errors: 0 }
+        }
+      },
+
+      refreshPendingCount: async () => {
+        try {
+          const { fetchPendingCount } = await import('@/lib/mobileSync/syncService')
+          const count = await fetchPendingCount()
+          set({ pendingCount: count })
+        } catch {
+          // Silently fail
         }
       },
 

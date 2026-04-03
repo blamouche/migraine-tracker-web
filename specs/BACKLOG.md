@@ -41,7 +41,7 @@
 | E17 | Multi-profil & abonnements                     | 3.16    | 8       |
 | E18 | Données environnementales                      | 4.2     | 5       |
 | E19 | Module IA                                      | 3.18    | 8       |
-| E20 | Saisie mobile — mode Crise à distance          | 3.19    | 7       |
+| E20 | Saisie mobile — mode Crise à distance          | 3.19    | 10      |
 | E21 | Administration & feature flags                 | 3.17    | 7       |
 | E22 | Infrastructure, robustesse & qualité           | 6.5/6.6 | 9       |
 | E23 | Navigation & shell applicatif                  | 3.20    | 5       |
@@ -63,7 +63,7 @@
 | E39 | Reconnexion rapide — skip onboarding utilisateur connu | ✅     | 4       |
 | E40 | Saisie mobile étendue — tous types d'enregistrements    | —      | 6       |
 
-**Total : 232 User Stories**
+**Total : 235 User Stories**
 
 ---
 
@@ -2021,7 +2021,7 @@
 - [x] Interface mobile disponible sur `m.migraine-ai.app`
 - [x] 3 champs : heure (défaut : maintenant), intensité (curseur), traitement (chips)
 - [x] Fond sombre permanent, zones tactiles ≥ 48px, aucun scroll
-- [ ] Données sérialisées en YAML, chiffrées (AES-256-GCM) et envoyées à Supabase
+- [x] Données sérialisées en YAML, chiffrées (AES-256-GCM) et envoyées à Supabase
 - [x] Confirmation : « Crise enregistrée. Elle sera intégrée à votre vault à la prochaine ouverture. »
 
 ---
@@ -2048,12 +2048,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vérification de `mobile_transit` au démarrage desktop
-- [ ] Déchiffrement local avec la clé de `config/mobile-sync.md`
-- [ ] Écriture dans `crises/`, `daily-pain/`, `charge-mentale/` avec `source: mobile`
-- [ ] Crises mobiles apparaissent en zone d'attention avec badge « Saisie mobile »
-- [ ] Entrées synchronisées supprimées de Supabase immédiatement
-- [ ] Toast de confirmation : « X entrées saisies depuis votre téléphone ont été ajoutées. »
+- [x] Vérification de `mobile_transit` au démarrage desktop
+- [x] Déchiffrement local avec la clé de `config/mobile-sync.md`
+- [x] Écriture dans `crises/`, `daily-pain/`, `charge-mentale/` avec `source: mobile`
+- [x] Crises mobiles apparaissent en zone d'attention avec badge « Saisie mobile »
+- [x] Entrées synchronisées supprimées de Supabase immédiatement
+- [x] Toast de confirmation : « X entrées saisies depuis votre téléphone ont été ajoutées. »
 
 ---
 
@@ -2065,9 +2065,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Saisie stockée en IndexedDB sur le mobile si hors connexion
-- [ ] Envoi automatique à Supabase dès connexion rétablie
-- [ ] Aucun message d'erreur bloquant — l'utilisateur voit sa saisie confirmée
+- [x] Saisie stockée en IndexedDB sur le mobile si hors connexion
+- [x] Envoi automatique à Supabase dès connexion rétablie
+- [x] Aucun message d'erreur bloquant — l'utilisateur voit sa saisie confirmée
 
 ---
 
@@ -2094,9 +2094,56 @@
 
 **Critères d'acceptation :**
 
-- [ ] Notification à 80 jours sans synchronisation
+- [x] Notification à 80 jours sans synchronisation
 - [ ] Message : « Vous avez des saisies mobiles non synchronisées depuis 80 jours. Ouvrez Migraine AI sur votre ordinateur. »
-- [ ] Purge automatique à 90 jours (cron Supabase)
+- [x] Purge automatique à 90 jours (cron Supabase)
+
+---
+
+### US-20-08 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** que les entrées issues de la saisie mobile soient identifiées visuellement dans le journal et le calendrier,
+**afin de** distinguer les données saisies depuis mon téléphone de celles saisies sur le desktop.
+
+**Critères d'acceptation :**
+
+- [x] Les crises, douleurs et charges mentales synchronisées depuis le mobile portent un badge « Saisie mobile » dans les listes d'historique
+- [x] Le badge est basé sur le champ `source: mobile` présent dans le frontmatter YAML du fichier vault
+- [ ] Le badge apparaît également dans la vue calendrier consolidée (E28)
+- [x] Le badge est purement informatif — aucun comportement différent pour les entrées mobiles
+
+---
+
+### US-20-09 · 🟢 Basse · FREE
+
+**En tant que** patient avec des saisies mobiles non synchronisées depuis longtemps,
+**je veux** voir un avertissement dans l'application desktop m'invitant à synchroniser,
+**afin de** ne pas perdre mes données avant la purge automatique à 90 jours.
+
+**Critères d'acceptation :**
+
+- [x] Au démarrage, l'application appelle `notify_stale_mobile_entries()` pour détecter les entrées > 80 jours non synchronisées
+- [x] Si des entrées sont détectées, une bannière d'avertissement s'affiche sur le tableau de bord : « Vous avez des saisies mobiles non synchronisées depuis plus de 80 jours. Synchronisez-les avant qu'elles soient supprimées automatiquement. »
+- [x] La bannière contient un lien vers la page `/mobile-sync` pour lancer la synchronisation
+- [x] La bannière disparaît après une synchronisation réussie
+
+---
+
+### US-20-10 · 🟠 Haute · FREE
+
+**En tant que** patient avec la saisie mobile activée,
+**je veux** voir en permanence dans l'interface principale si des saisies mobiles sont en attente de synchronisation et pouvoir déclencher la synchronisation sans naviguer vers la page Saisie mobile,
+**afin de** ne pas oublier de synchroniser et de le faire en un clic.
+
+**Critères d'acceptation :**
+
+- [x] Un indicateur est visible dans la sidebar ou la barre de navigation lorsque `pendingCount > 0` (ex. badge numérique sur l'icône mobile)
+- [x] L'indicateur affiche le nombre de saisies en attente
+- [x] L'indicateur n'apparaît pas si la saisie mobile est désactivée ou s'il n'y a aucune saisie en attente
+- [x] Un clic sur l'indicateur ouvre un popover ou une zone permettant de lancer la synchronisation directement
+- [x] Après une synchronisation réussie, l'indicateur se met à jour (disparaît si plus rien en attente)
+- [x] Le compteur est rafraîchi automatiquement à l'ouverture de l'application et à chaque retour de focus sur la fenêtre
 
 ---
 

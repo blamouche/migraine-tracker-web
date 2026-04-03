@@ -25,6 +25,7 @@ function chargeToMarkdown(c: ChargeMentaleEntry): string {
     `domaine: ${c.domaine}`,
     `humeur: ${c.humeur}`,
     `contexte: [${c.contexte.join(', ')}]`,
+    `source: ${c.source ?? ''}`,
     `cree_le: ${c.createdAt}`,
     `modifie_le: ${c.updatedAt}`,
     '---',
@@ -60,6 +61,7 @@ function markdownToCharge(content: string): ChargeMentaleEntry | null {
     humeur: (get('humeur') || 'neutre') as HumeurLevel,
     contexte: getArray('contexte'),
     notes: notesMatch?.[1]?.trim() ?? null,
+    source: get('source') === 'mobile' ? 'mobile' : undefined,
     createdAt: get('cree_le'),
     updatedAt: get('modifie_le'),
   }

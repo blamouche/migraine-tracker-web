@@ -68,7 +68,14 @@ export async function runBootSequence(): Promise<BootResult> {
       name: 'mobile-sync',
       critical: false,
       run: async () => {
-        // Check for pending mobile transit entries
+        const { syncMobileEntries } = await import('@/lib/mobileSync/syncService')
+        const result = await syncMobileEntries()
+        if (result.synced > 0) {
+          // Dispatch a custom event so the UI can show a toast
+          window.dispatchEvent(
+            new CustomEvent('mobile-sync-complete', { detail: result }),
+          )
+        }
       },
     },
     {

@@ -7,6 +7,7 @@ import { useModuleStore } from '@/stores/moduleStore'
 import { usePlanStore } from '@/stores/planStore'
 import { isPathDisabled } from './ModuleGate'
 import { usePlanConfigStore } from '@/stores/planConfigStore'
+import { MobileSyncIndicator } from '@/components/mobile/MobileSyncIndicator'
 
 
 interface NavItem {
@@ -173,6 +174,9 @@ export function Sidebar() {
           </div>
         ))}
       </nav>
+
+      {/* Mobile sync indicator */}
+      <MobileSyncIndicator collapsed={sidebarCollapsed} />
 
       {/* User / logout */}
       <div className="border-t border-(--color-border)">

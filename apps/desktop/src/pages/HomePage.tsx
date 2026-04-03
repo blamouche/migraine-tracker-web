@@ -22,6 +22,7 @@ import { TRANSPORT_MOYEN_LABELS } from '@/types/transport'
 import { SPORT_TYPE_LABELS } from '@/types/sport'
 import { CHARGE_DOMAINE_LABELS, HUMEUR_LABELS } from '@/types/chargeMentale'
 import { PAIN_NIVEAU_LABELS } from '@/types/dailyPain'
+import { StaleMobileEntriesBanner } from '@/components/mobile/StaleMobileEntriesBanner'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -82,6 +83,8 @@ export function HomePage() {
           <AlertBanner />
 
           {/* Incomplete entries (US-02-13) */}
+          <StaleMobileEntriesBanner />
+
           <IncompleteEntries
             crises={crises}
             onComplete={(crisis) => navigate(`/crisis/${crisis.id}/edit`)}
