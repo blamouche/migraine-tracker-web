@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { QRCodeSVG } from 'qrcode.react'
 import { useMobileSyncStore } from '@/stores/mobileSyncStore'
 
-const MOBILE_URL = import.meta.env.DEV ? 'http://localhost:5174' : 'https://m.migraine-ai.app'
+const MOBILE_URL = import.meta.env.DEV ? 'http://localhost:5174' : 'https://migraine-ai-mobile.netlify.app'
 
 export function MobileSyncPage() {
   const navigate = useNavigate()
@@ -37,7 +37,7 @@ export function MobileSyncPage() {
     setSyncing(false)
   }
 
-  // Build the full QR URL: m.migraine-ai.app/#payload=<base64>
+  // Build the full QR URL: <mobile-url>/#payload=<base64>
   const qrUrl = qrPayload ? `${MOBILE_URL}/#payload=${qrPayload}` : null
 
   return (
@@ -98,8 +98,8 @@ export function MobileSyncPage() {
               )}
               <p className="mt-3 text-center text-xs text-(--color-text-muted)">
                 Ou accédez à{' '}
-                <span className="font-mono text-(--color-brand)">m.migraine-ai.app</span> puis
-                scannez
+                <span className="font-mono text-(--color-brand)">migraine-ai-mobile.netlify.app</span>{' '}
+                puis scannez
               </p>
               {import.meta.env.DEV && qrUrl && (
                 <div className="mt-3 text-center">
