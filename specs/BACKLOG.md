@@ -41,7 +41,7 @@
 | E17 | Multi-profil & abonnements                     | 3.16    | 8       |
 | E18 | Données environnementales                      | 4.2     | 5       |
 | E19 | Module IA                                      | 3.18    | 8       |
-| E20 | Saisie mobile — mode Crise à distance          | 3.19    | 7       |
+| E20 | Saisie mobile — mode Crise à distance          | 3.19    | 10      |
 | E21 | Administration & feature flags                 | 3.17    | 7       |
 | E22 | Infrastructure, robustesse & qualité           | 6.5/6.6 | 9       |
 | E23 | Navigation & shell applicatif                  | 3.20    | 5       |
@@ -52,8 +52,19 @@
 | E28 | Vue calendrier consolidée                       | 3.25    | 6       |
 | E29 | Personnalisation des modules de suivi           | 3.26    | 5       |
 | E30 | Prérequis déploiement & activation admin        | —       | 6       |
+| E31 | Gestion avancée des utilisateurs (admin)        | ✅     | 5       |
+| E32 | Statistiques d'utilisation (admin)               | ✅     | 4       |
+| E33 | Export utilisateurs & emails (admin)              | ✅     | 3       |
+| E34 | Configuration dynamique des plans & modules (admin) | ✅     | 5       |
+| E35 | Activation Magic Link & email/password             | ✅     | 4       |
+| E36 | Suppression du mode multi-profils                   | ✅     | 8       |
+| E37 | Picto météo pour le module environnement             | ✅     | 1       |
+| E38 | Changement du dossier vault depuis les paramètres    | —     | 3       |
+| E39 | Reconnexion rapide — skip onboarding utilisateur connu | ✅     | 4       |
+| E40 | Saisie mobile étendue — tous types d'enregistrements    | —      | 6       |
+| E41 | Import des fichiers vault sans identifiant                | —      | 4       |
 
-**Total : 189 User Stories**
+**Total : 236 User Stories**
 
 ---
 
@@ -101,7 +112,7 @@
 
 **Critères d'acceptation :**
 
-- [ ] Un projet Supabase créé : `migraine-ai` (unique pour dev/staging/prod)
+- [x] Un projet Supabase créé : `migraine-ai` (unique pour dev/staging/prod)
 - [x] Migration initiale appliquée : tables `user_profiles`, `user_usage`, `profile_plans`, `plan_config`, `mobile_transit`, `admin_log`
 - [x] Seed `plan_config` appliqué (valeurs free/pro définies dans ARCHITECTURE_TECHNIQUE.md §11)
 - [x] RLS activé sur toutes les tables avec les politiques définies
@@ -120,7 +131,7 @@
 
 - [x] Workflow `ci.yml` : ESLint → Vitest (coverage ≥ 80 %) → Playwright E2E → axe-core → Vite build
 - [x] Le workflow échoue et bloque le merge si une violation d'accessibilité est détectée
-- [ ] Les secrets Supabase et Netlify sont configurés dans GitHub Actions Secrets
+- [x] Les secrets Supabase et Netlify sont configurés dans GitHub Actions Secrets
 - [ ] Durée totale du pipeline < 10 min sur un projet vide
 - [ ] Badge CI visible dans le README
 
@@ -134,9 +145,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Site Netlify `migraine-ai-staging` déploie automatiquement à chaque PR avec une URL unique
-- [ ] Site Netlify `migraine-ai-prod` déploie uniquement sur merge vers `main`
-- [ ] Variables d'environnement Netlify configurées (Supabase URL, anon key, etc.)
+- [x] Site Netlify `migraine-ai-staging` déploie automatiquement à chaque PR avec une URL unique
+- [x] Site Netlify `migraine-ai-prod` déploie sur merge vers `prod`
+- [x] Variables d'environnement Netlify configurées (Supabase URL, anon key, etc.)
 - [x] Headers de sécurité configurés dans `netlify.toml` (CSP, HSTS, X-Frame-Options)
 - [x] Redirect `/* → /index.html` configuré pour le routing SPA
 
@@ -172,7 +183,7 @@
 - [x] Stratégie `CacheFirst` pour les assets statiques (JS, CSS, polices)
 - [ ] L'app passe le test "Installable" dans Lighthouse
 - [ ] Un prompt d'installation personnalisé s'affiche après la 2e visite
-- [ ] En mode offline, une page de fallback s'affiche si le réseau est requis
+- [x] En mode offline, une page de fallback s'affiche si le réseau est requis (`apps/desktop/public/offline.html`)
 
 ---
 
@@ -2011,7 +2022,7 @@
 - [x] Interface mobile disponible sur `m.migraine-ai.app`
 - [x] 3 champs : heure (défaut : maintenant), intensité (curseur), traitement (chips)
 - [x] Fond sombre permanent, zones tactiles ≥ 48px, aucun scroll
-- [ ] Données sérialisées en YAML, chiffrées (AES-256-GCM) et envoyées à Supabase
+- [x] Données sérialisées en YAML, chiffrées (AES-256-GCM) et envoyées à Supabase
 - [x] Confirmation : « Crise enregistrée. Elle sera intégrée à votre vault à la prochaine ouverture. »
 
 ---
@@ -2038,12 +2049,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Vérification de `mobile_transit` au démarrage desktop
-- [ ] Déchiffrement local avec la clé de `config/mobile-sync.md`
-- [ ] Écriture dans `crises/`, `daily-pain/`, `charge-mentale/` avec `source: mobile`
-- [ ] Crises mobiles apparaissent en zone d'attention avec badge « Saisie mobile »
-- [ ] Entrées synchronisées supprimées de Supabase immédiatement
-- [ ] Toast de confirmation : « X entrées saisies depuis votre téléphone ont été ajoutées. »
+- [x] Vérification de `mobile_transit` au démarrage desktop
+- [x] Déchiffrement local avec la clé de `config/mobile-sync.md`
+- [x] Écriture dans `crises/`, `daily-pain/`, `charge-mentale/` avec `source: mobile`
+- [x] Crises mobiles apparaissent en zone d'attention avec badge « Saisie mobile »
+- [x] Entrées synchronisées supprimées de Supabase immédiatement
+- [x] Toast de confirmation : « X entrées saisies depuis votre téléphone ont été ajoutées. »
 
 ---
 
@@ -2055,9 +2066,9 @@
 
 **Critères d'acceptation :**
 
-- [ ] Saisie stockée en IndexedDB sur le mobile si hors connexion
-- [ ] Envoi automatique à Supabase dès connexion rétablie
-- [ ] Aucun message d'erreur bloquant — l'utilisateur voit sa saisie confirmée
+- [x] Saisie stockée en IndexedDB sur le mobile si hors connexion
+- [x] Envoi automatique à Supabase dès connexion rétablie
+- [x] Aucun message d'erreur bloquant — l'utilisateur voit sa saisie confirmée
 
 ---
 
@@ -2084,9 +2095,56 @@
 
 **Critères d'acceptation :**
 
-- [ ] Notification à 80 jours sans synchronisation
-- [ ] Message : « Vous avez des saisies mobiles non synchronisées depuis 80 jours. Ouvrez Migraine AI sur votre ordinateur. »
-- [ ] Purge automatique à 90 jours (cron Supabase)
+- [x] Notification à 80 jours sans synchronisation
+- [x] Message : « Vous avez des saisies mobiles non synchronisées depuis 80 jours. Ouvrez Migraine AI sur votre ordinateur. »
+- [x] Purge automatique à 90 jours (cron Supabase)
+
+---
+
+### US-20-08 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** que les entrées issues de la saisie mobile soient identifiées visuellement dans le journal et le calendrier,
+**afin de** distinguer les données saisies depuis mon téléphone de celles saisies sur le desktop.
+
+**Critères d'acceptation :**
+
+- [x] Les crises, douleurs et charges mentales synchronisées depuis le mobile portent un badge « Saisie mobile » dans les listes d'historique
+- [x] Le badge est basé sur le champ `source: mobile` présent dans le frontmatter YAML du fichier vault
+- [ ] Le badge apparaît également dans la vue calendrier consolidée (E28)
+- [x] Le badge est purement informatif — aucun comportement différent pour les entrées mobiles
+
+---
+
+### US-20-09 · 🟢 Basse · FREE
+
+**En tant que** patient avec des saisies mobiles non synchronisées depuis longtemps,
+**je veux** voir un avertissement dans l'application desktop m'invitant à synchroniser,
+**afin de** ne pas perdre mes données avant la purge automatique à 90 jours.
+
+**Critères d'acceptation :**
+
+- [x] Au démarrage, l'application appelle `notify_stale_mobile_entries()` pour détecter les entrées > 80 jours non synchronisées
+- [x] Si des entrées sont détectées, une bannière d'avertissement s'affiche sur le tableau de bord : « Vous avez des saisies mobiles non synchronisées depuis plus de 80 jours. Synchronisez-les avant qu'elles soient supprimées automatiquement. »
+- [x] La bannière contient un lien vers la page `/mobile-sync` pour lancer la synchronisation
+- [x] La bannière disparaît après une synchronisation réussie
+
+---
+
+### US-20-10 · 🟠 Haute · FREE
+
+**En tant que** patient avec la saisie mobile activée,
+**je veux** voir en permanence dans l'interface principale si des saisies mobiles sont en attente de synchronisation et pouvoir déclencher la synchronisation sans naviguer vers la page Saisie mobile,
+**afin de** ne pas oublier de synchroniser et de le faire en un clic.
+
+**Critères d'acceptation :**
+
+- [x] Un indicateur est visible dans la sidebar ou la barre de navigation lorsque `pendingCount > 0` (ex. badge numérique sur l'icône mobile)
+- [x] L'indicateur affiche le nombre de saisies en attente
+- [x] L'indicateur n'apparaît pas si la saisie mobile est désactivée ou s'il n'y a aucune saisie en attente
+- [x] Un clic sur l'indicateur ouvre un popover ou une zone permettant de lancer la synchronisation directement
+- [x] Après une synchronisation réussie, l'indicateur se met à jour (disparaît si plus rien en attente)
+- [x] Le compteur est rafraîchi automatiquement à l'ouverture de l'application et à chaque retour de focus sur la fenêtre
 
 ---
 
@@ -2331,8 +2389,8 @@
 - [x] Tests unitaires + intégration sur chaque push
 - [x] Tests E2E sur chaque PR vers `main`
 - [x] Build Vite sur chaque merge sur `main`
-- [ ] Déploiement staging (preview Netlify) sur chaque PR
-- [ ] Déploiement production automatique après passage de tous les tests
+- [x] Déploiement staging (preview Netlify) sur chaque PR
+- [x] Déploiement production automatique sur push vers `prod` après passage de tous les tests
 
 ---
 
@@ -2939,10 +2997,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] `@supabase/supabase-js` ajouté à `apps/admin/package.json`
-- [ ] `apps/admin/vite.config.ts` inclut `envDir: resolve(__dirname, '../..')` pour lire les variables d'environnement depuis la racine du monorepo
-- [ ] `apps/admin/src/lib/supabase.ts` créé avec le client Supabase typé (même pattern que `apps/desktop/src/lib/supabase.ts`)
-- [ ] Le client est utilisable dans les hooks et composants admin
+- [x] `@supabase/supabase-js` ajouté à `apps/admin/package.json`
+- [x] `apps/admin/vite.config.ts` inclut `envDir: resolve(__dirname, '../..')` pour lire les variables d'environnement depuis la racine du monorepo
+- [x] `apps/admin/src/lib/supabase.ts` créé avec le client Supabase typé (même pattern que `apps/desktop/src/lib/supabase.ts`)
+- [x] Le client est utilisable dans les hooks et composants admin
 - [ ] Les types Supabase sont partagés via `@migraine-ai/shared`
 
 ---
@@ -2955,10 +3013,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Migration `supabase/migrations/00002_admin_plan_config_policy.sql` créée
-- [ ] Policy `INSERT`, `UPDATE`, `DELETE` sur `plan_config` pour les utilisateurs avec `(auth.jwt() ->> 'role') = 'admin'`
-- [ ] La policy `SELECT` publique existante est conservée
-- [ ] Migration testée en staging avant application en production
+- [x] Migration `supabase/migrations/00002_admin_plan_config_policy.sql` créée
+- [x] Policy `INSERT`, `UPDATE`, `DELETE` sur `plan_config` pour les admins (`auth.jwt() -> 'app_metadata' ->> 'role'`)
+- [x] La policy `SELECT` publique existante est conservée
+- [x] Migration appliquée en production
 
 ---
 
@@ -2970,11 +3028,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Migration `supabase/migrations/00003_admin_user_list_function.sql` créée
-- [ ] Fonction `SECURITY DEFINER` qui joint `auth.users` avec `user_usage`, `user_profiles`, `profile_plans`
-- [ ] Retourne : `user_id`, email masqué (`a***@gmail.com`), date d'inscription, plan actif, dernière connexion, nombre de profils, fréquence 30 jours
-- [ ] Accessible uniquement aux admins (vérification `(auth.jwt() ->> 'role') = 'admin'` dans la fonction)
-- [ ] Fonction `reveal_user_email(target_user_id)` séparée qui journalise l'action dans `admin_log`
+- [x] Migration `supabase/migrations/00003_admin_user_list_function.sql` créée
+- [x] Fonction `SECURITY DEFINER` qui joint `auth.users` avec `user_usage`, `user_profiles`, `profile_plans`
+- [x] Retourne : `user_id`, email masqué (`a***@gmail.com`), date d'inscription, plan actif, dernière connexion, nombre de profils, fréquence 30 jours
+- [x] Accessible uniquement aux admins (vérification `auth.jwt() -> 'app_metadata' ->> 'role'` dans la fonction)
+- [x] Fonction `reveal_user_email(target_user_id)` séparée qui journalise l'action dans `admin_log`
 
 ---
 
@@ -2986,11 +3044,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] `supabase/functions/delete-user/index.ts` créé (Deno Edge Function)
-- [ ] Vérifie que l'appelant est admin (JWT `role = 'admin'`)
-- [ ] Utilise `supabase.auth.admin.deleteUser()` avec le `service_role_key`
-- [ ] Journalise l'action dans `admin_log` avant suppression
-- [ ] Retourne un statut de confirmation ou une erreur détaillée
+- [x] `supabase/functions/delete-user/index.ts` créé (Deno Edge Function)
+- [x] Vérifie que l'appelant est admin (JWT `role = 'admin'`)
+- [x] Utilise `supabase.auth.admin.deleteUser()` avec le `service_role_key`
+- [x] Journalise l'action dans `admin_log` avant suppression
+- [x] Retourne un statut de confirmation ou une erreur détaillée
 - [ ] Secret `SUPABASE_SERVICE_ROLE_KEY` configuré via `supabase secrets set`
 
 ---
@@ -3003,10 +3061,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] `apps/admin/netlify.toml` créé avec : `publish = "dist"`, redirect SPA `/* → /index.html`, headers de sécurité (CSP, HSTS, X-Frame-Options)
-- [ ] `apps/mobile/netlify.toml` créé avec la même structure adaptée au mobile
-- [ ] Les headers CSP de l'admin incluent `connect-src 'self' https://*.supabase.co`
-- [ ] Les trois apps sont buildables indépendamment via `pnpm --filter @migraine-ai/admin build`
+- [x] `apps/admin/netlify.toml` créé avec : `publish = "dist"`, redirect SPA `/* → /index.html`, headers de sécurité (CSP, HSTS, X-Frame-Options)
+- [x] `apps/mobile/netlify.toml` créé avec la même structure adaptée au mobile
+- [x] Les headers CSP de l'admin incluent `connect-src 'self' https://*.supabase.co`
+- [x] Les trois apps sont buildables indépendamment via `pnpm --filter @migraine-ai/admin build`
 
 ---
 
@@ -3018,10 +3076,823 @@
 
 **Critères d'acceptation :**
 
-- [ ] Section 15.2 de `specs/ARCHITECTURE_TECHNIQUE.md` mise à jour : admin sur Netlify (pas Vercel)
-- [ ] Les 3 sous-domaines documentés : `migraine-ai.app` (desktop), `m.migraine-ai.app` (mobile), `admin.migraine-ai.app` (admin)
-- [ ] Schéma de déploiement cohérent avec `netlify.toml` de chaque app
+- [x] Section 15.2 de `specs/ARCHITECTURE_TECHNIQUE.md` mise à jour : admin sur Netlify (pas Vercel)
+- [x] Les 3 sous-domaines documentés : `migraine-ai.app` (desktop), `m.migraine-ai.app` (mobile), `admin.migraine-ai.app` (admin)
+- [x] Schéma de déploiement cohérent avec `netlify.toml` de chaque app
 
 ---
 
-_Fin du backlog v1.1 — 189 User Stories réparties en 30 Epics_
+---
+
+## EPIC E31 — Gestion avancée des utilisateurs (admin)
+
+> En tant qu'administrateur, je veux pouvoir visualiser les informations clés de chaque utilisateur et effectuer des actions de gestion (changement de plan, désactivation, suppression) directement depuis l'interface admin, afin de piloter la plateforme efficacement.
+
+### US-31-01 · 🔴 Critique · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir pour chaque utilisateur sa date d'inscription, son plan (gratuit/payant), sa dernière connexion et son statut (actif/désactivé),
+**afin de** monitorer rapidement l'état de chaque compte.
+
+**Critères d'acceptation :**
+
+- [x] La liste utilisateurs affiche les colonnes : email masqué, date d'inscription, plan (`free`/`pro`), dernière connexion, statut (`actif`/`désactivé`)
+- [x] Le plan est affiché avec un badge visuel distinct (couleur différente pour free et pro)
+- [x] La dernière connexion affiche une date formatée en français ou « — » si jamais connecté
+- [x] Le statut est affiché en vert (actif) ou rouge (désactivé)
+- [x] Les données proviennent de la fonction `get_admin_user_list()` en temps réel
+
+---
+
+### US-31-02 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** accéder à une fiche détaillée d'un utilisateur en cliquant sur sa ligne,
+**afin de** voir l'ensemble de ses informations et effectuer des actions de gestion.
+
+**Critères d'acceptation :**
+
+- [x] Clic sur une ligne ouvre un panneau latéral (drawer) ou une modale avec les détails de l'utilisateur
+- [x] Informations affichées : email complet (avec bouton « Révéler » journalisé), date d'inscription, plan actif, dernière connexion, nombre de profils, nombre de sessions 30j, provider d'authentification, consentement marketing
+- [x] Le panneau contient les boutons d'action : changer de plan, désactiver/réactiver, supprimer
+- [x] Fermeture du panneau par bouton ou clic à l'extérieur
+
+---
+
+### US-31-03 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** basculer un utilisateur entre le plan gratuit et le plan payant,
+**afin de** gérer manuellement les abonnements (offre promotionnelle, support, correction).
+
+**Critères d'acceptation :**
+
+- [x] Bouton ou switch « Changer de plan » dans la fiche utilisateur
+- [x] Confirmation requise avant application (« Passer de free à pro ? »)
+- [x] Mise à jour de la table `user_plans` : champ `plan` modifié via RPC `change_user_plan()`
+- [x] Si aucune entrée `user_plans` n'existe, en créer une avec le plan sélectionné
+- [x] Action journalisée dans `admin_log` avec l'ancien et le nouveau plan
+- [x] Le changement est reflété immédiatement dans la liste utilisateurs
+
+---
+
+### US-31-04 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** désactiver ou réactiver un compte utilisateur,
+**afin de** gérer les abus ou restaurer un accès temporairement suspendu.
+
+**Critères d'acceptation :**
+
+- [x] Bouton « Désactiver » (si actif) ou « Réactiver » (si désactivé) dans la fiche utilisateur
+- [x] Confirmation requise avant exécution
+- [x] Mise à jour de `user_usage.is_active` en base
+- [x] Action journalisée dans `admin_log`
+- [x] Le statut est mis à jour immédiatement dans la liste et la fiche
+- [ ] L'utilisateur désactivé voit le message « Votre compte a été désactivé. Contactez le support. » à sa prochaine connexion
+
+---
+
+### US-31-05 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** supprimer définitivement un compte utilisateur,
+**afin de** respecter une demande de suppression ou un droit à l'oubli (RGPD).
+
+**Critères d'acceptation :**
+
+- [x] Bouton « Supprimer le compte » dans la fiche utilisateur, visuellement distinct (rouge, zone danger)
+- [x] Double confirmation : étape 1 (« Êtes-vous sûr ? ») + étape 2 (saisie de l'email de l'utilisateur pour valider)
+- [x] Appel à l'Edge Function `delete-user` qui supprime le compte via `supabase.auth.admin.deleteUser()`
+- [x] Suppression en cascade : `user_usage`, `user_plans`, `mobile_transit`
+- [x] Action journalisée dans `admin_log` avant suppression (irréversible)
+- [x] L'utilisateur disparaît de la liste après suppression
+- [x] Le vault local de l'utilisateur n'est pas touché (données restent sur sa machine)
+
+---
+
+---
+
+## EPIC E32 — Statistiques d'utilisation (admin)
+
+> En tant qu'administrateur, je veux visualiser les statistiques d'utilisation de la plateforme via des graphiques, afin de suivre la croissance et l'engagement des utilisateurs dans le temps.
+
+### US-32-01 · 🔴 Critique · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir un onglet « Statistiques » dans l'interface admin,
+**afin d'** accéder à une vue d'ensemble de l'utilisation de la plateforme.
+
+**Critères d'acceptation :**
+
+- [x] Nouvel onglet « Stats » ajouté à la navigation admin (à côté de Utilisateurs, Plans, Journal)
+- [x] KPIs en haut de page : nombre total d'utilisateurs, utilisateurs actifs (30j), nouveaux ce mois-ci, ratio free/pro
+- [x] Les données sont récupérées via une fonction Postgres `get_admin_stats()` (SECURITY DEFINER)
+- [x] Affichage d'un loader pendant le chargement
+
+---
+
+### US-32-02 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir un graphique des nouvelles inscriptions mois par mois,
+**afin de** suivre la croissance de la plateforme.
+
+**Critères d'acceptation :**
+
+- [x] Graphique en barres affichant le nombre de nouvelles inscriptions par mois
+- [x] Période affichée : 12 derniers mois par défaut
+- [x] Chaque barre affiche le nombre exact au survol (tooltip)
+- [x] Les données proviennent de `auth.users.created_at` agrégé par mois via une fonction Postgres
+- [x] Axe X : mois (format « Jan 2026 »), Axe Y : nombre d'inscriptions
+- [x] Bibliothèque graphique : Recharts
+
+---
+
+### US-32-03 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir un graphique d'utilisation de la plateforme avec une granularité ajustable (jour, semaine, mois),
+**afin de** comprendre les tendances d'engagement des utilisateurs.
+
+**Critères d'acceptation :**
+
+- [x] Graphique en ligne affichant le nombre d'utilisateurs actifs (sessions) par période
+- [x] Sélecteur de granularité : jour, semaine, mois
+- [x] Période affichée : 30 derniers jours (jour), 12 dernières semaines (semaine), 12 derniers mois (mois)
+- [x] Les données proviennent de `user_usage.last_active_at` agrégé par la granularité choisie via une fonction Postgres
+- [x] Tooltip au survol avec la valeur exacte et la date
+- [x] Le graphique se met à jour dynamiquement au changement de granularité
+
+---
+
+### US-32-04 · 🟡 Moyenne · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir la répartition des plans (free vs pro) sur le graphique d'inscriptions et d'utilisation,
+**afin de** suivre l'adoption du plan payant.
+
+**Critères d'acceptation :**
+
+- [x] Le graphique des inscriptions affiche des barres empilées (free en gris, pro en couleur brand)
+- [x] Le graphique d'utilisation affiche deux courbes superposées (free et pro)
+- [x] Légende visible avec les deux catégories
+- [x] Les fonctions Postgres retournent les données ventilées par plan
+
+---
+
+### US-32-05 · 🟡 Moyenne · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir un graphique dédié à la répartition des utilisateurs entre les différents niveaux d'abonnement,
+**afin de** comprendre la distribution des plans et identifier des opportunités de conversion.
+
+**Critères d'acceptation :**
+
+- [x] Graphique en camembert (pie chart) ou donut affichant la répartition actuelle des utilisateurs par niveau d'abonnement (free, pro, et tout futur plan)
+- [x] Chaque segment affiche le pourcentage et le nombre absolu d'utilisateurs
+- [x] Tooltip au survol avec le détail (nom du plan, nombre, pourcentage)
+- [x] Légende visible avec les couleurs associées à chaque plan
+- [x] KPI complémentaires affichés à côté du graphique : taux de conversion free → pro, évolution du ratio sur les 30 derniers jours
+- [x] Les données proviennent d'une fonction Postgres `get_subscription_distribution()` (SECURITY DEFINER)
+- [x] Le graphique se met à jour en temps réel lors du rechargement de la page
+
+---
+
+---
+
+## EPIC E33 — Export utilisateurs & emails (admin)
+
+> En tant qu'administrateur, je veux pouvoir exporter les données utilisateurs et les listes d'emails filtrées depuis l'interface admin, afin d'analyser les données dans un tableur ou de préparer des campagnes de communication ciblées.
+
+### US-33-01 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** exporter la liste complète des utilisateurs en CSV,
+**afin de** l'analyser dans un tableur.
+
+**Critères d'acceptation :**
+
+- [x] Bouton « Exporter CSV » visible dans l'onglet Utilisateurs
+- [x] Le CSV contient les colonnes : email masqué, date d'inscription, plan, dernière connexion, sessions 30j, statut, consentement marketing
+- [x] Les emails sont masqués par défaut (`a***@gmail.com`) pour protéger la vie privée
+- [x] Le fichier est généré côté client (Blob + URL.createObjectURL) et téléchargé automatiquement
+- [x] Nom du fichier : `migraine-ai-utilisateurs_YYYY-MM-DD.csv`
+- [x] Action journalisée dans `admin_log`
+
+---
+
+### US-33-02 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** exporter une liste d'emails filtrée par plan (gratuit ou payant),
+**afin de** cibler des communications spécifiques à un segment d'utilisateurs.
+
+**Critères d'acceptation :**
+
+- [x] Bouton « Exporter emails » avec sélecteur de filtre par plan : Tous, Free uniquement, Pro uniquement
+- [x] L'export contient les emails complets (non masqués) — via fonction Postgres `export_admin_emails(plan_filter, activity_filter)`
+- [x] L'action de révélation groupée est journalisée une seule fois dans `admin_log` (pas une entrée par email)
+- [x] Format CSV avec colonnes : email, plan, date d'inscription
+- [x] Nom du fichier : `migraine-ai-emails-{filtre}_YYYY-MM-DD.csv`
+- [x] Confirmation requise avant export (« Vous allez exporter N emails. Cette action sera journalisée. »)
+
+---
+
+### US-33-03 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** exporter une liste d'emails filtrée par dernière connexion,
+**afin d'** identifier et contacter les utilisateurs actifs ou inactifs.
+
+**Critères d'acceptation :**
+
+- [x] Filtre par dernière connexion : actifs (< 30 jours), inactifs (30-90 jours), dormants (> 90 jours), jamais connectés
+- [x] Combinable avec le filtre par plan (ex : « Pro + inactifs 30-90j »)
+- [x] L'export contient : email complet, plan, dernière connexion, date d'inscription
+- [x] Fonction Postgres `export_admin_emails(plan_filter, activity_filter)` pour filtrer côté serveur
+- [x] Confirmation et journalisation comme US-33-02
+- [x] Nom du fichier : `migraine-ai-emails-{filtre-plan}-{filtre-activite}_YYYY-MM-DD.csv`
+
+---
+
+---
+
+## EPIC E34 — Configuration dynamique des plans & modules (admin)
+
+> En tant qu'administrateur, je veux configurer finement les paramètres et modules disponibles pour chaque plan (free/pro) depuis l'onglet Plans de l'interface admin, avec une prise en compte immédiate côté utilisateur sans déconnexion, afin de piloter l'offre en temps réel. Les modules désactivés restent visibles mais inutilisables.
+
+### US-34-01 · 🔴 Critique · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** voir dans l'onglet Plans la liste complète de tous les paramètres et modules de l'application pour chaque plan,
+**afin de** configurer l'offre de manière exhaustive.
+
+**Critères d'acceptation :**
+
+- [x] Chaque plan (free/pro) affiche tous les feature flags existants dans `plan_config`, organisés en deux sections : « Paramètres » (valeurs numériques) et « Modules » (activé/désactivé)
+- [x] Section Paramètres : `analytics_range_months`, `max_profiles` — champs numériques éditables
+- [x] Section Modules : `ia_enabled`, `module_cycle_enabled`, `module_sport_enabled`, `module_transport_enabled`, `module_charge_mentale_enabled`, `module_daily_pain_enabled`, `pdf_report_enabled`, `vocal_input_enabled`, `export_csv_enabled`, `export_zip_enabled` — toggles on/off
+- [x] Chaque module affiche son nom lisible (pas la clé technique) et une description courte
+- [x] Si un nouveau feature flag est ajouté en base, il apparaît automatiquement dans l'interface
+
+---
+
+### US-34-02 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** activer ou désactiver un module pour un plan donné,
+**afin de** contrôler les fonctionnalités accessibles aux utilisateurs de ce plan.
+
+**Critères d'acceptation :**
+
+- [x] Toggle on/off pour chaque module avec retour visuel immédiat
+- [x] La modification est persistée dans `plan_config` via upsert
+- [x] Chaque modification est journalisée dans `admin_log` (ancienne valeur → nouvelle valeur)
+- [x] Un toast de confirmation s'affiche après sauvegarde réussie
+- [x] En cas d'erreur réseau, le toggle revient à son état précédent avec un message d'erreur
+
+---
+
+### US-34-03 · 🔴 Critique · TECH
+
+**En tant que** développeur,
+**je veux** que l'app desktop recharge la configuration `plan_config` périodiquement sans déconnexion,
+**afin que** les changements de plan effectués par l'admin soient reflétés en temps réel côté utilisateur.
+
+**Critères d'acceptation :**
+
+- [x] Le store de modules (`moduleStore` ou `planStore`) interroge `plan_config` à intervalle régulier (toutes les 5 minutes) ou à chaque changement de page
+- [x] Si un module passe de `true` à `false`, l'état est mis à jour dans le store sans recharger la page
+- [x] Aucune déconnexion/reconnexion nécessaire pour voir les changements
+- [x] Le premier chargement au démarrage de l'app reste inchangé (lecture depuis le cache puis sync)
+
+---
+
+### US-34-04 · 🔴 Critique · TECH
+
+**En tant que** utilisateur,
+**je veux** que les modules désactivés par l'admin soient visibles mais non utilisables dans mon interface,
+**afin de** comprendre que la fonctionnalité existe mais n'est pas disponible pour mon plan.
+
+**Critères d'acceptation :**
+
+- [x] Un module désactivé apparaît dans la navigation/sidebar avec un style atténué (opacité réduite, icône cadenas)
+- [x] Le clic sur un module désactivé affiche un message : « Cette fonctionnalité n'est pas disponible avec votre plan actuel. » avec un lien vers l'upgrade (ou simple info si pas de plan supérieur)
+- [x] Les formulaires d'un module désactivé ne sont pas accessibles (redirection vers le message ci-dessus)
+- [x] Les données existantes d'un module désactivé restent consultables en lecture seule (l'historique ne disparaît pas)
+- [x] Le composant `ModuleGate` (ou équivalent) encapsule chaque module et gère l'état activé/désactivé
+
+---
+
+### US-34-05 · 🟡 Moyenne · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** pouvoir comparer visuellement les plans free et pro côte à côte,
+**afin de** vérifier la cohérence de la configuration avant de la publier.
+
+**Critères d'acceptation :**
+
+- [x] Affichage des deux plans en colonnes côte à côte (déjà le cas, à enrichir)
+- [x] Les différences entre free et pro sont mises en évidence visuellement (surlignage ou badge « Différent »)
+- [x] Un bouton « Copier la config de Pro vers Free » (ou inversement) avec confirmation
+- [ ] Un résumé des modifications non encore vues par les utilisateurs (basé sur `updated_at` vs dernière consultation)
+
+---
+
+---
+
+## EPIC E35 — Activation Magic Link & email/password
+
+> En tant qu'utilisateur, je veux pouvoir me connecter avec un Magic Link (lien envoyé par email) ou avec un email et mot de passe classique en plus de Google, afin d'avoir le choix de ma méthode d'authentification.
+
+### US-35-01 · 🔴 Critique · FREE
+
+**En tant qu'** utilisateur,
+**je veux** me connecter avec un Magic Link (email OTP),
+**afin de** ne pas avoir besoin de mémoriser un mot de passe.
+
+**Critères d'acceptation :**
+
+- [x] Le bouton « Continuer avec un Magic Link » est fonctionnel sur la page de login
+- [x] L'utilisateur saisit son email et reçoit un lien de connexion par email
+- [x] Le clic sur le lien redirige vers l'app et connecte automatiquement l'utilisateur
+- [ ] Le provider Supabase Auth Email est activé et configuré (templates email en français)
+- [x] Les Redirect URLs Supabase incluent les domaines de l'app (localhost + Netlify)
+- [x] Message de confirmation affiché : « Un lien de connexion a été envoyé à votre adresse email »
+- [x] Gestion de l'erreur si l'email est invalide ou si le service est indisponible
+
+---
+
+### US-35-02 · 🔴 Critique · FREE
+
+**En tant qu'** utilisateur,
+**je veux** créer un compte avec email et mot de passe,
+**afin de** me connecter de manière traditionnelle.
+
+**Critères d'acceptation :**
+
+- [x] Formulaire d'inscription fonctionnel : email + mot de passe + confirmation du mot de passe
+- [x] Validation Zod : email valide, mot de passe ≥ 8 caractères, confirmation identique
+- [x] Appel à `supabase.auth.signUp()` avec redirection après confirmation
+- [ ] Email de confirmation envoyé par Supabase (template en français)
+- [x] Message affiché : « Un email de confirmation a été envoyé. Vérifiez votre boîte de réception. »
+- [x] L'utilisateur ne peut pas accéder à l'app sans avoir confirmé son email
+
+---
+
+### US-35-03 · 🔴 Critique · FREE
+
+**En tant qu'** utilisateur,
+**je veux** me connecter avec mon email et mot de passe existants,
+**afin d'** accéder à mon compte.
+
+**Critères d'acceptation :**
+
+- [x] Formulaire de connexion fonctionnel : email + mot de passe
+- [x] Appel à `supabase.auth.signInWithPassword()`
+- [x] Messages d'erreur en français : « Email ou mot de passe incorrect », « Veuillez confirmer votre email »
+- [x] Lien « Mot de passe oublié ? » visible sous le formulaire
+- [x] Après connexion réussie, redirection vers la HomePage (ou onboarding si première connexion)
+
+---
+
+### US-35-04 · 🟠 Haute · FREE
+
+**En tant qu'** utilisateur,
+**je veux** réinitialiser mon mot de passe si je l'ai oublié,
+**afin de** retrouver l'accès à mon compte.
+
+**Critères d'acceptation :**
+
+- [x] Page « Mot de passe oublié » accessible depuis le formulaire de connexion
+- [x] L'utilisateur saisit son email et reçoit un lien de réinitialisation
+- [x] Appel à `supabase.auth.resetPasswordForEmail()` avec `redirectTo` vers une page de reset
+- [x] Page de reset : saisie du nouveau mot de passe + confirmation
+- [x] Appel à `supabase.auth.updateUser({ password })` pour appliquer le changement
+- [x] Message de succès et redirection vers la page de login
+
+---
+
+## EPIC E36 — Suppression du mode multi-profils
+
+> En tant qu'équipe produit, nous voulons supprimer le mode multi-profils de l'application (desktop, admin, base de données), afin de simplifier l'architecture : un compte = un profil. Pour suivre un proche, l'utilisateur doit créer un compte séparé.
+
+**Impact :** Cette Epic rend obsolètes E17 (Multi-profil & abonnements) et E27 (Création du profil par défaut à l'onboarding). Les stories concernées sont remplacées par les stories ci-dessous.
+
+### US-36-01 · 🔴 Critique · TECH
+
+**En tant que** développeur,
+**je veux** supprimer la table `user_profiles` et simplifier `profile_plans` en rattachant le plan directement au `user_id`,
+**afin de** refléter le modèle un compte = un profil dans la base de données.
+
+**Critères d'acceptation :**
+
+- [x] Nouvelle migration Supabase qui supprime la table `user_profiles`
+- [x] La table `profile_plans` est renommée ou remplacée par `user_plans` avec `user_id` comme clé (sans `profile_local_id`)
+- [x] Les politiques RLS sont mises à jour en conséquence
+- [x] La colonne `profile_count` est supprimée de `user_usage`
+- [x] Le champ `max_profiles` est supprimé de `plan_config` et du seed
+
+---
+
+### US-36-02 · 🔴 Critique · TECH
+
+**En tant que** développeur,
+**je veux** supprimer le `profileStore` et toute la logique multi-profils du frontend,
+**afin de** simplifier la gestion d'état côté client.
+
+**Critères d'acceptation :**
+
+- [x] Le fichier `profileStore.ts` est supprimé
+- [x] Les feature flags sont rattachés directement au compte utilisateur (via `authStore` ou un nouveau `planStore`)
+- [x] Toutes les références à `activeProfileId`, `switchProfile`, `profiles[]` sont supprimées du code
+- [x] Le localStorage `migraine-ai-profiles` n'est plus utilisé
+
+---
+
+### US-36-03 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** que mon vault soit directement associé à mon compte (sans notion de profil intermédiaire),
+**afin de** simplifier l'accès à mes données.
+
+**Critères d'acceptation :**
+
+- [x] Les fonctions vault (`saveVaultHandle`, `restoreVaultHandle`, `checkVaultAccess`) utilisent `user.id` directement au lieu de `profileId`
+- [x] Tous les modules vault (crises, dailyPain, alimentaire, sport, transport, cycle, chargeMentale, consultation) sont mis à jour
+- [x] Le `medicalProfileStore` fonctionne sans référence au profil
+- [x] Migration transparente pour les utilisateurs existants : le vault du profil actif devient le vault du compte
+
+---
+
+### US-36-04 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** que l'onboarding ne me demande plus de nommer un profil,
+**afin que** l'inscription soit plus rapide et intuitive.
+
+**Critères d'acceptation :**
+
+- [x] L'étape `ProfileSetupPage` est supprimée ou remplacée par une étape simplifiée (nom d'affichage du compte)
+- [x] Le flow onboarding passe directement du consentement à la sélection du vault
+- [x] Le `onboardingStore` ne contient plus l'étape `profile-setup`
+- [x] Le nom affiché dans le header est le nom du compte (metadata Supabase) et non plus le nom d'un profil
+
+---
+
+### US-36-05 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** que la page de gestion des profils (`ProfileManagerPage`) soit supprimée,
+**afin qu'** il n'y ait plus de sélecteur multi-profils dans l'application.
+
+**Critères d'acceptation :**
+
+- [x] La page `ProfileManagerPage.tsx` est supprimée
+- [x] La route correspondante est retirée du routeur
+- [x] Le lien vers le gestionnaire de profils est retiré du Sidebar
+- [x] Le raccourci clavier `Cmd/Ctrl + P` pour le sélecteur de profil est supprimé
+- [x] Le badge de couleur de profil dans le header est supprimé
+
+---
+
+### US-36-06 · 🟠 Haute · TECH
+
+**En tant que** développeur,
+**je veux** supprimer les types et constantes liés au multi-profils,
+**afin de** nettoyer le code et éviter toute confusion.
+
+**Critères d'acceptation :**
+
+- [x] Le type `UserProfile` (dans `apps/desktop/src/types/profile.ts`) est supprimé ou simplifié en type `UserAccount`
+- [x] Les constantes `PROFILE_COLORS`, `UserProfileFormData` sont supprimées
+- [x] Le type `UserProfile` dans `packages/shared/src/types/index.ts` est supprimé
+- [x] Toutes les interfaces et types qui référencent `profileLocalId` sont nettoyés
+
+---
+
+### US-36-07 · 🟠 Haute · ADMIN
+
+**En tant qu'** administrateur,
+**je veux** que l'interface d'administration ne référence plus les multi-profils,
+**afin que** le tableau de bord reflète le modèle un compte = un profil.
+
+**Critères d'acceptation :**
+
+- [x] La colonne « Profiles » est supprimée du tableau des utilisateurs dans l'admin
+- [x] La fonction RPC `get_admin_user_list()` ne retourne plus `profile_count`
+- [x] Le plan est affiché au niveau du compte, pas du profil
+- [x] Les onglets ou sections liés aux profils sont retirés si existants
+
+---
+
+### US-36-08 · 🟡 Moyenne · FREE
+
+**En tant que** patient ayant utilisé le mode multi-profils avant la mise à jour,
+**je veux** que mes données soient migrées proprement vers le nouveau modèle,
+**afin de** ne perdre aucune donnée lors de la transition.
+
+**Critères d'acceptation :**
+
+- [x] Un script de migration identifie le profil actif (ou le premier profil) de chaque utilisateur et le conserve comme profil unique
+- [x] Le vault associé à ce profil devient le vault du compte
+- [x] Les profils secondaires ne sont pas supprimés du stockage local (vault conservé), mais ne sont plus accessibles depuis l'app
+- [x] Un message informatif est affiché aux utilisateurs concernés lors de la première connexion post-migration
+
+---
+
+## EPIC E37 — Picto météo pour le module environnement
+
+> En tant qu'utilisateur, je veux que le pictogramme du module « Données environnementales » évoque la météo, afin que l'icône soit immédiatement compréhensible.
+
+### US-37-01 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** que l'icône du module environnement représente la météo (ex : soleil avec nuage, thermomètre, etc.),
+**afin de** comprendre immédiatement à quoi correspond ce module dans la navigation.
+
+**Critères d'acceptation :**
+
+- [x] L'icône actuelle du module environnement est remplacée par une icône évoquant la météo (ex : `Cloud`, `CloudSun`, `Thermometer` ou équivalent Lucide)
+- [x] L'icône est mise à jour partout où le module apparaît : sidebar, dashboard, onboarding
+- [x] L'icône reste cohérente avec le Design System existant (taille, couleur, style)
+- [x] Le label « Données environnementales » reste inchangé
+
+---
+
+## EPIC E38 — Changement du dossier vault depuis les paramètres
+
+> En tant qu'utilisateur, je veux pouvoir modifier le dossier source de mon vault depuis les paramètres de l'application, afin de déplacer mes données ou de pointer vers un autre emplacement sans devoir refaire l'onboarding.
+
+### US-38-01 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** accéder à un réglage « Dossier vault » dans mes paramètres,
+**afin de** voir quel dossier est actuellement utilisé pour stocker mes données.
+
+**Critères d'acceptation :**
+
+- [ ] Une section « Stockage / Vault » est visible dans la page Paramètres
+- [ ] Le chemin du dossier vault actuellement configuré est affiché
+- [ ] Un bouton « Modifier » permet d'ouvrir le sélecteur de dossier natif (File System Access API)
+
+---
+
+### US-38-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** sélectionner un nouveau dossier vault via le sélecteur de fichiers,
+**afin de** pointer l'application vers un autre emplacement de données.
+
+**Critères d'acceptation :**
+
+- [ ] Le clic sur « Modifier » ouvre le sélecteur de dossier natif du navigateur
+- [ ] Le nouveau dossier est validé (structure vault existante détectée, ou nouveau dossier vide accepté)
+- [ ] Le handle du vault est mis à jour dans IndexedDB
+- [ ] L'application recharge les données depuis le nouveau vault
+- [ ] Un message de confirmation s'affiche : « Vault mis à jour avec succès »
+- [ ] En cas d'erreur (dossier inaccessible, permissions insuffisantes) : message d'erreur explicite
+
+---
+
+### US-38-03 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** être averti si le nouveau dossier vault est vide ou ne contient pas de données existantes,
+**afin de** ne pas perdre mes données par erreur.
+
+**Critères d'acceptation :**
+
+- [ ] Si le dossier sélectionné est vide : message « Ce dossier est vide. L'application créera la structure de données. Continuer ? »
+- [ ] Si le dossier contient une structure vault valide : message « Données existantes détectées. L'application utilisera ces données. »
+- [ ] Si le dossier contient des fichiers non reconnus : avertissement « Ce dossier contient des fichiers non reconnus. Voulez-vous tout de même l'utiliser ? »
+- [ ] L'ancien dossier vault n'est pas supprimé ni modifié
+
+---
+
+## EPIC E39 — Reconnexion rapide — skip onboarding utilisateur connu
+
+> En tant qu'utilisateur déjà inscrit, je veux que l'application me redirige directement vers le contenu principal lors de ma connexion, sans me redemander d'accepter les CGU, de cocher le consentement marketing ni de paramétrer mon profil, afin de gagner du temps et d'éviter une expérience répétitive.
+
+### US-39-01 · 🔴 Critique · FREE
+
+**En tant que** patient déjà inscrit,
+**je veux** que l'application détecte que mon compte existe déjà lors de la connexion,
+**afin de** ne pas repasser par les étapes d'onboarding.
+
+**Critères d'acceptation :**
+
+- [ ] À la connexion (OAuth, email/password ou magic link), l'app vérifie si l'utilisateur possède déjà un profil complet (consentement CGU horodaté + vault configuré)
+- [ ] Si le profil est complet : redirection directe vers le tableau de bord (skip total de l'onboarding)
+- [ ] Si le profil est incomplet (ex. migration de données) : seules les étapes manquantes sont affichées
+
+---
+
+### US-39-02 · 🔴 Critique · FREE
+
+**En tant que** patient déjà inscrit,
+**je veux** que mon consentement CGU et mes préférences de communication soient conservés d'une session à l'autre,
+**afin de** ne pas devoir recocher ces cases à chaque connexion.
+
+**Critères d'acceptation :**
+
+- [ ] Le consentement CGU (horodaté) est stocké dans le profil Supabase et vérifié à la connexion
+- [ ] Le consentement marketing (horodaté) est stocké dans le profil Supabase et vérifié à la connexion
+- [ ] Si les deux consentements sont présents, les écrans CGU et communications sont complètement ignorés
+- [ ] Si les CGU ont été mises à jour depuis le dernier consentement : l'écran CGU est ré-affiché avec un message « Nos conditions ont été mises à jour »
+
+---
+
+### US-39-03 · 🟠 Haute · FREE
+
+**En tant que** patient déjà inscrit,
+**je veux** que l'étape de paramétrage du profil médical soit ignorée si je l'ai déjà complétée ou explicitement passée,
+**afin de** ne pas revoir cet écran à chaque connexion.
+
+**Critères d'acceptation :**
+
+- [ ] L'app vérifie si l'étape profil médical a déjà été complétée ou explicitement ignorée (flag `onboarding_profile_done` dans Supabase)
+- [ ] Si le flag est présent : l'écran de profil médical est ignoré
+- [ ] Si le flag est absent (nouvel utilisateur ou migration) : l'écran de profil est affiché normalement
+- [ ] Le flag est positionné dès que l'utilisateur clique « Passer pour l'instant » ou valide le formulaire
+
+---
+
+### US-39-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient déjà inscrit,
+**je veux** que l'étape de sélection du vault soit ignorée si un vault est déjà configuré,
+**afin de** accéder directement à mes données sans re-sélectionner mon dossier.
+
+**Critères d'acceptation :**
+
+- [ ] L'app vérifie si un handle vault valide existe en IndexedDB au lancement
+- [ ] Si le handle est valide et le vault accessible : skip de l'écran de sélection du vault
+- [ ] Si le handle est invalide ou les permissions ont été révoquées : l'écran de sélection est ré-affiché avec un message « Veuillez re-sélectionner votre dossier »
+- [ ] Le flux complet (connexion → contenu) ne présente aucun écran intermédiaire pour un utilisateur entièrement configuré
+
+---
+
+## EPIC E40 — Saisie mobile étendue — tous types d'enregistrements
+
+> En tant que patient en déplacement, je veux pouvoir enregistrer rapidement depuis mon téléphone tout type d'événement de suivi (pas seulement les crises et la douleur), afin de maintenir un suivi complet même loin de mon ordinateur. L'architecture suit celle d'E20 : données chiffrées AES-256-GCM, transit via Supabase, intégration au vault à l'ouverture du desktop.
+
+### US-40-01 · 🟠 Haute · FREE
+
+**En tant que** patient en déplacement,
+**je veux** enregistrer une prise de traitement depuis mon téléphone,
+**afin de** ne pas oublier de consigner mon traitement quand je ne suis pas devant mon ordinateur.
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Traitement » : sélection du traitement (chips parmi ceux du profil), heure (défaut : maintenant), dose optionnelle
+- [ ] Validation en un tap, temps de saisie < 10 secondes
+- [ ] Données sérialisées en YAML, chiffrées (AES-256-GCM) et envoyées à Supabase (`mobile_transit`)
+- [ ] Intégration au vault desktop dans `traitements/` avec `source: mobile` (même flux qu'US-20-04)
+
+---
+
+### US-40-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** enregistrer un aliment ou un déclencheur potentiel depuis mon téléphone,
+**afin de** capturer un repas ou une exposition suspecte au moment où elle se produit.
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Alimentation / Déclencheur » : champ texte libre + chips parmi les déclencheurs fréquents du profil, heure (défaut : maintenant)
+- [ ] Validation rapide, temps de saisie < 15 secondes
+- [ ] Même flux chiffré que les saisies de crise (E20)
+- [ ] Intégration au vault desktop dans `alimentation/` ou `declencheurs/` avec `source: mobile`
+
+---
+
+### US-40-03 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** enregistrer une note libre depuis mon téléphone,
+**afin de** capturer un contexte ou une observation que je ne veux pas oublier (mauvaise nuit, stress, météo ressentie…).
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Note » : champ texte libre (max 500 caractères), heure (défaut : maintenant)
+- [ ] Validation en un tap
+- [ ] Même flux chiffré que les saisies de crise (E20)
+- [ ] Intégration au vault desktop dans `notes/` avec `source: mobile`
+
+---
+
+### US-40-04 · 🟡 Moyenne · PRO
+
+**En tant que** patient avec le plan Pro,
+**je veux** enregistrer une activité sportive depuis mon téléphone,
+**afin de** consigner mon effort physique au moment où il a lieu.
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Sport » : type d'activité (chips), durée (sélecteur rapide : 15/30/45/60 min), intensité (léger/modéré/intense)
+- [ ] Validation rapide, temps de saisie < 10 secondes
+- [ ] Même flux chiffré que les saisies de crise (E20)
+- [ ] Intégration au vault desktop dans `sport/` avec `source: mobile`
+
+---
+
+### US-40-05 · 🟡 Moyenne · PRO
+
+**En tant que** patient avec le plan Pro,
+**je veux** enregistrer un événement de charge mentale ou un événement de vie depuis mon téléphone,
+**afin de** capturer un pic de stress ou un événement marquant en temps réel.
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Charge mentale » : curseur 1-10, catégorie optionnelle (travail, famille, santé…), note courte optionnelle
+- [ ] Validation rapide, temps de saisie < 10 secondes
+- [ ] Même flux chiffré que les saisies de crise (E20)
+- [ ] Intégration au vault desktop dans `charge-mentale/` avec `source: mobile`
+
+---
+
+### US-40-06 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** accéder à un menu d'accueil mobile me proposant tous les types de saisie disponibles,
+**afin de** choisir rapidement ce que je veux enregistrer.
+
+**Critères d'acceptation :**
+
+- [ ] Écran d'accueil mobile affichant les types de saisie sous forme de boutons larges : Crise, Douleur, Traitement, Alimentation, Note, Sport, Charge mentale
+- [ ] Les types PRO sont visibles mais verrouillés pour les utilisateurs FREE (avec indication « Pro »)
+- [ ] Les types affichés respectent les modules activés par l'utilisateur (E29 — personnalisation des modules)
+- [ ] Fond sombre permanent, zones tactiles ≥ 48 px
+- [ ] Accès direct au type le plus fréquent de l'utilisateur mis en avant (ex. « Crise » en premier si c'est le plus utilisé)
+
+---
+
+## EPIC E41 — Import des fichiers vault sans identifiant
+
+> En tant que patient, je veux pouvoir importer dans l'application les fichiers markdown présents dans mon vault qui n'ont pas de champ `id` dans leur frontmatter, afin de récupérer des données saisies manuellement ou issues d'une source externe sans perdre d'informations. Le validateur vault (E22) détecte déjà ces fichiers ; cette epic ajoute un parcours utilisateur pour les corriger et les intégrer.
+
+### US-41-01 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** voir dans la page Paramètres le nombre de fichiers vault sans identifiant détectés,
+**afin de** savoir si des données nécessitent une action de ma part.
+
+**Critères d'acceptation :**
+
+- [ ] Section « Fichiers à importer » visible dans la page Paramètres, sous la section vault existante
+- [ ] Affichage du nombre de fichiers `.md` sans champ `id` dans le frontmatter (hors dossier `config/` et `templates/`)
+- [ ] Si aucun fichier à importer, la section affiche « Aucun fichier à importer » et le bouton d'import est masqué
+- [ ] Le scan réutilise la logique du `vaultValidator` (E22) pour détecter les fichiers sans `id`
+
+---
+
+### US-41-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** consulter la liste des fichiers sans identifiant avant de les importer,
+**afin de** vérifier leur contenu et décider lesquels importer.
+
+**Critères d'acceptation :**
+
+- [ ] Bouton « Voir les fichiers » ouvre un dialog/panneau listant les fichiers détectés
+- [ ] Chaque fichier affiche : chemin relatif dans le vault, date du fichier, aperçu du contenu (premières lignes du body markdown)
+- [ ] Possibilité de sélectionner/désélectionner individuellement les fichiers à importer
+- [ ] Sélection globale « Tout sélectionner / Tout désélectionner »
+
+---
+
+### US-41-03 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** importer les fichiers sélectionnés en leur attribuant automatiquement un identifiant unique,
+**afin qu'** ils soient reconnus par l'application et apparaissent dans les modules correspondants.
+
+**Critères d'acceptation :**
+
+- [ ] Bouton « Importer la sélection » déclenche le traitement des fichiers sélectionnés
+- [ ] Chaque fichier reçoit un `id` unique (UUID v4) injecté dans le frontmatter YAML existant
+- [ ] Le fichier est réécrit sur disque avec le frontmatter corrigé, le body markdown est préservé à l'identique
+- [ ] Le fichier est classé dans le bon module selon son dossier parent (`crises/`, `daily-pain/`, `charge-mentale/`, etc.)
+- [ ] Les stores concernés sont rechargés après l'import pour refléter les nouvelles données
+- [ ] Message de confirmation indiquant le nombre de fichiers importés avec succès
+
+---
+
+### US-41-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** être averti si un fichier ne peut pas être importé (frontmatter corrompu, format inconnu),
+**afin de** pouvoir le corriger manuellement ou le signaler.
+
+**Critères d'acceptation :**
+
+- [ ] Les fichiers avec un frontmatter YAML non fermé ou invalide sont signalés comme « non importables »
+- [ ] Les fichiers situés dans un dossier non reconnu par l'application sont signalés avec le message « Dossier non reconnu »
+- [ ] Un récapitulatif post-import distingue : fichiers importés, fichiers en erreur (avec raison)
+- [ ] Les fichiers en erreur restent inchangés sur disque
+
+---
+
+_Fin du backlog v1.5 — 236 User Stories réparties en 41 Epics_

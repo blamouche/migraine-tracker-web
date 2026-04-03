@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { supabase } from '@/lib/supabase'
 import { removeAnonymousId, getAnonymousId } from '@/lib/anonymous'
+import { useOnboardingStore } from '@/stores/onboardingStore'
+import { checkVaultAccess } from '@/lib/vault/handle'
 
 export function AuthCallbackPage() {
   const navigate = useNavigate()
@@ -18,18 +20,60 @@ export function AuthCallbackPage() {
         }
 
         if (data.session) {
+          const userId = data.session.user.id
+
           // Merge anonymous ID if exists
           const anonId = await getAnonymousId()
           if (anonId) {
             try {
               await supabase.rpc('merge_anonymous_id', {
                 p_anonymous_id: anonId,
-                p_user_id: data.session.user.id,
+                p_user_id: userId,
               })
             } catch {
               // Non-blocking: merge failure doesn't prevent login
             }
             await removeAnonymousId()
+          }
+
+          // E39: Check if returning user with complete profile
+          try {
+            const { data: usage, error: usageError } = await supabase
+              .from('user_usage')
+              .select('cgu_consent_at, onboarding_profile_done')
+              .eq('user_id', userId)
+              .single()
+
+            if (!usageError && usage?.cgu_consent_at) {
+              const store = useOnboardingStore.getState()
+
+              // CGU already accepted — restore consent state
+              store.acceptConsent(true, false)
+
+              // Check vault access
+              const vaultOk = await checkVaultAccess(userId)
+              if (vaultOk) {
+                store.markVaultReady()
+              } else {
+                // Vault missing — go to vault selection
+                navigate('/onboarding/vault', { replace: true })
+                return
+              }
+
+              // Check medical profile
+              if (usage.onboarding_profile_done) {
+                store.markMedicalProfileDone()
+                // Fully complete — skip onboarding entirely
+                navigate('/', { replace: true })
+                return
+              } else {
+                // Only medical profile missing
+                navigate('/onboarding/medical-profile', { replace: true })
+                return
+              }
+            }
+          } catch {
+            // No user_usage record or query failed — proceed to normal onboarding
           }
 
           navigate('/onboarding/consent', { replace: true })

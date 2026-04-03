@@ -4,8 +4,8 @@ import { useAuthStore } from '@/stores/authStore'
 
 async function getVaultRoot(): Promise<FileSystemDirectoryHandle | null> {
   const { user, anonymousId } = useAuthStore.getState()
-  const profileId = user?.id ?? anonymousId ?? 'default'
-  const parentHandle = await restoreVaultHandle(profileId)
+  const userId = user?.id ?? anonymousId ?? 'default'
+  const parentHandle = await restoreVaultHandle(userId)
   if (!parentHandle) return null
   return ensureVaultStructure(parentHandle)
 }
@@ -30,6 +30,7 @@ function crisisToMarkdown(crisis: CrisisEntry): string {
     `statut: ${crisis.status}`,
     `completion_forcee: ${crisis.completionForcee}`,
     `duree_estimee: ${crisis.estimatedDuration ?? ''}`,
+    `source: ${crisis.source ?? ''}`,
     `cree_le: ${crisis.createdAt}`,
     `modifie_le: ${crisis.updatedAt}`,
     '---',
@@ -75,6 +76,7 @@ function markdownToCrisis(content: string): CrisisEntry | null {
     status: get('statut') === 'complet' ? 'complet' : 'incomplet',
     completionForcee: get('completion_forcee') === 'true',
     estimatedDuration: get('duree_estimee') ? parseInt(get('duree_estimee'), 10) : null,
+    source: get('source') === 'mobile' ? 'mobile' : undefined,
     notes: notesMatch?.[1]?.trim() ?? null,
     createdAt: get('cree_le'),
     updatedAt: get('modifie_le'),

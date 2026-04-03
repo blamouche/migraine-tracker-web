@@ -3,6 +3,7 @@ import { OnboardingGuard } from '@/components/layout/OnboardingGuard'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { LoginPage } from '@/pages/LoginPage'
 import { AuthCallbackPage } from '@/pages/AuthCallbackPage'
+import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
 import { ConsentPage } from '@/pages/ConsentPage'
 import { VaultSelectionPage } from '@/pages/VaultSelectionPage'
 import { MedicalProfilePage } from '@/pages/MedicalProfilePage'
@@ -27,8 +28,6 @@ import { ChargeMentaleHistoryPage } from '@/pages/ChargeMentaleHistoryPage'
 import { EvenementVieFormPage } from '@/pages/EvenementVieFormPage'
 import { DailyPainFormPage } from '@/pages/DailyPainFormPage'
 import { DailyPainHistoryPage } from '@/pages/DailyPainHistoryPage'
-import { ProfileManagerPage } from '@/pages/ProfileManagerPage'
-import { ProfileSetupPage } from '@/pages/ProfileSetupPage'
 import { EnvironnementSettingsPage } from '@/pages/EnvironnementSettingsPage'
 import { CycleFormPage } from '@/pages/CycleFormPage'
 import { CycleHistoryPage } from '@/pages/CycleHistoryPage'
@@ -41,6 +40,7 @@ import { SportHistoryPage } from '@/pages/SportHistoryPage'
 import { ModulePreferencesPage } from '@/pages/ModulePreferencesPage'
 import { CalendarPage } from '@/pages/CalendarPage'
 import { VaultReconnectPage } from '@/pages/VaultReconnectPage'
+import { SettingsPage } from '@/pages/SettingsPage'
 
 export const router = createBrowserRouter([
   {
@@ -52,12 +52,12 @@ export const router = createBrowserRouter([
     element: <AuthCallbackPage />,
   },
   {
-    path: '/onboarding/consent',
-    element: <ConsentPage />,
+    path: '/auth/reset-password',
+    element: <ResetPasswordPage />,
   },
   {
-    path: '/onboarding/profile',
-    element: <ProfileSetupPage />,
+    path: '/onboarding/consent',
+    element: <ConsentPage />,
   },
   {
     path: '/onboarding/vault',
@@ -233,11 +233,6 @@ export const router = createBrowserRouter([
             path: '/douleur/historique',
             element: <DailyPainHistoryPage />,
           },
-          // E17 — Multi-profil
-          {
-            path: '/profils',
-            element: <ProfileManagerPage />,
-          },
           // E18 — Environnement
           {
             path: '/environnement',
@@ -257,6 +252,11 @@ export const router = createBrowserRouter([
           {
             path: '/modules',
             element: <ModulePreferencesPage />,
+          },
+          // E38 — Settings / Vault management
+          {
+            path: '/parametres',
+            element: <SettingsPage />,
           },
         ],
       },

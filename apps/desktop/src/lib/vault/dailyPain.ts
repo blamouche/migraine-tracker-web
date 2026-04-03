@@ -4,8 +4,8 @@ import { useAuthStore } from '@/stores/authStore'
 
 async function getVaultRoot(): Promise<FileSystemDirectoryHandle | null> {
   const { user, anonymousId } = useAuthStore.getState()
-  const profileId = user?.id ?? anonymousId ?? 'default'
-  const parentHandle = await restoreVaultHandle(profileId)
+  const userId = user?.id ?? anonymousId ?? 'default'
+  const parentHandle = await restoreVaultHandle(userId)
   if (!parentHandle) return null
   return ensureVaultStructure(parentHandle)
 }
@@ -22,6 +22,7 @@ function painToMarkdown(p: DailyPainEntry): string {
     `niveau: ${p.niveau}`,
     `liee_a_crise: ${p.lieeACrise}`,
     `crise_id: ${p.criseId ?? ''}`,
+    `source: ${p.source ?? ''}`,
     `cree_le: ${p.createdAt}`,
     `modifie_le: ${p.updatedAt}`,
     '---',
@@ -50,6 +51,7 @@ function markdownToPain(content: string): DailyPainEntry | null {
     lieeACrise: get('liee_a_crise') === 'true',
     criseId: get('crise_id') || null,
     notes: notesMatch?.[1]?.trim() ?? null,
+    source: get('source') === 'mobile' ? 'mobile' : undefined,
     createdAt: get('cree_le'),
     updatedAt: get('modifie_le'),
   }

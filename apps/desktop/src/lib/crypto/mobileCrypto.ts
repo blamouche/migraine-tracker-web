@@ -52,10 +52,15 @@ export async function decrypt(ciphertext: string, iv: string, base64Key: string)
 }
 
 export function generateQRPayload(secretKey: string, userId: string): string {
-  return JSON.stringify({
-    version: 1,
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
+  const payload = JSON.stringify({
+    version: 2,
     key: secretKey,
     userId,
-    endpoint: 'https://your-supabase-url.supabase.co',
+    endpoint: supabaseUrl || 'https://your-supabase-url.supabase.co',
+    anonKey: supabaseAnonKey || '',
   })
+  // Encode as base64 for URL fragment transport
+  return btoa(payload)
 }

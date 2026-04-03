@@ -73,7 +73,7 @@ export function CalendarDayDrawer({ date, dayData, onClose }: CalendarDayDrawerP
             <ul className="space-y-3">
               {indicators.map((ind) => {
                 const meta = getModuleMeta(ind.module)
-                const editRoute = getEditRouteForModule(ind.module, date)
+                const editRoute = getEditRouteForModule(ind.module)
 
                 return (
                   <li

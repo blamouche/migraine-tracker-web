@@ -4,6 +4,8 @@
 -- SECURITY DEFINER permet d'accéder à auth.users sans exposer
 -- la table côté client. La vérification du rôle admin est faite
 -- dans la fonction elle-même.
+-- Note : Supabase stocke le rôle dans app_metadata du JWT,
+-- accessible via auth.jwt() -> 'app_metadata' ->> 'role'
 
 CREATE OR REPLACE FUNCTION get_admin_user_list()
 RETURNS TABLE (
@@ -24,21 +26,16 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  -- Vérification du rôle admin
-  IF (auth.jwt() ->> 'role') != 'admin' THEN
+  -- Vérification du rôle admin (dans app_metadata du JWT Supabase)
+  IF (auth.jwt() -> 'app_metadata' ->> 'role') != 'admin' THEN
     RAISE EXCEPTION 'Accès refusé : rôle admin requis';
   END IF;
 
   RETURN QUERY
   SELECT
     au.id AS user_id,
-    -- Email masqué : premier caractère + *** + @domaine
-    CONCAT(
-      LEFT(au.email, 1),
-      '***@',
-      SPLIT_PART(au.email, '@', 2)
-    ) AS email_masked,
-    au.email AS email_full,
+    CONCAT(LEFT(au.email::text, 1), '***@', SPLIT_PART(au.email::text, '@', 2))::text AS email_masked,
+    au.email::text AS email_full,
     au.created_at,
     uu.last_active_at,
     COALESCE(uu.session_count, 0) AS session_count,
@@ -48,7 +45,7 @@ BEGIN
     COALESCE(
       (SELECT pp.plan FROM profile_plans pp WHERE pp.user_id = au.id LIMIT 1),
       'free'
-    ) AS plan,
+    )::text AS plan,
     COALESCE(uu.marketing_consent, FALSE) AS marketing_consent
   FROM auth.users au
   LEFT JOIN user_usage uu ON uu.user_id = au.id
@@ -69,22 +66,23 @@ AS $$
 DECLARE
   full_email TEXT;
 BEGIN
-  -- Vérification du rôle admin
-  IF (auth.jwt() ->> 'role') != 'admin' THEN
+  IF (auth.jwt() -> 'app_metadata' ->> 'role') != 'admin' THEN
     RAISE EXCEPTION 'Accès refusé : rôle admin requis';
   END IF;
 
-  -- Récupérer l'email
-  SELECT email INTO full_email FROM auth.users WHERE id = target_user_id;
+  SELECT email::text INTO full_email FROM auth.users WHERE id = target_user_id;
 
   IF full_email IS NULL THEN
     RAISE EXCEPTION 'Utilisateur non trouvé';
   END IF;
 
-  -- Journaliser l'action
   INSERT INTO admin_log (admin_id, action, target_id, new_value)
   VALUES (auth.uid(), 'reveal_email', target_user_id, 'Email révélé');
 
   RETURN full_email;
 END;
 $$;
+
+-- Permissions pour les utilisateurs authentifiés (le check admin est dans la fonction)
+GRANT EXECUTE ON FUNCTION get_admin_user_list() TO authenticated;
+GRANT EXECUTE ON FUNCTION reveal_user_email(UUID) TO authenticated;

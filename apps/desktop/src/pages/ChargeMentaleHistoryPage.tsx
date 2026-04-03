@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { useChargeMentaleStore } from '@/stores/chargeMentaleStore'
 import { ChargeMentaleCalendar } from '@/components/chargeMentale/ChargeMentaleCalendar'
+import { MobileBadge } from '@/components/ui/MobileBadge'
 import type { ChargeMentaleEntry } from '@/types/chargeMentale'
 import { CHARGE_DOMAINE_LABELS, HUMEUR_LABELS } from '@/types/chargeMentale'
 
@@ -63,7 +64,10 @@ export function ChargeMentaleHistoryPage() {
                         <p className="text-xs text-(--color-text-muted)">{CHARGE_DOMAINE_LABELS[entry.domaine]} · {HUMEUR_LABELS[entry.humeur]}</p>
                       </div>
                     </div>
-                    <span className="text-(--color-text-muted)">{expandedId === entry.id ? '▲' : '▼'}</span>
+                    <div className="flex items-center gap-2">
+                      {entry.source === 'mobile' && <MobileBadge />}
+                      <span className="text-(--color-text-muted)">{expandedId === entry.id ? '▲' : '▼'}</span>
+                    </div>
                   </div>
                 </button>
                 {expandedId === entry.id && (

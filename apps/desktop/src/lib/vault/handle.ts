@@ -2,32 +2,45 @@ import { idbGet, idbSet } from '../idb'
 
 const VAULT_HANDLE_KEY = 'vault-handle'
 
-function handleKey(profileId: string) {
-  return `${VAULT_HANDLE_KEY}:${profileId}`
+function handleKey(userId: string) {
+  return `${VAULT_HANDLE_KEY}:${userId}`
 }
 
 export async function saveVaultHandle(
-  profileId: string,
+  userId: string,
   handle: FileSystemDirectoryHandle,
 ): Promise<void> {
-  await idbSet(handleKey(profileId), handle)
+  await idbSet(handleKey(userId), handle)
 }
 
 export async function restoreVaultHandle(
-  profileId: string,
+  userId: string,
 ): Promise<FileSystemDirectoryHandle | null> {
-  const handle = await idbGet<FileSystemDirectoryHandle>(handleKey(profileId))
+  const handle = await idbGet<FileSystemDirectoryHandle>(handleKey(userId))
   if (!handle) return null
 
-  const permission = await handle.requestPermission({ mode: 'readwrite' })
-  if (permission !== 'granted') return null
+  // queryPermission doesn't require user activation (works in background)
+  const handleWithQuery = handle as FileSystemDirectoryHandle & {
+    queryPermission: (desc: { mode: string }) => Promise<PermissionState>
+  }
+  const current = await handleWithQuery.queryPermission({ mode: 'readwrite' })
+  if (current === 'granted') return handle
+
+  // Only request (which needs user gesture) if not already granted
+  try {
+    const permission = await handle.requestPermission({ mode: 'readwrite' })
+    if (permission !== 'granted') return null
+  } catch {
+    // requestPermission throws without user activation — permission not yet granted
+    return null
+  }
 
   return handle
 }
 
-export async function checkVaultAccess(profileId: string): Promise<boolean> {
+export async function checkVaultAccess(userId: string): Promise<boolean> {
   try {
-    const handle = await idbGet<FileSystemDirectoryHandle>(handleKey(profileId))
+    const handle = await idbGet<FileSystemDirectoryHandle>(handleKey(userId))
     if (!handle) return false
     const permission = await (handle as FileSystemDirectoryHandle & { queryPermission: (desc: { mode: string }) => Promise<string> }).queryPermission({ mode: 'readwrite' })
     return permission === 'granted'

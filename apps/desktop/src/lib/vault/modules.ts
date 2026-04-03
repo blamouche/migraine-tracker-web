@@ -1,7 +1,7 @@
 /**
  * E29 — Vault persistence for module preferences (config/modules.md)
  */
-import type { ModuleConfig, ModuleId } from '@/types/modules'
+import type { ModuleConfig } from '@/types/modules'
 import { DEFAULT_MODULE_CONFIG, MODULE_DEFINITIONS } from '@/types/modules'
 import { restoreVaultHandle, ensureVaultStructure } from './handle'
 import { useAuthStore } from '@/stores/authStore'
@@ -10,8 +10,8 @@ const CONFIG_FILE = 'modules.md'
 
 async function getVaultRoot(): Promise<FileSystemDirectoryHandle | null> {
   const { user, anonymousId } = useAuthStore.getState()
-  const profileId = user?.id ?? anonymousId ?? 'default'
-  const parentHandle = await restoreVaultHandle(profileId)
+  const userId = user?.id ?? anonymousId ?? 'default'
+  const parentHandle = await restoreVaultHandle(userId)
   if (!parentHandle) return null
   return ensureVaultStructure(parentHandle)
 }

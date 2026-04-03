@@ -6,6 +6,7 @@ export interface ChargeMentaleEntry {
   humeur: HumeurLevel
   contexte: string[]
   notes: string | null
+  source?: 'web' | 'mobile' | undefined
   createdAt: string // ISO
   updatedAt: string // ISO
 }

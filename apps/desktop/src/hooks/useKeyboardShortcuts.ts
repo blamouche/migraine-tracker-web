@@ -31,10 +31,6 @@ export function useKeyboardShortcuts() {
             e.preventDefault()
             navigateRef.current('/dashboard')
             return
-          case 'p':
-            e.preventDefault()
-            navigateRef.current('/profils')
-            return
           case ',':
             e.preventDefault()
             navigateRef.current('/environnement')
@@ -58,7 +54,6 @@ export const SHORTCUT_LIST = [
   { keys: ['Ctrl', 'N'], description: 'Nouvelle crise' },
   { keys: ['Ctrl', 'D'], description: 'Dashboard' },
   { keys: ['Ctrl', 'K'], description: 'Command Palette' },
-  { keys: ['Ctrl', 'P'], description: 'Sélecteur de profil' },
   { keys: ['Ctrl', ','], description: 'Préférences' },
   { keys: ['Escape'], description: 'Fermer le panneau actif' },
   { keys: ['?'], description: 'Afficher les raccourcis' },

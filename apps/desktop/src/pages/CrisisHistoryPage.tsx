@@ -4,6 +4,7 @@ import { useCrisisStore } from '@/stores/crisisStore'
 import { CrisisCalendar } from '@/components/crisis/CrisisCalendar'
 import type { CrisisEntry } from '@/types/crisis'
 import { INTENSITY_LABELS } from '@/types/crisis'
+import { MobileBadge } from '@/components/ui/MobileBadge'
 
 type SortOrder = 'date-desc' | 'date-asc' | 'intensity-desc'
 type StatusFilter = 'all' | 'complet' | 'incomplet'
@@ -172,6 +173,7 @@ export function CrisisHistoryPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
+                      {crisis.source === 'mobile' && <MobileBadge />}
                       {crisis.status === 'incomplet' && (
                         <span className="rounded-(--radius-full) bg-(--color-warning-light) px-2 py-0.5 text-xs text-(--color-warning)">
                           Incomplet

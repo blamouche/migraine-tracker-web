@@ -1,5 +1,8 @@
+import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { useNavigationStore } from '@/stores/navigationStore'
+import { usePlanConfigStore } from '@/stores/planConfigStore'
+import { ModuleGate } from './ModuleGate'
 import { Sidebar } from './Sidebar'
 import { BottomBar } from './BottomBar'
 import { Breadcrumb } from './Breadcrumb'
@@ -9,6 +12,7 @@ import { CommandPalette } from '@/components/ui/CommandPalette'
 import { ShortcutsPanel } from '@/components/ui/ShortcutsPanel'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { useModuleGuard } from './ModuleGuard'
+import { useProfileMigration } from '@/hooks/useProfileMigration'
 
 const ROUTE_TITLES: Record<string, string> = {
   '/': 'Accueil',
@@ -34,7 +38,6 @@ const ROUTE_TITLES: Record<string, string> = {
   '/douleur/nouveau': 'Nouvelle douleur',
   '/douleur/historique': 'Douleur quotidienne',
   '/evenement/nouveau': 'Nouvel événement',
-  '/profils': 'Gestion des profils',
   '/environnement': 'Environnement',
   '/ia': 'Module IA',
   '/mobile-sync': 'Synchronisation mobile',
@@ -50,12 +53,29 @@ const BYPASS_LAYOUT = ['/crisis/quick']
 export function AppLayout() {
   const location = useLocation()
   const { sidebarOpen, setSidebarOpen } = useNavigationStore()
+  const fetchConfig = usePlanConfigStore((s) => s.fetchConfig)
+  const startAutoRefresh = usePlanConfigStore((s) => s.startAutoRefresh)
+
+  // E34 — Fetch plan_config on mount + auto-refresh every 5 min
+  useEffect(() => {
+    fetchConfig()
+    const cleanup = startAutoRefresh()
+    return cleanup
+  }, [fetchConfig, startAutoRefresh])
+
+  // E34 — Re-fetch on page navigation
+  useEffect(() => {
+    fetchConfig()
+  }, [location.pathname, fetchConfig])
 
   // Register global keyboard shortcuts (E26)
   useKeyboardShortcuts()
 
   // E29 — Redirect if route belongs to disabled module
   useModuleGuard()
+
+  // E36 — Migration notice for users who had multiple profiles
+  const { showMigrationNotice, dismissNotice } = useProfileMigration()
 
   if (BYPASS_LAYOUT.includes(location.pathname)) {
     return <Outlet />
@@ -109,11 +129,30 @@ export function AppLayout() {
           </div>
         </header>
 
+        {/* E36 — Migration notice */}
+        {showMigrationNotice && (
+          <div className="flex items-center justify-between border-b border-(--color-border) bg-(--color-brand-light) px-6 py-3 text-sm text-(--color-text-primary)">
+            <p>
+              Le mode multi-profils a été supprimé. Votre profil principal a été conservé comme profil unique de votre compte.
+              Pour suivre un proche, créez un compte séparé.
+            </p>
+            <button
+              type="button"
+              onClick={dismissNotice}
+              className="ml-4 shrink-0 text-xs font-medium text-(--color-brand) hover:underline"
+            >
+              Compris
+            </button>
+          </div>
+        )}
+
         {/* Scrollable content */}
         <main className="flex-1 overflow-y-auto" id="main-content">
           <div className="mx-auto max-w-[1200px] px-6 py-6 lg:px-8 lg:py-8">
             <PageTransition>
-              <Outlet />
+              <ModuleGate pathname={location.pathname}>
+                <Outlet />
+              </ModuleGate>
             </PageTransition>
           </div>
         </main>

@@ -23,11 +23,10 @@ export function CalendarDayCell({
   isFuture,
   onDayClick,
   onQuickAdd,
-  enabledModules,
 }: CalendarDayCellProps) {
   const [showTooltip, setShowTooltip] = useState(false)
 
-  const indicators = dayData?.indicators ?? []
+  const indicators = useMemo(() => dayData?.indicators ?? [], [dayData?.indicators])
   const hasData = indicators.length > 0
   const isEmpty = !hasData && !isFuture
 

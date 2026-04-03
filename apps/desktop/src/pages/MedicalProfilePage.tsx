@@ -2,6 +2,8 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useMedicalProfileStore } from '@/stores/medicalProfileStore'
+import { useAuthStore } from '@/stores/authStore'
+import { supabase } from '@/lib/supabase'
 import type { MigraineType } from '@/types/medicalProfile'
 
 interface MedicalProfileForm {
@@ -32,6 +34,7 @@ export function MedicalProfilePage() {
   const navigate = useNavigate()
   const { markMedicalProfileDone, completeOnboarding } = useOnboardingStore()
   const { profile, saveProfile } = useMedicalProfileStore()
+  const user = useAuthStore((s) => s.user)
 
   const { register, handleSubmit } = useForm<MedicalProfileForm>({
     defaultValues: {
@@ -41,7 +44,20 @@ export function MedicalProfilePage() {
     },
   })
 
-  const onSubmit = (data: MedicalProfileForm) => {
+  const persistProfileDone = async () => {
+    if (user) {
+      try {
+        await supabase.from('user_usage').upsert(
+          { user_id: user.id, onboarding_profile_done: true },
+          { onConflict: 'user_id' },
+        )
+      } catch {
+        // Non-blocking
+      }
+    }
+  }
+
+  const onSubmit = async (data: MedicalProfileForm) => {
     // Save to medical profile store & vault
     const traitementsCrise = data.crisisTreatment
       ? data.crisisTreatment.split(',').map((s) => s.trim()).filter(Boolean)
@@ -56,11 +72,13 @@ export function MedicalProfilePage() {
       traitementsFond,
       updatedAt: new Date().toISOString(),
     })
+    await persistProfileDone()
     markMedicalProfileDone()
     navigate('/', { replace: true })
   }
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    await persistProfileDone()
     completeOnboarding()
     navigate('/', { replace: true })
   }
