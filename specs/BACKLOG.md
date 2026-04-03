@@ -52,13 +52,13 @@
 | E28 | Vue calendrier consolidée                       | 3.25    | 6       |
 | E29 | Personnalisation des modules de suivi           | 3.26    | 5       |
 | E30 | Prérequis déploiement & activation admin        | —       | 6       |
-| E31 | Gestion avancée des utilisateurs (admin)        | —       | 5       |
-| E32 | Statistiques d'utilisation (admin)               | —       | 4       |
-| E33 | Export utilisateurs & emails (admin)              | —       | 3       |
+| E31 | Gestion avancée des utilisateurs (admin)        | ✅     | 5       |
+| E32 | Statistiques d'utilisation (admin)               | ✅     | 4       |
+| E33 | Export utilisateurs & emails (admin)              | ✅     | 3       |
 | E34 | Configuration dynamique des plans & modules (admin) | ✅     | 5       |
 | E35 | Activation Magic Link & email/password             | ✅     | 4       |
 | E36 | Suppression du mode multi-profils                   | ✅     | 8       |
-| E37 | Picto météo pour le module environnement             | —     | 1       |
+| E37 | Picto météo pour le module environnement             | ✅     | 1       |
 | E38 | Changement du dossier vault depuis les paramètres    | —     | 3       |
 
 **Total : 222 User Stories**
@@ -3046,11 +3046,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] La liste utilisateurs affiche les colonnes : email masqué, date d'inscription, plan (`free`/`pro`), dernière connexion, statut (`actif`/`désactivé`)
-- [ ] Le plan est affiché avec un badge visuel distinct (couleur différente pour free et pro)
-- [ ] La dernière connexion affiche une date formatée en français ou « — » si jamais connecté
-- [ ] Le statut est affiché en vert (actif) ou rouge (désactivé)
-- [ ] Les données proviennent de la fonction `get_admin_user_list()` en temps réel
+- [x] La liste utilisateurs affiche les colonnes : email masqué, date d'inscription, plan (`free`/`pro`), dernière connexion, statut (`actif`/`désactivé`)
+- [x] Le plan est affiché avec un badge visuel distinct (couleur différente pour free et pro)
+- [x] La dernière connexion affiche une date formatée en français ou « — » si jamais connecté
+- [x] Le statut est affiché en vert (actif) ou rouge (désactivé)
+- [x] Les données proviennent de la fonction `get_admin_user_list()` en temps réel
 
 ---
 
@@ -3062,10 +3062,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Clic sur une ligne ouvre un panneau latéral (drawer) ou une modale avec les détails de l'utilisateur
-- [ ] Informations affichées : email complet (avec bouton « Révéler » journalisé), date d'inscription, plan actif, dernière connexion, nombre de profils, nombre de sessions 30j, provider d'authentification, consentement marketing
-- [ ] Le panneau contient les boutons d'action : changer de plan, désactiver/réactiver, supprimer
-- [ ] Fermeture du panneau par bouton ou clic à l'extérieur
+- [x] Clic sur une ligne ouvre un panneau latéral (drawer) ou une modale avec les détails de l'utilisateur
+- [x] Informations affichées : email complet (avec bouton « Révéler » journalisé), date d'inscription, plan actif, dernière connexion, nombre de profils, nombre de sessions 30j, provider d'authentification, consentement marketing
+- [x] Le panneau contient les boutons d'action : changer de plan, désactiver/réactiver, supprimer
+- [x] Fermeture du panneau par bouton ou clic à l'extérieur
 
 ---
 
@@ -3077,12 +3077,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bouton ou switch « Changer de plan » dans la fiche utilisateur
-- [ ] Confirmation requise avant application (« Passer de free à pro ? »)
-- [ ] Mise à jour de la table `profile_plans` : champ `plan` modifié pour le profil actif de l'utilisateur
-- [ ] Si aucune entrée `profile_plans` n'existe, en créer une avec le plan sélectionné
-- [ ] Action journalisée dans `admin_log` avec l'ancien et le nouveau plan
-- [ ] Le changement est reflété immédiatement dans la liste utilisateurs
+- [x] Bouton ou switch « Changer de plan » dans la fiche utilisateur
+- [x] Confirmation requise avant application (« Passer de free à pro ? »)
+- [x] Mise à jour de la table `user_plans` : champ `plan` modifié via RPC `change_user_plan()`
+- [x] Si aucune entrée `user_plans` n'existe, en créer une avec le plan sélectionné
+- [x] Action journalisée dans `admin_log` avec l'ancien et le nouveau plan
+- [x] Le changement est reflété immédiatement dans la liste utilisateurs
 
 ---
 
@@ -3094,11 +3094,11 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bouton « Désactiver » (si actif) ou « Réactiver » (si désactivé) dans la fiche utilisateur
-- [ ] Confirmation requise avant exécution
-- [ ] Mise à jour de `user_usage.is_active` en base
-- [ ] Action journalisée dans `admin_log`
-- [ ] Le statut est mis à jour immédiatement dans la liste et la fiche
+- [x] Bouton « Désactiver » (si actif) ou « Réactiver » (si désactivé) dans la fiche utilisateur
+- [x] Confirmation requise avant exécution
+- [x] Mise à jour de `user_usage.is_active` en base
+- [x] Action journalisée dans `admin_log`
+- [x] Le statut est mis à jour immédiatement dans la liste et la fiche
 - [ ] L'utilisateur désactivé voit le message « Votre compte a été désactivé. Contactez le support. » à sa prochaine connexion
 
 ---
@@ -3111,13 +3111,13 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bouton « Supprimer le compte » dans la fiche utilisateur, visuellement distinct (rouge, zone danger)
-- [ ] Double confirmation : étape 1 (« Êtes-vous sûr ? ») + étape 2 (saisie de l'email de l'utilisateur pour valider)
-- [ ] Appel à l'Edge Function `delete-user` qui supprime le compte via `supabase.auth.admin.deleteUser()`
-- [ ] Suppression en cascade : `user_usage`, `user_profiles`, `profile_plans`, `mobile_transit`
-- [ ] Action journalisée dans `admin_log` avant suppression (irréversible)
-- [ ] L'utilisateur disparaît de la liste après suppression
-- [ ] Le vault local de l'utilisateur n'est pas touché (données restent sur sa machine)
+- [x] Bouton « Supprimer le compte » dans la fiche utilisateur, visuellement distinct (rouge, zone danger)
+- [x] Double confirmation : étape 1 (« Êtes-vous sûr ? ») + étape 2 (saisie de l'email de l'utilisateur pour valider)
+- [x] Appel à l'Edge Function `delete-user` qui supprime le compte via `supabase.auth.admin.deleteUser()`
+- [x] Suppression en cascade : `user_usage`, `user_plans`, `mobile_transit`
+- [x] Action journalisée dans `admin_log` avant suppression (irréversible)
+- [x] L'utilisateur disparaît de la liste après suppression
+- [x] Le vault local de l'utilisateur n'est pas touché (données restent sur sa machine)
 
 ---
 
@@ -3135,10 +3135,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Nouvel onglet « Stats » ajouté à la navigation admin (à côté de Utilisateurs, Plans, Journal)
-- [ ] KPIs en haut de page : nombre total d'utilisateurs, utilisateurs actifs (30j), nouveaux ce mois-ci, ratio free/pro
-- [ ] Les données sont récupérées via une fonction Postgres `get_admin_stats()` (SECURITY DEFINER)
-- [ ] Affichage d'un loader pendant le chargement
+- [x] Nouvel onglet « Stats » ajouté à la navigation admin (à côté de Utilisateurs, Plans, Journal)
+- [x] KPIs en haut de page : nombre total d'utilisateurs, utilisateurs actifs (30j), nouveaux ce mois-ci, ratio free/pro
+- [x] Les données sont récupérées via une fonction Postgres `get_admin_stats()` (SECURITY DEFINER)
+- [x] Affichage d'un loader pendant le chargement
 
 ---
 
@@ -3150,12 +3150,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Graphique en barres affichant le nombre de nouvelles inscriptions par mois
-- [ ] Période affichée : 12 derniers mois par défaut
-- [ ] Chaque barre affiche le nombre exact au survol (tooltip)
-- [ ] Les données proviennent de `auth.users.created_at` agrégé par mois via une fonction Postgres
-- [ ] Axe X : mois (format « Jan 2026 »), Axe Y : nombre d'inscriptions
-- [ ] Bibliothèque graphique : Nivo (déjà utilisée dans l'app desktop) ou solution légère (Chart.js, Recharts)
+- [x] Graphique en barres affichant le nombre de nouvelles inscriptions par mois
+- [x] Période affichée : 12 derniers mois par défaut
+- [x] Chaque barre affiche le nombre exact au survol (tooltip)
+- [x] Les données proviennent de `auth.users.created_at` agrégé par mois via une fonction Postgres
+- [x] Axe X : mois (format « Jan 2026 »), Axe Y : nombre d'inscriptions
+- [x] Bibliothèque graphique : Recharts
 
 ---
 
@@ -3167,12 +3167,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Graphique en ligne affichant le nombre d'utilisateurs actifs (sessions) par période
-- [ ] Sélecteur de granularité : jour, semaine, mois
-- [ ] Période affichée : 30 derniers jours (jour), 12 dernières semaines (semaine), 12 derniers mois (mois)
-- [ ] Les données proviennent de `user_usage.last_active_at` agrégé par la granularité choisie via une fonction Postgres
-- [ ] Tooltip au survol avec la valeur exacte et la date
-- [ ] Le graphique se met à jour dynamiquement au changement de granularité
+- [x] Graphique en ligne affichant le nombre d'utilisateurs actifs (sessions) par période
+- [x] Sélecteur de granularité : jour, semaine, mois
+- [x] Période affichée : 30 derniers jours (jour), 12 dernières semaines (semaine), 12 derniers mois (mois)
+- [x] Les données proviennent de `user_usage.last_active_at` agrégé par la granularité choisie via une fonction Postgres
+- [x] Tooltip au survol avec la valeur exacte et la date
+- [x] Le graphique se met à jour dynamiquement au changement de granularité
 
 ---
 
@@ -3184,10 +3184,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] Le graphique des inscriptions affiche des barres empilées (free en gris, pro en couleur brand)
-- [ ] Le graphique d'utilisation affiche deux courbes superposées (free et pro)
-- [ ] Légende visible avec les deux catégories
-- [ ] Les fonctions Postgres retournent les données ventilées par plan
+- [x] Le graphique des inscriptions affiche des barres empilées (free en gris, pro en couleur brand)
+- [x] Le graphique d'utilisation affiche deux courbes superposées (free et pro)
+- [x] Légende visible avec les deux catégories
+- [x] Les fonctions Postgres retournent les données ventilées par plan
 
 ---
 
@@ -3199,13 +3199,13 @@
 
 **Critères d'acceptation :**
 
-- [ ] Graphique en camembert (pie chart) ou donut affichant la répartition actuelle des utilisateurs par niveau d'abonnement (free, pro, et tout futur plan)
-- [ ] Chaque segment affiche le pourcentage et le nombre absolu d'utilisateurs
-- [ ] Tooltip au survol avec le détail (nom du plan, nombre, pourcentage)
-- [ ] Légende visible avec les couleurs associées à chaque plan
-- [ ] KPI complémentaires affichés à côté du graphique : taux de conversion free → pro, évolution du ratio sur les 30 derniers jours
-- [ ] Les données proviennent d'une fonction Postgres `get_subscription_distribution()` (SECURITY DEFINER)
-- [ ] Le graphique se met à jour en temps réel lors du rechargement de la page
+- [x] Graphique en camembert (pie chart) ou donut affichant la répartition actuelle des utilisateurs par niveau d'abonnement (free, pro, et tout futur plan)
+- [x] Chaque segment affiche le pourcentage et le nombre absolu d'utilisateurs
+- [x] Tooltip au survol avec le détail (nom du plan, nombre, pourcentage)
+- [x] Légende visible avec les couleurs associées à chaque plan
+- [x] KPI complémentaires affichés à côté du graphique : taux de conversion free → pro, évolution du ratio sur les 30 derniers jours
+- [x] Les données proviennent d'une fonction Postgres `get_subscription_distribution()` (SECURITY DEFINER)
+- [x] Le graphique se met à jour en temps réel lors du rechargement de la page
 
 ---
 
@@ -3223,12 +3223,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bouton « Exporter CSV » visible dans l'onglet Utilisateurs
-- [ ] Le CSV contient les colonnes : email masqué, date d'inscription, plan, dernière connexion, nombre de profils, sessions 30j, statut, consentement marketing
-- [ ] Les emails sont masqués par défaut (`a***@gmail.com`) pour protéger la vie privée
-- [ ] Le fichier est généré côté client (Blob + URL.createObjectURL) et téléchargé automatiquement
-- [ ] Nom du fichier : `migraine-ai-utilisateurs_YYYY-MM-DD.csv`
-- [ ] Action journalisée dans `admin_log`
+- [x] Bouton « Exporter CSV » visible dans l'onglet Utilisateurs
+- [x] Le CSV contient les colonnes : email masqué, date d'inscription, plan, dernière connexion, sessions 30j, statut, consentement marketing
+- [x] Les emails sont masqués par défaut (`a***@gmail.com`) pour protéger la vie privée
+- [x] Le fichier est généré côté client (Blob + URL.createObjectURL) et téléchargé automatiquement
+- [x] Nom du fichier : `migraine-ai-utilisateurs_YYYY-MM-DD.csv`
+- [x] Action journalisée dans `admin_log`
 
 ---
 
@@ -3240,12 +3240,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Bouton « Exporter emails » avec sélecteur de filtre par plan : Tous, Free uniquement, Pro uniquement
-- [ ] L'export contient les emails complets (non masqués) — nécessite l'appel à `reveal_user_email()` pour chaque utilisateur ou une fonction Postgres dédiée `export_admin_emails(plan_filter)`
-- [ ] L'action de révélation groupée est journalisée une seule fois dans `admin_log` (pas une entrée par email)
-- [ ] Format CSV avec colonnes : email, plan, date d'inscription
-- [ ] Nom du fichier : `migraine-ai-emails-{filtre}_YYYY-MM-DD.csv`
-- [ ] Confirmation requise avant export (« Vous allez exporter N emails. Cette action sera journalisée. »)
+- [x] Bouton « Exporter emails » avec sélecteur de filtre par plan : Tous, Free uniquement, Pro uniquement
+- [x] L'export contient les emails complets (non masqués) — via fonction Postgres `export_admin_emails(plan_filter, activity_filter)`
+- [x] L'action de révélation groupée est journalisée une seule fois dans `admin_log` (pas une entrée par email)
+- [x] Format CSV avec colonnes : email, plan, date d'inscription
+- [x] Nom du fichier : `migraine-ai-emails-{filtre}_YYYY-MM-DD.csv`
+- [x] Confirmation requise avant export (« Vous allez exporter N emails. Cette action sera journalisée. »)
 
 ---
 
@@ -3257,12 +3257,12 @@
 
 **Critères d'acceptation :**
 
-- [ ] Filtre par dernière connexion : actifs (< 30 jours), inactifs (30-90 jours), dormants (> 90 jours), jamais connectés
-- [ ] Combinable avec le filtre par plan (ex : « Pro + inactifs 30-90j »)
-- [ ] L'export contient : email complet, plan, dernière connexion, date d'inscription
-- [ ] Fonction Postgres `export_admin_emails(plan_filter, activity_filter)` pour filtrer côté serveur
-- [ ] Confirmation et journalisation comme US-33-02
-- [ ] Nom du fichier : `migraine-ai-emails-{filtre-plan}-{filtre-activite}_YYYY-MM-DD.csv`
+- [x] Filtre par dernière connexion : actifs (< 30 jours), inactifs (30-90 jours), dormants (> 90 jours), jamais connectés
+- [x] Combinable avec le filtre par plan (ex : « Pro + inactifs 30-90j »)
+- [x] L'export contient : email complet, plan, dernière connexion, date d'inscription
+- [x] Fonction Postgres `export_admin_emails(plan_filter, activity_filter)` pour filtrer côté serveur
+- [x] Confirmation et journalisation comme US-33-02
+- [x] Nom du fichier : `migraine-ai-emails-{filtre-plan}-{filtre-activite}_YYYY-MM-DD.csv`
 
 ---
 
@@ -3564,10 +3564,10 @@
 
 **Critères d'acceptation :**
 
-- [ ] L'icône actuelle du module environnement est remplacée par une icône évoquant la météo (ex : `Cloud`, `CloudSun`, `Thermometer` ou équivalent Lucide)
-- [ ] L'icône est mise à jour partout où le module apparaît : sidebar, dashboard, onboarding
-- [ ] L'icône reste cohérente avec le Design System existant (taille, couleur, style)
-- [ ] Le label « Données environnementales » reste inchangé
+- [x] L'icône actuelle du module environnement est remplacée par une icône évoquant la météo (ex : `Cloud`, `CloudSun`, `Thermometer` ou équivalent Lucide)
+- [x] L'icône est mise à jour partout où le module apparaît : sidebar, dashboard, onboarding
+- [x] L'icône reste cohérente avec le Design System existant (taille, couleur, style)
+- [x] Le label « Données environnementales » reste inchangé
 
 ---
 
