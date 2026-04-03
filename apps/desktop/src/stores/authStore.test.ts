@@ -70,7 +70,10 @@ describe('authStore', () => {
   it('calls signInWithOtp for magic link', async () => {
     const { supabase } = await import('@/lib/supabase')
     await useAuthStore.getState().signInWithMagicLink('test@example.com')
-    expect(supabase.auth.signInWithOtp).toHaveBeenCalledWith({ email: 'test@example.com' })
+    expect(supabase.auth.signInWithOtp).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      options: { emailRedirectTo: expect.stringContaining('/auth/callback') },
+    })
   })
 
   it('calls signUp for email registration', async () => {
@@ -79,6 +82,7 @@ describe('authStore', () => {
     expect(supabase.auth.signUp).toHaveBeenCalledWith({
       email: 'test@example.com',
       password: 'password123',
+      options: { emailRedirectTo: expect.stringContaining('/auth/callback') },
     })
   })
 
