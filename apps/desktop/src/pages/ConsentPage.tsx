@@ -21,12 +21,14 @@ export function ConsentPage() {
     // Persist marketing consent + create user plan in Supabase
     if (user) {
       try {
+        const now = new Date().toISOString()
         await Promise.all([
           supabase.from('user_usage').upsert(
             {
               user_id: user.id,
+              cgu_consent_at: now,
               marketing_consent: marketing,
-              marketing_consent_at: marketing ? new Date().toISOString() : null,
+              marketing_consent_at: marketing ? now : null,
             },
             { onConflict: 'user_id' },
           ),

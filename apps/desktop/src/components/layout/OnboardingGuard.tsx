@@ -3,6 +3,7 @@ import { Navigate, Outlet } from 'react-router'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useAuthStore } from '@/stores/authStore'
 import { checkVaultAccess } from '@/lib/vault/handle'
+import { supabase } from '@/lib/supabase'
 
 export function OnboardingGuard() {
   const step = useOnboardingStore((s) => s.step)
@@ -10,11 +11,60 @@ export function OnboardingGuard() {
   const user = useAuthStore((s) => s.user)
   const anonymousId = useAuthStore((s) => s.anonymousId)
   const [vaultStatus, setVaultStatus] = useState<'checking' | 'ok' | 'missing'>('checking')
+  const [syncing, setSyncing] = useState(true)
 
   const userId = user?.id ?? anonymousId ?? 'default'
 
+  // E39: Sync onboarding state from Supabase when local store is incomplete
   useEffect(() => {
-    if (step !== 'complete' || !user) {
+    if (!user || step === 'complete') {
+      setSyncing(false)
+      return
+    }
+
+    let cancelled = false
+
+    async function syncFromServer() {
+      try {
+        const { data: usage, error: usageError } = await supabase
+          .from('user_usage')
+          .select('cgu_consent_at, onboarding_profile_done')
+          .eq('user_id', user!.id)
+          .single()
+
+        if (cancelled) return
+
+        if (!usageError && usage?.cgu_consent_at) {
+          const store = useOnboardingStore.getState()
+
+          // Restore consent
+          store.acceptConsent(true, false)
+
+          // Check vault
+          const vaultOk = await checkVaultAccess(user!.id)
+          if (cancelled) return
+
+          if (vaultOk) {
+            store.markVaultReady()
+
+            if (usage.onboarding_profile_done) {
+              store.markMedicalProfileDone()
+            }
+          }
+        }
+      } catch {
+        // Query failed — proceed with current local state
+      }
+
+      if (!cancelled) setSyncing(false)
+    }
+
+    syncFromServer()
+    return () => { cancelled = true }
+  }, [user, step])
+
+  useEffect(() => {
+    if (syncing || step !== 'complete' || !user) {
       setVaultStatus('ok')
       return
     }
@@ -26,9 +76,9 @@ export function OnboardingGuard() {
       }
     })
     return () => { cancelled = true }
-  }, [step, user, userId])
+  }, [syncing, step, user, userId])
 
-  if (isLoading || vaultStatus === 'checking') {
+  if (isLoading || syncing || vaultStatus === 'checking') {
     return (
       <div className="flex min-h-screen items-center justify-center bg-(--color-bg-base)">
         <p className="text-sm text-(--color-text-secondary)">Chargement...</p>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useAuthStore } from '@/stores/authStore'
 import { pickVaultFolder, ensureVaultStructure, saveVaultHandle } from '@/lib/vault/handle'
+import { supabase } from '@/lib/supabase'
 
 export function VaultSelectionPage() {
   const [error, setError] = useState<string | null>(null)
@@ -21,6 +22,17 @@ export function VaultSelectionPage() {
       const handle = await pickVaultFolder()
       await ensureVaultStructure(handle)
       await saveVaultHandle(userId, handle)
+      // E38: Persist vault folder name to Supabase
+      if (user) {
+        try {
+          await supabase.from('user_usage').upsert(
+            { user_id: user.id, vault_folder_name: handle.name },
+            { onConflict: 'user_id' },
+          )
+        } catch {
+          // Non-blocking
+        }
+      }
       markVaultReady()
       navigate('/onboarding/medical-profile', { replace: true })
     } catch (err) {
