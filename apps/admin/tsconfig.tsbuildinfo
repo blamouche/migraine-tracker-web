@@ -1,1 +1,1 @@
-{"root":["./src/main.tsx","./vite-env.d.ts"],"version":"5.9.3"}
+{"root":["./src/main.tsx","./src/hooks/useadminauth.ts","./src/hooks/useauditlog.ts","./src/hooks/useplanconfig.ts","./src/hooks/useusers.ts","./src/lib/supabase.ts","./vite-env.d.ts"],"version":"5.9.3"}

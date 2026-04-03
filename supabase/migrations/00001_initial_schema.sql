@@ -105,19 +105,19 @@ CREATE POLICY "own data only" ON mobile_transit
 
 -- Admins — accès complet journalisé
 CREATE POLICY "admin full access" ON user_usage
-  FOR ALL USING ((auth.jwt() ->> 'role') = 'admin');
+  FOR ALL USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 CREATE POLICY "admin full access" ON user_profiles
-  FOR ALL USING ((auth.jwt() ->> 'role') = 'admin');
+  FOR ALL USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 CREATE POLICY "admin full access" ON profile_plans
-  FOR ALL USING ((auth.jwt() ->> 'role') = 'admin');
+  FOR ALL USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 CREATE POLICY "admin full access" ON mobile_transit
-  FOR ALL USING ((auth.jwt() ->> 'role') = 'admin');
+  FOR ALL USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 CREATE POLICY "admin full access" ON admin_log
-  FOR ALL USING ((auth.jwt() ->> 'role') = 'admin');
+  FOR ALL USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 -- ============================================================
 -- CRON — purge mobile_transit > 90 jours non synchronisé
