@@ -60,8 +60,10 @@
 | E36 | Suppression du mode multi-profils                   | ✅     | 8       |
 | E37 | Picto météo pour le module environnement             | ✅     | 1       |
 | E38 | Changement du dossier vault depuis les paramètres    | —     | 3       |
+| E39 | Reconnexion rapide — skip onboarding utilisateur connu | ✅     | 4       |
+| E40 | Saisie mobile étendue — tous types d'enregistrements    | —      | 6       |
 
-**Total : 222 User Stories**
+**Total : 232 User Stories**
 
 ---
 
@@ -3621,4 +3623,162 @@
 
 ---
 
-_Fin du backlog v1.2 — 222 User Stories réparties en 38 Epics_
+## EPIC E39 — Reconnexion rapide — skip onboarding utilisateur connu
+
+> En tant qu'utilisateur déjà inscrit, je veux que l'application me redirige directement vers le contenu principal lors de ma connexion, sans me redemander d'accepter les CGU, de cocher le consentement marketing ni de paramétrer mon profil, afin de gagner du temps et d'éviter une expérience répétitive.
+
+### US-39-01 · 🔴 Critique · FREE
+
+**En tant que** patient déjà inscrit,
+**je veux** que l'application détecte que mon compte existe déjà lors de la connexion,
+**afin de** ne pas repasser par les étapes d'onboarding.
+
+**Critères d'acceptation :**
+
+- [ ] À la connexion (OAuth, email/password ou magic link), l'app vérifie si l'utilisateur possède déjà un profil complet (consentement CGU horodaté + vault configuré)
+- [ ] Si le profil est complet : redirection directe vers le tableau de bord (skip total de l'onboarding)
+- [ ] Si le profil est incomplet (ex. migration de données) : seules les étapes manquantes sont affichées
+
+---
+
+### US-39-02 · 🔴 Critique · FREE
+
+**En tant que** patient déjà inscrit,
+**je veux** que mon consentement CGU et mes préférences de communication soient conservés d'une session à l'autre,
+**afin de** ne pas devoir recocher ces cases à chaque connexion.
+
+**Critères d'acceptation :**
+
+- [ ] Le consentement CGU (horodaté) est stocké dans le profil Supabase et vérifié à la connexion
+- [ ] Le consentement marketing (horodaté) est stocké dans le profil Supabase et vérifié à la connexion
+- [ ] Si les deux consentements sont présents, les écrans CGU et communications sont complètement ignorés
+- [ ] Si les CGU ont été mises à jour depuis le dernier consentement : l'écran CGU est ré-affiché avec un message « Nos conditions ont été mises à jour »
+
+---
+
+### US-39-03 · 🟠 Haute · FREE
+
+**En tant que** patient déjà inscrit,
+**je veux** que l'étape de paramétrage du profil médical soit ignorée si je l'ai déjà complétée ou explicitement passée,
+**afin de** ne pas revoir cet écran à chaque connexion.
+
+**Critères d'acceptation :**
+
+- [ ] L'app vérifie si l'étape profil médical a déjà été complétée ou explicitement ignorée (flag `onboarding_profile_done` dans Supabase)
+- [ ] Si le flag est présent : l'écran de profil médical est ignoré
+- [ ] Si le flag est absent (nouvel utilisateur ou migration) : l'écran de profil est affiché normalement
+- [ ] Le flag est positionné dès que l'utilisateur clique « Passer pour l'instant » ou valide le formulaire
+
+---
+
+### US-39-04 · 🟡 Moyenne · FREE
+
+**En tant que** patient déjà inscrit,
+**je veux** que l'étape de sélection du vault soit ignorée si un vault est déjà configuré,
+**afin de** accéder directement à mes données sans re-sélectionner mon dossier.
+
+**Critères d'acceptation :**
+
+- [ ] L'app vérifie si un handle vault valide existe en IndexedDB au lancement
+- [ ] Si le handle est valide et le vault accessible : skip de l'écran de sélection du vault
+- [ ] Si le handle est invalide ou les permissions ont été révoquées : l'écran de sélection est ré-affiché avec un message « Veuillez re-sélectionner votre dossier »
+- [ ] Le flux complet (connexion → contenu) ne présente aucun écran intermédiaire pour un utilisateur entièrement configuré
+
+---
+
+## EPIC E40 — Saisie mobile étendue — tous types d'enregistrements
+
+> En tant que patient en déplacement, je veux pouvoir enregistrer rapidement depuis mon téléphone tout type d'événement de suivi (pas seulement les crises et la douleur), afin de maintenir un suivi complet même loin de mon ordinateur. L'architecture suit celle d'E20 : données chiffrées AES-256-GCM, transit via Supabase, intégration au vault à l'ouverture du desktop.
+
+### US-40-01 · 🟠 Haute · FREE
+
+**En tant que** patient en déplacement,
+**je veux** enregistrer une prise de traitement depuis mon téléphone,
+**afin de** ne pas oublier de consigner mon traitement quand je ne suis pas devant mon ordinateur.
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Traitement » : sélection du traitement (chips parmi ceux du profil), heure (défaut : maintenant), dose optionnelle
+- [ ] Validation en un tap, temps de saisie < 10 secondes
+- [ ] Données sérialisées en YAML, chiffrées (AES-256-GCM) et envoyées à Supabase (`mobile_transit`)
+- [ ] Intégration au vault desktop dans `traitements/` avec `source: mobile` (même flux qu'US-20-04)
+
+---
+
+### US-40-02 · 🟠 Haute · FREE
+
+**En tant que** patient,
+**je veux** enregistrer un aliment ou un déclencheur potentiel depuis mon téléphone,
+**afin de** capturer un repas ou une exposition suspecte au moment où elle se produit.
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Alimentation / Déclencheur » : champ texte libre + chips parmi les déclencheurs fréquents du profil, heure (défaut : maintenant)
+- [ ] Validation rapide, temps de saisie < 15 secondes
+- [ ] Même flux chiffré que les saisies de crise (E20)
+- [ ] Intégration au vault desktop dans `alimentation/` ou `declencheurs/` avec `source: mobile`
+
+---
+
+### US-40-03 · 🟡 Moyenne · FREE
+
+**En tant que** patient,
+**je veux** enregistrer une note libre depuis mon téléphone,
+**afin de** capturer un contexte ou une observation que je ne veux pas oublier (mauvaise nuit, stress, météo ressentie…).
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Note » : champ texte libre (max 500 caractères), heure (défaut : maintenant)
+- [ ] Validation en un tap
+- [ ] Même flux chiffré que les saisies de crise (E20)
+- [ ] Intégration au vault desktop dans `notes/` avec `source: mobile`
+
+---
+
+### US-40-04 · 🟡 Moyenne · PRO
+
+**En tant que** patient avec le plan Pro,
+**je veux** enregistrer une activité sportive depuis mon téléphone,
+**afin de** consigner mon effort physique au moment où il a lieu.
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Sport » : type d'activité (chips), durée (sélecteur rapide : 15/30/45/60 min), intensité (léger/modéré/intense)
+- [ ] Validation rapide, temps de saisie < 10 secondes
+- [ ] Même flux chiffré que les saisies de crise (E20)
+- [ ] Intégration au vault desktop dans `sport/` avec `source: mobile`
+
+---
+
+### US-40-05 · 🟡 Moyenne · PRO
+
+**En tant que** patient avec le plan Pro,
+**je veux** enregistrer un événement de charge mentale ou un événement de vie depuis mon téléphone,
+**afin de** capturer un pic de stress ou un événement marquant en temps réel.
+
+**Critères d'acceptation :**
+
+- [ ] Écran mobile « Charge mentale » : curseur 1-10, catégorie optionnelle (travail, famille, santé…), note courte optionnelle
+- [ ] Validation rapide, temps de saisie < 10 secondes
+- [ ] Même flux chiffré que les saisies de crise (E20)
+- [ ] Intégration au vault desktop dans `charge-mentale/` avec `source: mobile`
+
+---
+
+### US-40-06 · 🔴 Critique · FREE
+
+**En tant que** patient,
+**je veux** accéder à un menu d'accueil mobile me proposant tous les types de saisie disponibles,
+**afin de** choisir rapidement ce que je veux enregistrer.
+
+**Critères d'acceptation :**
+
+- [ ] Écran d'accueil mobile affichant les types de saisie sous forme de boutons larges : Crise, Douleur, Traitement, Alimentation, Note, Sport, Charge mentale
+- [ ] Les types PRO sont visibles mais verrouillés pour les utilisateurs FREE (avec indication « Pro »)
+- [ ] Les types affichés respectent les modules activés par l'utilisateur (E29 — personnalisation des modules)
+- [ ] Fond sombre permanent, zones tactiles ≥ 48 px
+- [ ] Accès direct au type le plus fréquent de l'utilisateur mis en avant (ex. « Crise » en premier si c'est le plus utilisé)
+
+---
+
+_Fin du backlog v1.4 — 232 User Stories réparties en 40 Epics_
