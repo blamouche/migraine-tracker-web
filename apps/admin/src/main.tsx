@@ -15,7 +15,6 @@ import { useStats } from '@/hooks/useStats'
 import { useExport } from '@/hooks/useExport'
 import type { PlanFeatures } from '@/hooks/usePlanConfig'
 import { getFeatureMeta } from '@/lib/featureMetadata'
-import type { FeatureCategory } from '@/lib/featureMetadata'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer,
@@ -482,17 +481,17 @@ function UsersTab() {
                 </td>
                 <td className="py-3">
                   {confirmAction === u.user_id ? (
-                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-1">
                       <button
                         type="button"
-                        onClick={() => handleToggleActive(u.user_id, u.is_active)}
+                        onClick={(e) => { e.stopPropagation(); handleToggleActive(u.user_id, u.is_active) }}
                         className="rounded bg-(--color-danger) px-2 py-1 text-xs text-white"
                       >
                         {u.is_active ? 'Désactiver' : 'Réactiver'}
                       </button>
                       <button
                         type="button"
-                        onClick={() => setConfirmAction(null)}
+                        onClick={(e) => { e.stopPropagation(); setConfirmAction(null) }}
                         className="text-xs text-(--color-text-muted)"
                       >
                         Non
@@ -545,8 +544,9 @@ function UsersTab() {
 
             <div className="mt-4 space-y-3">
               <div>
-                <label className="text-xs font-medium text-(--color-text-muted)">Filtrer par plan</label>
+                <label htmlFor="export-plan-filter" className="text-xs font-medium text-(--color-text-muted)">Filtrer par plan</label>
                 <select
+                  id="export-plan-filter"
                   value={exportPlanFilter}
                   onChange={(e) => setExportPlanFilter(e.target.value)}
                   className="mt-1 w-full rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-elevated) px-3 py-2 text-sm"
@@ -558,8 +558,9 @@ function UsersTab() {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-(--color-text-muted)">Filtrer par activité</label>
+                <label htmlFor="export-activity-filter" className="text-xs font-medium text-(--color-text-muted)">Filtrer par activité</label>
                 <select
+                  id="export-activity-filter"
                   value={exportActivityFilter}
                   onChange={(e) => setExportActivityFilter(e.target.value)}
                   className="mt-1 w-full rounded-(--radius-md) border border-(--color-border) bg-(--color-bg-elevated) px-3 py-2 text-sm"
@@ -750,7 +751,7 @@ function PlanEditor({
 
   const isDiff = (key: string) => features[key] !== otherFeatures[key]
 
-  const renderSection = (sectionTitle: string, keys: string[], _category: FeatureCategory) => {
+  const renderSection = (sectionTitle: string, keys: string[]) => {
     if (keys.length === 0) return null
     return (
       <div className="mt-4">
@@ -836,9 +837,9 @@ function PlanEditor({
   return (
     <div className="rounded-(--radius-xl) bg-(--color-bg-elevated) p-6">
       <h2 className="text-sm font-semibold">{title}</h2>
-      {renderSection('Paramètres', grouped.params, 'parameter')}
-      {renderSection('Modules', grouped.modules, 'module')}
-      {renderSection('Autres', grouped.other, 'parameter')}
+      {renderSection('Paramètres', grouped.params)}
+      {renderSection('Modules', grouped.modules)}
+      {renderSection('Autres', grouped.other)}
     </div>
   )
 }
