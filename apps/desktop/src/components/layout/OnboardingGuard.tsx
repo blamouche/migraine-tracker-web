@@ -11,7 +11,7 @@ export function OnboardingGuard() {
   const anonymousId = useAuthStore((s) => s.anonymousId)
   const [vaultStatus, setVaultStatus] = useState<'checking' | 'ok' | 'missing'>('checking')
 
-  const profileId = user?.id ?? anonymousId ?? 'default'
+  const userId = user?.id ?? anonymousId ?? 'default'
 
   useEffect(() => {
     if (step !== 'complete' || !user) {
@@ -20,13 +20,13 @@ export function OnboardingGuard() {
     }
 
     let cancelled = false
-    checkVaultAccess(profileId).then((accessible) => {
+    checkVaultAccess(userId).then((accessible) => {
       if (!cancelled) {
         setVaultStatus(accessible ? 'ok' : 'missing')
       }
     })
     return () => { cancelled = true }
-  }, [step, user, profileId])
+  }, [step, user, userId])
 
   if (isLoading || vaultStatus === 'checking') {
     return (
@@ -46,7 +46,6 @@ export function OnboardingGuard() {
     const redirectMap: Record<string, string> = {
       login: '/onboarding/consent',
       consent: '/onboarding/consent',
-      'profile-setup': '/onboarding/profile',
       'vault-selection': '/onboarding/vault',
       'medical-profile': '/onboarding/medical-profile',
     }

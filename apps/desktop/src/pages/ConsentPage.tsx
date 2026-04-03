@@ -18,24 +18,34 @@ export function ConsentPage() {
 
     setSubmitting(true)
 
-    // Persist marketing consent to Supabase if authenticated
+    // Persist marketing consent + create user plan in Supabase
     if (user) {
       try {
-        await supabase.from('user_usage').upsert(
-          {
-            user_id: user.id,
-            marketing_consent: marketing,
-            marketing_consent_at: marketing ? new Date().toISOString() : null,
-          },
-          { onConflict: 'user_id' },
-        )
+        await Promise.all([
+          supabase.from('user_usage').upsert(
+            {
+              user_id: user.id,
+              marketing_consent: marketing,
+              marketing_consent_at: marketing ? new Date().toISOString() : null,
+            },
+            { onConflict: 'user_id' },
+          ),
+          supabase.from('user_plans').upsert(
+            {
+              user_id: user.id,
+              plan: 'free',
+              plan_activated_at: new Date().toISOString(),
+            },
+            { onConflict: 'user_id' },
+          ),
+        ])
       } catch {
         // Non-blocking
       }
     }
 
     acceptConsent(cgu, marketing)
-    navigate('/onboarding/profile', { replace: true })
+    navigate('/onboarding/vault', { replace: true })
   }
 
   return (

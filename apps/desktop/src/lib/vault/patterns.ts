@@ -6,8 +6,8 @@ const PATTERNS_FILE = 'patterns-valides.md'
 
 async function getVaultRoot(): Promise<FileSystemDirectoryHandle | null> {
   const { user, anonymousId } = useAuthStore.getState()
-  const profileId = user?.id ?? anonymousId ?? 'default'
-  const parentHandle = await restoreVaultHandle(profileId)
+  const userId = user?.id ?? anonymousId ?? 'default'
+  const parentHandle = await restoreVaultHandle(userId)
   if (!parentHandle) return null
   return ensureVaultStructure(parentHandle)
 }

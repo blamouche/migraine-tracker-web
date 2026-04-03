@@ -29,7 +29,6 @@ const ROUTE_LABELS: Record<string, string> = {
   '/douleur/nouveau': 'Nouvelle douleur',
   '/douleur/historique': 'Douleur quotidienne',
   '/evenement/nouveau': 'Nouvel événement',
-  '/profils': 'Profils',
   '/environnement': 'Environnement',
   '/ia': 'Module IA',
   '/mobile-sync': 'Sync mobile',

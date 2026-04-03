@@ -28,8 +28,6 @@ import { ChargeMentaleHistoryPage } from '@/pages/ChargeMentaleHistoryPage'
 import { EvenementVieFormPage } from '@/pages/EvenementVieFormPage'
 import { DailyPainFormPage } from '@/pages/DailyPainFormPage'
 import { DailyPainHistoryPage } from '@/pages/DailyPainHistoryPage'
-import { ProfileManagerPage } from '@/pages/ProfileManagerPage'
-import { ProfileSetupPage } from '@/pages/ProfileSetupPage'
 import { EnvironnementSettingsPage } from '@/pages/EnvironnementSettingsPage'
 import { CycleFormPage } from '@/pages/CycleFormPage'
 import { CycleHistoryPage } from '@/pages/CycleHistoryPage'
@@ -59,10 +57,6 @@ export const router = createBrowserRouter([
   {
     path: '/onboarding/consent',
     element: <ConsentPage />,
-  },
-  {
-    path: '/onboarding/profile',
-    element: <ProfileSetupPage />,
   },
   {
     path: '/onboarding/vault',
@@ -237,11 +231,6 @@ export const router = createBrowserRouter([
           {
             path: '/douleur/historique',
             element: <DailyPainHistoryPage />,
-          },
-          // E17 — Multi-profil
-          {
-            path: '/profils',
-            element: <ProfileManagerPage />,
           },
           // E18 — Environnement
           {
