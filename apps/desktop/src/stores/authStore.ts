@@ -10,6 +10,7 @@ interface AuthState {
   anonymousId: string | null
   isLoading: boolean
   error: string | null
+  isPasswordRecovery: boolean
 
   initialize: () => Promise<void>
   signInWithProvider: (provider: 'google' | 'apple' | 'facebook') => Promise<void>
@@ -17,6 +18,7 @@ interface AuthState {
   signUp: (email: string, password: string) => Promise<void>
   signIn: (email: string, password: string) => Promise<void>
   resetPassword: (email: string) => Promise<void>
+  updatePassword: (password: string) => Promise<boolean>
   signOut: () => Promise<void>
   clearError: () => void
 }
@@ -28,6 +30,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   anonymousId: null,
   isLoading: true,
   error: null,
+  isPasswordRecovery: false,
 
   initialize: async () => {
     try {
@@ -41,11 +44,12 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ isAnonymous: false, isLoading: false })
       }
 
-      supabase.auth.onAuthStateChange((_event, session) => {
+      supabase.auth.onAuthStateChange((event, session) => {
         set({
           session,
           user: session?.user ?? null,
           isAnonymous: false,
+          ...(event === 'PASSWORD_RECOVERY' ? { isPasswordRecovery: true } : {}),
         })
       })
     } catch {
@@ -64,7 +68,10 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signInWithMagicLink: async (email) => {
     set({ error: null })
-    const { error } = await supabase.auth.signInWithOtp({ email })
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    })
     if (error) {
       set({ error: mapAuthError(error.message) })
     }
@@ -72,7 +79,11 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signUp: async (email, password) => {
     set({ error: null })
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    })
     if (error) {
       set({ error: mapAuthError(error.message) })
     }
@@ -88,15 +99,28 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   resetPassword: async (email) => {
     set({ error: null })
-    const { error } = await supabase.auth.resetPasswordForEmail(email)
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset-password`,
+    })
     if (error) {
       set({ error: mapAuthError(error.message) })
     }
   },
 
+  updatePassword: async (password) => {
+    set({ error: null })
+    const { error } = await supabase.auth.updateUser({ password })
+    if (error) {
+      set({ error: mapAuthError(error.message) })
+      return false
+    }
+    set({ isPasswordRecovery: false })
+    return true
+  },
+
   signOut: async () => {
     await supabase.auth.signOut()
-    set({ session: null, user: null, isAnonymous: false })
+    set({ session: null, user: null, isAnonymous: false, isPasswordRecovery: false })
   },
 
   clearError: () => set({ error: null }),

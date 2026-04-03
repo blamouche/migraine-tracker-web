@@ -3,6 +3,7 @@ import { OnboardingGuard } from '@/components/layout/OnboardingGuard'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { LoginPage } from '@/pages/LoginPage'
 import { AuthCallbackPage } from '@/pages/AuthCallbackPage'
+import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
 import { ConsentPage } from '@/pages/ConsentPage'
 import { VaultSelectionPage } from '@/pages/VaultSelectionPage'
 import { MedicalProfilePage } from '@/pages/MedicalProfilePage'
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
   {
     path: '/auth/callback',
     element: <AuthCallbackPage />,
+  },
+  {
+    path: '/auth/reset-password',
+    element: <ResetPasswordPage />,
   },
   {
     path: '/onboarding/consent',
