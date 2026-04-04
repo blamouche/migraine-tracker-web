@@ -1,6 +1,6 @@
 [build]
   command = "cd ../.. && pnpm --filter @migraine-ai/mobile build"
-  publish = "apps/mobile/dist"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
