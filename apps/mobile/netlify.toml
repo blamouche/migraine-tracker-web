@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm build"
+  command = "cd ../.. && pnpm --filter @migraine-ai/mobile build"
   publish = "dist"
 
 [build.environment]
